@@ -1,13 +1,8 @@
 ﻿#include "il2cpp.h"
-#include <iostream>
-
-#ifdef _WIN32
-#include <Windows.h>
-#endif
+#include "../Includes.h"
 
 static HMODULE g_gameAssembly = nullptr;
 
-// function pointers
 static t_il2cpp_domain_get p_il2cpp_domain_get = nullptr;
 static t_il2cpp_thread_attach p_il2cpp_thread_attach = nullptr;
 static t_il2cpp_domain_assembly_open p_il2cpp_domain_assembly_open = nullptr;
@@ -17,10 +12,9 @@ static t_il2cpp_object_new p_il2cpp_object_new = nullptr;
 static t_il2cpp_class_get_method_from_name p_il2cpp_class_get_method_from_name = nullptr;
 static t_il2cpp_runtime_invoke p_il2cpp_runtime_invoke = nullptr;
 static t_il2cpp_string_new p_il2cpp_string_new = nullptr;
+static t_il2cpp_string_new_utf16 p_il2cpp_string_new_utf16 = nullptr;
 static t_il2cpp_class_get_type p_il2cpp_class_get_type = nullptr;
 static t_il2cpp_type_get_object p_il2cpp_type_get_object = nullptr;
-
-// новые указатели на функции
 static t_il2cpp_object_get_class p_il2cpp_object_get_class = nullptr;
 static t_il2cpp_class_get_field_from_name p_il2cpp_class_get_field_from_name = nullptr;
 static t_il2cpp_field_set_value p_il2cpp_field_set_value = nullptr;
@@ -39,76 +33,65 @@ bool il2cpp_initialize()
     if (!g_gameAssembly) return false;
 
     FARPROC proc = nullptr;
-    ResolveSymbol("il2cpp_domain_get", &proc); p_il2cpp_domain_get = (t_il2cpp_domain_get)proc;
-    ResolveSymbol("il2cpp_thread_attach", &proc); p_il2cpp_thread_attach = (t_il2cpp_thread_attach)proc;
-    ResolveSymbol("il2cpp_domain_assembly_open", &proc); p_il2cpp_domain_assembly_open = (t_il2cpp_domain_assembly_open)proc;
-    ResolveSymbol("il2cpp_assembly_get_image", &proc); p_il2cpp_assembly_get_image = (t_il2cpp_assembly_get_image)proc;
-    ResolveSymbol("il2cpp_class_from_name", &proc); p_il2cpp_class_from_name = (t_il2cpp_class_from_name)proc;
-    ResolveSymbol("il2cpp_object_new", &proc); p_il2cpp_object_new = (t_il2cpp_object_new)proc;
-    ResolveSymbol("il2cpp_string_new", &proc); p_il2cpp_string_new = (t_il2cpp_string_new)proc;
-
-    // основные функции
-    ResolveSymbol("il2cpp_class_get_type", &proc); p_il2cpp_class_get_type = (t_il2cpp_class_get_type)proc;
-    ResolveSymbol("il2cpp_type_get_object", &proc); p_il2cpp_type_get_object = (t_il2cpp_type_get_object)proc;
-    ResolveSymbol("il2cpp_class_get_method_from_name", &proc); p_il2cpp_class_get_method_from_name = (t_il2cpp_class_get_method_from_name)proc;
-    ResolveSymbol("il2cpp_runtime_invoke", &proc); p_il2cpp_runtime_invoke = (t_il2cpp_runtime_invoke)proc;
-
-    // новые функции для работы с полями
-    ResolveSymbol("il2cpp_object_get_class", &proc); p_il2cpp_object_get_class = (t_il2cpp_object_get_class)proc;
-    ResolveSymbol("il2cpp_class_get_field_from_name", &proc); p_il2cpp_class_get_field_from_name = (t_il2cpp_class_get_field_from_name)proc;
-    ResolveSymbol("il2cpp_field_set_value", &proc); p_il2cpp_field_set_value = (t_il2cpp_field_set_value)proc;
+#define RESOLVE_SYMBOL(name, var) ResolveSymbol(name, &proc); var = (decltype(var))proc
+    RESOLVE_SYMBOL("il2cpp_domain_get", p_il2cpp_domain_get);
+    RESOLVE_SYMBOL("il2cpp_thread_attach", p_il2cpp_thread_attach);
+    RESOLVE_SYMBOL("il2cpp_domain_assembly_open", p_il2cpp_domain_assembly_open);
+    RESOLVE_SYMBOL("il2cpp_assembly_get_image", p_il2cpp_assembly_get_image);
+    RESOLVE_SYMBOL("il2cpp_class_from_name", p_il2cpp_class_from_name);
+    RESOLVE_SYMBOL("il2cpp_object_new", p_il2cpp_object_new);
+    RESOLVE_SYMBOL("il2cpp_string_new", p_il2cpp_string_new);
+    RESOLVE_SYMBOL("il2cpp_string_new_utf16", p_il2cpp_string_new_utf16);
+    RESOLVE_SYMBOL("il2cpp_class_get_type", p_il2cpp_class_get_type);
+    RESOLVE_SYMBOL("il2cpp_type_get_object", p_il2cpp_type_get_object);
+    RESOLVE_SYMBOL("il2cpp_class_get_method_from_name", p_il2cpp_class_get_method_from_name);
+    RESOLVE_SYMBOL("il2cpp_runtime_invoke", p_il2cpp_runtime_invoke);
+    RESOLVE_SYMBOL("il2cpp_object_get_class", p_il2cpp_object_get_class);
+    RESOLVE_SYMBOL("il2cpp_class_get_field_from_name", p_il2cpp_class_get_field_from_name);
+    RESOLVE_SYMBOL("il2cpp_field_set_value", p_il2cpp_field_set_value);
+#undef RESOLVE_SYMBOL
 
     return true;
 }
 
-// Обертки для основных функций
-const Il2CppType* il2cpp_class_get_type(Il2CppClass* klass) {
-    if (!p_il2cpp_class_get_type) return nullptr;
-    return p_il2cpp_class_get_type(klass);
-}
-
-Il2CppObject* il2cpp_type_get_object(const Il2CppType* type) {
-    if (!p_il2cpp_type_get_object) return nullptr;
-    return p_il2cpp_type_get_object(type);
-}
-
-const MethodInfo* il2cpp_class_get_method_from_name_wrap(Il2CppClass* klass, const char* name, int args) {
-    if (!p_il2cpp_class_get_method_from_name) return nullptr;
-    return p_il2cpp_class_get_method_from_name(klass, name, args);
-}
-
-void il2cpp_runtime_invoke_wrap(const MethodInfo* method, void* obj, void** params, void* exc) {
-    if (!p_il2cpp_runtime_invoke) return;
-    p_il2cpp_runtime_invoke(method, obj, params, exc);
-}
-
-// Обертки для новых функций
-Il2CppClass* il2cpp_object_get_class_wrap(Il2CppObject* obj) {
-    if (!p_il2cpp_object_get_class) return nullptr;
-    return p_il2cpp_object_get_class(obj);
-}
-
-FieldInfo* il2cpp_class_get_field_from_name_wrap(Il2CppClass* klass, const char* name) {
-    if (!p_il2cpp_class_get_field_from_name) return nullptr;
-    return p_il2cpp_class_get_field_from_name(klass, name);
-}
-
-void il2cpp_field_set_value_wrap(Il2CppObject* obj, FieldInfo* field, void* value) {
-    if (!p_il2cpp_field_set_value) return;
-    p_il2cpp_field_set_value(obj, field, value);
-}
-
-Il2CppDomain* il2cpp_domain_get()
+Il2CppMethodPointer il2cpp_get_method_pointer(const char* assemblyName, const char* namespaze, const char* className, const char* methodName, int argsCount)
 {
-    if (!p_il2cpp_domain_get) return nullptr;
-    return p_il2cpp_domain_get();
+    if (!il2cpp_initialize()) return nullptr;
+
+    Il2CppDomain* domain = il2cpp_domain_get();
+    if (!domain) return nullptr;
+
+    Il2CppAssembly* assembly = p_il2cpp_domain_assembly_open(domain, assemblyName);
+    if (!assembly) return nullptr;
+
+    Il2CppImage* image = p_il2cpp_assembly_get_image(assembly);
+    if (!image) return nullptr;
+
+    Il2CppClass* klass = p_il2cpp_class_from_name(image, namespaze, className);
+    if (!klass) return nullptr;
+
+    const MethodInfo* method = p_il2cpp_class_get_method_from_name(klass, methodName, argsCount);
+    if (!method) return nullptr;
+
+    return method->methodPointer;
 }
 
-void il2cpp_thread_attach(Il2CppDomain* domain)
+Il2CppString* il2cpp_string_new_utf16_wrap(const wchar_t* str, int len)
 {
-    if (!p_il2cpp_thread_attach) return;
-    p_il2cpp_thread_attach(domain);
+    return p_il2cpp_string_new_utf16 ? p_il2cpp_string_new_utf16(str, len) : nullptr;
 }
+
+const Il2CppType* il2cpp_class_get_type(Il2CppClass* klass) { return p_il2cpp_class_get_type ? p_il2cpp_class_get_type(klass) : nullptr; }
+Il2CppObject* il2cpp_type_get_object(const Il2CppType* type) { return p_il2cpp_type_get_object ? p_il2cpp_type_get_object(type) : nullptr; }
+const MethodInfo* il2cpp_class_get_method_from_name_wrap(Il2CppClass* klass, const char* name, int args) { return p_il2cpp_class_get_method_from_name ? p_il2cpp_class_get_method_from_name(klass, name, args) : nullptr; }
+void il2cpp_runtime_invoke_wrap(const MethodInfo* method, void* obj, void** params, void* exc) { if (p_il2cpp_runtime_invoke) p_il2cpp_runtime_invoke(method, obj, params, exc); }
+Il2CppClass* il2cpp_object_get_class_wrap(Il2CppObject* obj) { return p_il2cpp_object_get_class ? p_il2cpp_object_get_class(obj) : nullptr; }
+FieldInfo* il2cpp_class_get_field_from_name_wrap(Il2CppClass* klass, const char* name) { return p_il2cpp_class_get_field_from_name ? p_il2cpp_class_get_field_from_name(klass, name) : nullptr; }
+void il2cpp_field_set_value_wrap(Il2CppObject* obj, FieldInfo* field, void* value) { if (p_il2cpp_field_set_value) p_il2cpp_field_set_value(obj, field, value); }
+Il2CppDomain* il2cpp_domain_get() { return p_il2cpp_domain_get ? p_il2cpp_domain_get() : nullptr; }
+void il2cpp_thread_attach(Il2CppDomain* domain) { if (p_il2cpp_thread_attach) p_il2cpp_thread_attach(domain); }
+Il2CppObject* il2cpp_object_new_from_class(Il2CppClass* klass) { return p_il2cpp_object_new ? p_il2cpp_object_new(klass) : nullptr; }
+Il2CppString* il2cpp_string_new_wrap(const char* str) { return p_il2cpp_string_new ? p_il2cpp_string_new(str) : nullptr; }
 
 Il2CppClass* il2cpp_get_class(const char* assemblyName, const char* namespaze, const char* name)
 {
@@ -122,25 +105,7 @@ Il2CppClass* il2cpp_get_class(const char* assemblyName, const char* namespaze, c
     Il2CppImage* image = p_il2cpp_assembly_get_image(asmHandle);
     if (!image) return nullptr;
 
-    if (p_il2cpp_class_from_name)
-    {
-        return p_il2cpp_class_from_name(image, namespaze, name);
-    }
-
-    return nullptr;
-}
-
-Il2CppObject* il2cpp_object_new_from_class(Il2CppClass* klass)
-{
-    if (!klass) return nullptr;
-    if (!p_il2cpp_object_new) return nullptr;
-    return p_il2cpp_object_new(klass);
-}
-
-Il2CppString* il2cpp_string_new_wrap(const char* str)
-{
-    if (!p_il2cpp_string_new) return nullptr;
-    return p_il2cpp_string_new(str);
+    return p_il2cpp_class_from_name ? p_il2cpp_class_from_name(image, namespaze, name) : nullptr;
 }
 
 Il2CppObject* CreateIl2CppObject(const char* assemblyName, const char* namespaze, const char* name)
@@ -149,33 +114,19 @@ Il2CppObject* CreateIl2CppObject(const char* assemblyName, const char* namespaze
     Il2CppDomain* domain = il2cpp_domain_get();
     if (!domain) return nullptr;
 
-    // attach current thread
     il2cpp_thread_attach(domain);
 
     Il2CppClass* klass = il2cpp_get_class(assemblyName, namespaze, name);
-    if (!klass)
-    {
-        std::cout << "[il2cpp] class not found: " << namespaze << "." << name << " in " << assemblyName << std::endl;
-        return nullptr;
-    }
+    if (!klass) return nullptr;
 
     Il2CppObject* obj = il2cpp_object_new_from_class(klass);
-    if (!obj)
-    {
-        std::cout << "[il2cpp] failed to allocate object." << std::endl;
-        return nullptr;
-    }
+    if (!obj) return nullptr;
 
-    // если есть ctor — попытаемся вызвать его (".ctor")
     if (p_il2cpp_class_get_method_from_name && p_il2cpp_runtime_invoke)
     {
         const MethodInfo* ctor = p_il2cpp_class_get_method_from_name(klass, ".ctor", 0);
-        if (ctor)
-        {
-            p_il2cpp_runtime_invoke(ctor, obj, nullptr, nullptr);
-        }
+        if (ctor) p_il2cpp_runtime_invoke(ctor, obj, nullptr, nullptr);
     }
 
-    std::cout << "[il2cpp] created object: " << obj << std::endl;
     return obj;
 }

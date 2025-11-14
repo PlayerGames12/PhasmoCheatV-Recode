@@ -78,11 +78,13 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>$(ProjectDir)libs\detours\lib\syelog.lib;$(ProjectDir)libs\detours\lib\detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -95,11 +97,13 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>$(ProjectDir)libs\detours\lib\syelog.lib;$(ProjectDir)libs\detours\lib\detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -110,11 +114,13 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>$(ProjectDir)libs\detours\lib\syelog.lib;$(ProjectDir)libs\detours\lib\detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -127,30 +133,50 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>$(ProjectDir)libs\detours\lib\syelog.lib;$(ProjectDir)libs\detours\lib\detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\PhasmoCheat — копия — копия %282%29\cheat\source\il2cpp\Il2cpp.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="libs\il2cpp\il2cpp.cpp" />
     <ClCompile Include="libs\imgui\imgui.cpp" />
     <ClCompile Include="libs\imgui\imgui_demo.cpp" />
     <ClCompile Include="libs\imgui\imgui_draw.cpp" />
     <ClCompile Include="libs\imgui\imgui_impl_dx11.cpp" />
     <ClCompile Include="libs\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="libs\imgui\imgui_tables.cpp" />
     <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="main\config\config.cpp" />
+    <ClCompile Include="main\config\configs.cpp" />
+    <ClCompile Include="main\config\configs_manager.cpp" />
+    <ClCompile Include="main\features\feats\waterka\watermark.cpp" />
+    <ClCompile Include="main\features\feature.cpp" />
+    <ClCompile Include="main\hooks\ExitLevel_Exit.cpp" />
+    <ClCompile Include="main\hooks\GhostAI_Start.cpp" />
+    <ClCompile Include="main\hooks\hkPresent.cpp" />
+    <ClCompile Include="main\hooks\hkWndProc.cpp" />
+    <ClCompile Include="main\hooks\hooking.cpp" />
+    <ClCompile Include="main\logging\logger.cpp" />
+    <ClCompile Include="main\menu\menu.cpp" />
+    <ClCompile Include="main\menu\renderer.cpp" />
+    <ClCompile Include="main\utils\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\PhasmoCheat — копия — копия %282%29\cheat\source\il2cpp\Il2cpp.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="Includes.h" />
     <ClInclude Include="inGame.h" />
     <ClInclude Include="libs\detours\include\detours.h" />
     <ClInclude Include="libs\detours\include\detver.h" />
     <ClInclude Include="libs\detours\include\syelog.h" />
+    <ClInclude Include="libs\il2cpp\il2cpp.h" />
     <ClInclude Include="libs\imgui\imconfig.h" />
     <ClInclude Include="libs\imgui\imgui.h" />
     <ClInclude Include="libs\imgui\imgui_impl_dx11.h" />
@@ -159,6 +185,36 @@
     <ClInclude Include="libs\imgui\imstb_rectpack.h" />
     <ClInclude Include="libs\imgui\imstb_textedit.h" />
     <ClInclude Include="libs\imgui\imstb_truetype.h" />
+    <ClInclude Include="main\config\config.h" />
+    <ClInclude Include="main\config\configs.h" />
+    <ClInclude Include="main\config\configs_manager.h" />
+    <ClInclude Include="main\features\feats\waterka\watermark.h" />
+    <ClInclude Include="main\features\feature.h" />
+    <ClInclude Include="main\features\settings.h" />
+    <ClInclude Include="main\hooks\hooking.h" />
+    <ClInclude Include="main\hooks\Hooks.h" />
+    <ClInclude Include="main\logging\logger.h" />
+    <ClInclude Include="main\menu\menu.h" />
+    <ClInclude Include="main\menu\renderer.h" />
+    <ClInclude Include="main\menu\styles.h" />
+    <ClInclude Include="main\sdk\Cursor.h" />
+    <ClInclude Include="main\sdk\ExitLevel.h" />
+    <ClInclude Include="main\sdk\GhostAI.h" />
+    <ClInclude Include="main\sdk\GhostEvidence.h" />
+    <ClInclude Include="main\sdk\GhostInfo.h" />
+    <ClInclude Include="main\sdk\GhostModel.h" />
+    <ClInclude Include="main\sdk\GhostTraits.h" />
+    <ClInclude Include="main\sdk\MethodInfo.h" />
+    <ClInclude Include="main\sdk\MonoBehaviour.h" />
+    <ClInclude Include="main\sdk\Quaternion.h" />
+    <ClInclude Include="main\sdk\sdk.h" />
+    <ClInclude Include="main\sdk\String.h" />
+    <ClInclude Include="main\sdk\Vector2.h" />
+    <ClInclude Include="main\sdk\Vector3.h" />
+    <ClInclude Include="main\utils\utils.h" />
+    <ClInclude Include="res\fonts\DefFont.hpp" />
+    <ClInclude Include="res\fonts\HeadFont.hpp" />
+    <ClInclude Include="res\fonts\VCustomFont.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

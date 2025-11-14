@@ -22,13 +22,79 @@
     <Filter Include="Il2cpp">
       <UniqueIdentifier>{bc5ab0cc-28fa-4e80-8ecf-91b57c6dfaca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sdk">
+      <UniqueIdentifier>{1f53e4d2-b77f-4d8a-ac4e-12d291ce014f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hooks">
+      <UniqueIdentifier>{4507e7b9-9587-4c96-bf56-87a98fd2a068}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logger">
+      <UniqueIdentifier>{3aaee8ac-f36e-4f80-8a2a-1902336f23c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="menu">
+      <UniqueIdentifier>{3047d702-ce57-4222-90f9-8823e99ad6f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{16714487-2458-4919-8514-66567f53af4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features">
+      <UniqueIdentifier>{72e9687e-963a-40e8-83f5-d4e41d5597ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features\feats">
+      <UniqueIdentifier>{d19d3a8f-dbb5-435e-85d2-6c9dbcb7f124}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="configs">
+      <UniqueIdentifier>{af337e08-b120-428b-8087-a4c7e9beb5be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fonts">
+      <UniqueIdentifier>{c78ec3a6-4cc9-44e5-a7ef-76dbc7d85d8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="libs\imgui\imgui_demo.cpp">
-      <Filter>imgui</Filter>
+    <ClCompile Include="libs\il2cpp\il2cpp.cpp">
+      <Filter>Il2cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\hooking.cpp">
+      <Filter>hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\GhostAI_Start.cpp">
+      <Filter>hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="main\logging\logger.cpp">
+      <Filter>logger</Filter>
+    </ClCompile>
+    <ClCompile Include="main\menu\menu.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\hkWndProc.cpp">
+      <Filter>hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\hkPresent.cpp">
+      <Filter>hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="main\menu\renderer.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="main\utils\utils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\ExitLevel_Exit.cpp">
+      <Filter>hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feature.cpp">
+      <Filter>features</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\waterka\watermark.cpp">
+      <Filter>features\feats</Filter>
+    </ClCompile>
+    <ClCompile Include="main\config\configs_manager.cpp">
+      <Filter>configs</Filter>
+    </ClCompile>
+    <ClCompile Include="main\config\configs.cpp">
+      <Filter>configs</Filter>
     </ClCompile>
     <ClCompile Include="libs\imgui\imgui_draw.cpp">
       <Filter>imgui</Filter>
@@ -39,14 +105,20 @@
     <ClCompile Include="libs\imgui\imgui_impl_win32.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
+    <ClCompile Include="libs\imgui\imgui_tables.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
     <ClCompile Include="libs\imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="libs\imgui\imgui.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\PhasmoCheat — копия — копия %282%29\cheat\source\il2cpp\Il2cpp.cpp">
-      <Filter>Il2cpp</Filter>
+    <ClCompile Include="libs\imgui\imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="main\config\config.cpp">
+      <Filter>configs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -65,8 +137,89 @@
     <ClInclude Include="libs\detours\include\detours.h">
       <Filter>detours</Filter>
     </ClInclude>
-    <ClInclude Include="libs\imgui\imgui.h">
-      <Filter>imgui</Filter>
+    <ClInclude Include="main\sdk\sdk.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\il2cpp\il2cpp.h">
+      <Filter>Il2cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\GhostAI.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\MethodInfo.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\MonoBehaviour.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Vector3.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Quaternion.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\String.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Vector2.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\GhostInfo.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\GhostModel.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\GhostTraits.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\GhostEvidence.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\hooks\Hooks.h">
+      <Filter>hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="main\hooks\hooking.h">
+      <Filter>hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="main\logging\logger.h">
+      <Filter>logger</Filter>
+    </ClInclude>
+    <ClInclude Include="main\menu\styles.h">
+      <Filter>menu</Filter>
+    </ClInclude>
+    <ClInclude Include="main\menu\menu.h">
+      <Filter>menu</Filter>
+    </ClInclude>
+    <ClInclude Include="main\menu\renderer.h">
+      <Filter>menu</Filter>
+    </ClInclude>
+    <ClInclude Include="main\utils\utils.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\ExitLevel.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Cursor.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feature.h">
+      <Filter>features</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\settings.h">
+      <Filter>features</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\waterka\watermark.h">
+      <Filter>features\feats</Filter>
+    </ClInclude>
+    <ClInclude Include="main\config\configs.h">
+      <Filter>configs</Filter>
+    </ClInclude>
+    <ClInclude Include="main\config\configs_manager.h">
+      <Filter>configs</Filter>
     </ClInclude>
     <ClInclude Include="libs\imgui\imgui_impl_dx11.h">
       <Filter>imgui</Filter>
@@ -89,8 +242,20 @@
     <ClInclude Include="libs\imgui\imconfig.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\PhasmoCheat — копия — копия %282%29\cheat\source\il2cpp\Il2cpp.h">
-      <Filter>Il2cpp</Filter>
+    <ClInclude Include="libs\imgui\imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="main\config\config.h">
+      <Filter>configs</Filter>
+    </ClInclude>
+    <ClInclude Include="res\fonts\DefFont.hpp">
+      <Filter>fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="res\fonts\HeadFont.hpp">
+      <Filter>fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="res\fonts\VCustomFont.hpp">
+      <Filter>fonts</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
