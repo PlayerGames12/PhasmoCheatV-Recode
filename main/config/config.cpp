@@ -7,15 +7,12 @@ namespace PhasmoCheatV::Config
 {
     void MergeConfigWithDefaults(nlohmann::json& existingConfig)
     {
-        // Создаём дефолтный конфиг для сравнения
         nlohmann::json defaultConfig;
 
-        // Добавляем настройки меню
         defaultConfig["menu_settings"] = {
             {"toggle_key", Globals::MenuToggleKey}
         };
 
-        // Добавляем дефолтные значения для всех фич
         if (GET_FEATURE_HANDLER())
         {
             for (const auto& featurePair : GET_FEATURE_HANDLER()->GetFeatures())
@@ -63,7 +60,6 @@ namespace PhasmoCheatV::Config
             }
         }
 
-        // Рекурсивное слияние: добавляем отсутствующие поля из дефолтного конфига
         std::function<void(nlohmann::json&, const nlohmann::json&)> mergeRecursive =
             [&mergeRecursive](nlohmann::json& target, const nlohmann::json& source)
             {
@@ -77,17 +73,14 @@ namespace PhasmoCheatV::Config
 
                     if (!target.contains(key))
                     {
-                        // Добавляем отсутствующее поле с дефолтным значением
                         target[key] = sourceValue;
                     }
                     else if (sourceValue.is_object() && target[key].is_object())
                     {
-                        // Рекурсивно мержим вложенные объекты
                         mergeRecursive(target[key], sourceValue);
                     }
                 }
 
-                // Удаляем поля, которых нет в дефолтном конфиге
                 auto targetIt = target.begin();
                 while (targetIt != target.end())
                 {
@@ -113,7 +106,6 @@ namespace PhasmoCheatV::Config
 
         if (!std::filesystem::exists(filePath))
         {
-            // Если файла нет, создаём новый с дефолтными значениями
             SaveConfigToFile(filePath);
             return;
         }
@@ -122,7 +114,6 @@ namespace PhasmoCheatV::Config
         {
             std::ifstream f(filePath);
 
-            // Проверяем, не пустой ли файл
             if (f.peek() == std::ifstream::traits_type::eof())
             {
                 f.close();
@@ -133,16 +124,13 @@ namespace PhasmoCheatV::Config
             Json data = Json::parse(f);
             f.close();
 
-            // Мержим существующий конфиг с дефолтными значениями
             MergeConfigWithDefaults(data);
 
-            // Загружаем настройки меню
             if (data.contains("menu_settings") && data["menu_settings"].contains("toggle_key"))
             {
                 Globals::MenuToggleKey = data["menu_settings"]["toggle_key"].get<int>();
             }
 
-            // Загружаем настройки фич
             if (GET_FEATURE_HANDLER())
             {
                 for (const auto& featurePair : GET_FEATURE_HANDLER()->GetFeatures())
@@ -195,20 +183,15 @@ namespace PhasmoCheatV::Config
                 }
             }
 
-            // Сохраняем обновлённый конфиг обратно (с добавленными полями)
             std::ofstream outFile(filePath);
             outFile << data.dump(4);
             outFile.close();
         }
         catch (const nlohmann::json::parse_error& e)
         {
-            // Если ошибка парсинга, создаём новый конфиг
             SaveConfigToFile(filePath);
         }
-        catch (const std::exception& e)
-        {
-            // Обработка других ошибок
-        }
+        catch (const std::exception& e) {}
     }
 
     void SaveConfigToFile(const std::string& filePath)
@@ -216,12 +199,10 @@ namespace PhasmoCheatV::Config
         using Json = nlohmann::json;
         Json data;
 
-        // Сохраняем настройки меню
         Json menuSettings;
         menuSettings["toggle_key"] = Globals::MenuToggleKey;
         data["menu_settings"] = menuSettings;
 
-        // Сохраняем настройки фич
         if (GET_FEATURE_HANDLER())
         {
             for (const auto& featurePair : GET_FEATURE_HANDLER()->GetFeatures())
@@ -287,7 +268,6 @@ namespace PhasmoCheatV::Config
     }
 }
 
-// Реализация ConfigsM
 namespace PhasmoCheatV::ConfigsM
 {
     static std::vector<ConfigInfo> g_Configs;
@@ -409,10 +389,8 @@ namespace PhasmoCheatV::ConfigsM
 
             auto currentConfig = Utils::GetPhasmoCheatVDirectory() + "\\config.json";
 
-            // Копируем выбранный конфиг в основной файл конфигурации
             std::filesystem::copy_file(configPath, currentConfig, std::filesystem::copy_options::overwrite_existing);
 
-            // Загружаем конфиг (автоматически обновится при загрузке)
             Config::LoadConfigFromFile(currentConfig);
 
             return true;
@@ -432,10 +410,8 @@ namespace PhasmoCheatV::ConfigsM
 
             std::string configPath = g_ConfigsDir + "\\" + name + ".json";
 
-            // Сначала сохраняем текущий конфиг
             Config::SaveConfig();
 
-            // Копируем основной конфиг в папку конфигов
             std::string defaultConfig = Utils::GetPhasmoCheatVDirectory() + "\\config.json";
             if (std::filesystem::exists(defaultConfig))
             {
@@ -507,7 +483,6 @@ namespace PhasmoCheatV::ConfigsM
             std::string name = decoded.substr(nameStart, nameEnd - nameStart);
             std::string content = decoded.substr(nameEnd + 1);
 
-            // Проверяем, является ли контент валидным JSON
             nlohmann::json testJson;
             try
             {
@@ -520,7 +495,6 @@ namespace PhasmoCheatV::ConfigsM
 
             std::string configPath = g_ConfigsDir + "\\" + name + ".json";
 
-            // Автоматически обновляем импортированный конфиг
             Config::MergeConfigWithDefaults(testJson);
 
             std::ofstream file(configPath, std::ios::binary);
