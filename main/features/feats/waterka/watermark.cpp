@@ -29,17 +29,20 @@ void Watermark::OnRender()
         CachedText.append(" FPS");
     }
 
-    if (showPing /*&& SDK::PhotonNetwork_Get_IsConnected_ptr(nullptr)*/)
+    if (Utils::GetCheatUptimeSeconds() > 5) // Wait cheat initialized else crash game
     {
-        const int ping = 0; // SDK::PhotonNetwork_GetPing_ptr(nullptr);
-        CachedText.append(" | ");
-        CachedText.append(std::to_string(ping));
-        CachedText.append(" ms");
+        if (showPing && SDK::PhotonNetwork_Get_IsConnected(nullptr))
+        {
+                const int ping = SDK::PhotonNetwork_GetPing(nullptr);
+                CachedText.append(" | ");
+                CachedText.append(std::to_string(ping));
+                CachedText.append(" ms");
+        }
     }
 
-    if (showSanity /*&& GameState::mapController && GameState::mapController->Fields.GameController*/)
+    if (showSanity && InGame::mapController && InGame::mapController->Fields.GameController)
     {
-        const int sanity = 0; // SDK::GameController_GetAveragePlayerInsanity_ptr(...);
+        const int sanity = static_cast<int>(100.f - SDK::GameController_GetAveragePlayerInsanity(InGame::mapController->Fields.GameController, nullptr));
         CachedText.append(" | ");
         CachedText.append(std::to_string(sanity));
         CachedText.append("% Sanity");
@@ -107,35 +110,30 @@ void Watermark::OnRender()
 
 void Watermark::OnMenuRender()
 {
-    try {
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 6));
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 6));
 
-        bool enabled = IsActive();
-        if (ImGui::Checkbox("Enable Watermark", &enabled))
-        {
-            SET_CONFIG_VALUE(GetConfigManager(), "Enabled", bool, enabled);
-            if (enabled) OnActivate();
-            else OnDeactivate();
-        }
-
-        if (enabled) {
-            bool showFPS = CONFIG_BOOL(GetConfigManager(), "ShowFPS");
-            bool showSanity = CONFIG_BOOL(GetConfigManager(), "ShowSanity");
-            bool showPing = CONFIG_BOOL(GetConfigManager(), "ShowPing");
-
-            if (ImGui::Checkbox("Show FPS", &showFPS))
-                SET_CONFIG_VALUE(GetConfigManager(), "ShowFPS", bool, showFPS);
-
-            if (ImGui::Checkbox("Show average sanity", &showSanity))
-                SET_CONFIG_VALUE(GetConfigManager(), "ShowSanity", bool, showSanity);
-
-            if (ImGui::Checkbox("Show ping", &showPing))
-                SET_CONFIG_VALUE(GetConfigManager(), "ShowPing", bool, showPing);
-        }
-
-        ImGui::PopStyleVar();
+    bool enabled = IsActive();
+    if (ImGui::Checkbox("Enable Watermark", &enabled))
+    {
+        SET_CONFIG_VALUE(GetConfigManager(), "Enabled", bool, enabled);
+        if (enabled) OnActivate();
+        else OnDeactivate();
     }
-    catch (const std::exception& e) {
-        LOG_ERROR("Error in Watermark::OnMenuRender: " + std::string(e.what()));
+
+    if (enabled) {
+        bool showFPS = CONFIG_BOOL(GetConfigManager(), "ShowFPS");
+        bool showSanity = CONFIG_BOOL(GetConfigManager(), "ShowSanity");
+        bool showPing = CONFIG_BOOL(GetConfigManager(), "ShowPing");
+
+        if (ImGui::Checkbox("Show FPS", &showFPS))
+            SET_CONFIG_VALUE(GetConfigManager(), "ShowFPS", bool, showFPS);
+
+        if (ImGui::Checkbox("Show average sanity", &showSanity))
+            SET_CONFIG_VALUE(GetConfigManager(), "ShowSanity", bool, showSanity);
+
+        if (ImGui::Checkbox("Show ping", &showPing))
+            SET_CONFIG_VALUE(GetConfigManager(), "ShowPing", bool, showPing);
     }
+
+    ImGui::PopStyleVar();
 }

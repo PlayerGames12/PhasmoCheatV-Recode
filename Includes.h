@@ -14,9 +14,11 @@
 #include <functional>
 #include <Psapi.h>
 #include <array>
+#include <random>
 
 #include "Globals.h"
 #include "InGame.h"
+#include "main/sdk/sdk.h"
 #include "main/logging/logger.h"
 #include "main/utils/utils.h"
 
@@ -25,7 +27,6 @@
 #include "imgui/imgui_impl_win32.h"
 #include "main/menu/renderer.h"
 
-#include "main/sdk/sdk.h"
 #include "detours/include/detours.h"
 #include "main/hooks/Hooks.h"
 #include "main/hooks/hooking.h"
@@ -33,3 +34,5 @@
 #include "main/features/settings.h"
 #include "main/features/feature.h"
 #include "nlohmann/json.hpp"
+#include "main/config/config.h"
+#include "main/utils/notification.h"

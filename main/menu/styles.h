@@ -8,65 +8,12 @@ const ImVec4 accentPurple = ImVec4(0.51f, 0.25f, 0.96f, 1.00f);
 const ImVec4 darkerBg = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
 const ImVec4 accentPurpleDark = ImVec4(0.41f, 0.15f, 0.86f, 1.00f);
 const ImVec4 accentPurpleLight = ImVec4(0.61f, 0.35f, 1.00f, 1.00f);
-const ImVec4 darkBg = ImVec4(0.08f, 0.08f, 0.08f, 0.98f);;
+const ImVec4 darkBg = ImVec4(0.08f, 0.08f, 0.08f, 0.98f);
+const ImVec4 cardBg = ImVec4(0.12f, 0.12f, 0.14f, 1.00f);
+const ImVec4 headerBg = ImVec4(0.10f, 0.10f, 0.12f, 1.00f);
 
-inline void SetMenuStyle()
+inline void SetMenuDefaultStyle()
 {
-    ImGuiIO& io = ImGui::GetIO();
-
-    ImFontConfig fontConfig;
-    // 0
-    fontConfig.FontDataOwnedByAtlas = false;
-    io.FontDefault = io.Fonts->AddFontFromMemoryCompressedTTF(
-        DefFont_compressed_data,
-        DefFont_compressed_size,
-        19.0f,
-        &fontConfig
-    );
-    // 1
-    io.Fonts->AddFontFromMemoryCompressedTTF(
-        HeadFont_compressed_data,
-        HeadFont_compressed_size,
-        20.0f,
-        &fontConfig
-    );
-    // 2
-    io.Fonts->AddFontFromMemoryCompressedTTF(
-        VCustom_compressed_data,
-        VCustom_compressed_size,
-        35.0f,
-        &fontConfig
-    );
-    // 3
-    io.Fonts->AddFontFromMemoryCompressedTTF(
-        DefFont_compressed_data,
-        DefFont_compressed_size,
-        40.0f,
-        &fontConfig
-    );
-    // 4
-    io.Fonts->AddFontFromMemoryCompressedTTF(
-        DefFont_compressed_data,
-        DefFont_compressed_size,
-        25.0f,
-        &fontConfig
-    );
-    // 5
-    io.Fonts->AddFontFromMemoryCompressedTTF(
-        VCustom_compressed_data,
-        VCustom_compressed_size,
-        20.0f,
-        &fontConfig
-    );
-    // 6
-    io.Fonts->AddFontFromMemoryCompressedTTF(
-        VCustom_compressed_data,
-        VCustom_compressed_size,
-        15.0f,
-        &fontConfig
-    );
-
-
     ImGuiStyle& style = ImGui::GetStyle();
     style.WindowPadding = ImVec2(0, 0);
     style.FramePadding = ImVec2(12, 8);
@@ -82,18 +29,21 @@ inline void SetMenuStyle()
     style.FrameBorderSize = 0;
     style.TabBorderSize = 0;
 
-    style.WindowRounding = 12;
+    style.WindowRounding = 14;
     style.ChildRounding = 12;
-    style.FrameRounding = 6;
-    style.PopupRounding = 8;
-    style.ScrollbarRounding = 4;
-    style.GrabRounding = 4;
+    style.FrameRounding = 8;
+    style.PopupRounding = 10;
+    style.ScrollbarRounding = 6;
+    style.GrabRounding = 6;
     style.TabRounding = 0;
 
     ImVec4* colors = style.Colors;
 
     colors[ImGuiCol_WindowBg] = darkBg;
     colors[ImGuiCol_ChildBg] = darkerBg;
+    colors[ImGuiCol_FrameBg] = cardBg;
+    colors[ImGuiCol_FrameBgHovered] = ImVec4(0.18f, 0.18f, 0.20f, 1.00f);
+    colors[ImGuiCol_FrameBgActive] = ImVec4(0.22f, 0.22f, 0.24f, 1.00f);
     colors[ImGuiCol_Border] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
 
     colors[ImGuiCol_Button] = accentPurpleDark;
@@ -125,4 +75,82 @@ inline void SetMenuStyle()
     colors[ImGuiCol_ResizeGrip] = accentPurpleDark;
     colors[ImGuiCol_ResizeGripHovered] = accentPurple;
     colors[ImGuiCol_ResizeGripActive] = accentPurpleLight;
+}
+
+inline void InitFonts()
+{
+    ImGuiIO& io = ImGui::GetIO();
+
+    ImFontConfig fontConfig;
+    // 0
+    fontConfig.FontDataOwnedByAtlas = false;
+    io.FontDefault = io.Fonts->AddFontFromMemoryCompressedTTF(
+        DefFont_compressed_data,
+        DefFont_compressed_size,
+        19.f,
+        &fontConfig
+    );
+    // 1
+    io.Fonts->AddFontFromMemoryCompressedTTF(
+        HeadFont_compressed_data,
+        HeadFont_compressed_size,
+        20.f,
+        &fontConfig
+    );
+    // 2
+    io.Fonts->AddFontFromMemoryCompressedTTF(
+        VCustom_compressed_data,
+        VCustom_compressed_size,
+        35.f,
+        &fontConfig
+    );
+    // 3
+    io.Fonts->AddFontFromMemoryCompressedTTF(
+        DefFont_compressed_data,
+        DefFont_compressed_size,
+        40.f,
+        &fontConfig
+    );
+    // 4
+    io.Fonts->AddFontFromMemoryCompressedTTF(
+        DefFont_compressed_data,
+        DefFont_compressed_size,
+        25.f,
+        &fontConfig
+    );
+    // 5
+    io.Fonts->AddFontFromMemoryCompressedTTF(
+        VCustom_compressed_data,
+        VCustom_compressed_size,
+        20.f,
+        &fontConfig
+    );
+    // 6
+    io.Fonts->AddFontFromMemoryCompressedTTF(
+        VCustom_compressed_data,
+        VCustom_compressed_size,
+        15.f,
+        &fontConfig
+    );
+    // 7
+    io.Fonts->AddFontFromMemoryCompressedTTF(
+        DefFont_compressed_data,
+        DefFont_compressed_size,
+        20.f,
+        &fontConfig
+    );
+    //8
+    io.Fonts->AddFontFromMemoryCompressedTTF(
+        VCustom_compressed_data,
+        VCustom_compressed_size,
+        120.f,
+        &fontConfig
+    );
+    // 9
+    io.Fonts->AddFontFromMemoryCompressedTTF(
+        VCustom_compressed_data,
+        VCustom_compressed_size,
+        50.f,
+        &fontConfig
+    );
 }

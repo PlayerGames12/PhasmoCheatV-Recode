@@ -9,6 +9,7 @@ void Hooks::hkGhostAI_Start(SDK::GhostAI* ghostAI, SDK::MethodInfo* methodInfo)
 	SDK::GhostAI_Start(ghostAI, methodInfo);
 
 	if (CheatWork) {
+		InGame::FBGO = nullptr;
 		InGame::ghostAI = ghostAI;
 	}
 }

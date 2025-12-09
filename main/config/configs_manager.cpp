@@ -1,49 +1,54 @@
 #include "configs_manager.h"
-#include "configs.h"
 #include "config.h"
 
 using namespace PhasmoCheatV::Features::Configs;
+
+#define NOTIFY_INFO_QUICK(message) NOTIFY_INFO(message, 4.0f)
+#define NOTIFY_WARNING_QUICK(message) NOTIFY_WARNING(message, 5.0f)
+#define NOTIFY_ERROR_QUICK(message) NOTIFY_ERROR(message, 6.0f)
+#define NOTIFY_SUCCESS_QUICK(message) NOTIFY_SUCCESS(message, 4.0f)
 
 ConfigsManager::ConfigsManager() : FeatureCore("ConfigsManager", TYPE_CONFIGS)
 {
     std::memset(newConfigName, 0, sizeof(newConfigName));
     std::memset(importData, 0, sizeof(importData));
     showCreate = showImport = showDelete = showExport = false;
-    
+
     ConfigsM::InitializeConfigs();
 }
 
 void ConfigsManager::OnMenuRender()
 {
     ImGui::BeginChild("ConfigsContent", ImVec2(0, 0), true);
-    
+
     if (ImGui::Button("Create New", ImVec2(120, 30)))
     {
         showCreate = true;
         std::memset(newConfigName, 0, sizeof(newConfigName));
     }
-    
+
     ImGui::SameLine();
-    
+
     if (ImGui::Button("Import", ImVec2(120, 30)))
     {
         showImport = true;
         std::memset(importData, 0, sizeof(importData));
     }
-    
+
     ImGui::SameLine();
-    
+
     if (ImGui::Button("Save Current", ImVec2(120, 30)))
     {
         Config::SaveConfig();
+        NOTIFY_SUCCESS_QUICK("Current config saved");
     }
-    
+
     ImGui::Spacing();
     ImGui::Separator();
     ImGui::Spacing();
-    
+
     auto configs = ConfigsM::GetConfigs();
-    
+
     if (configs.empty())
     {
         ImGui::Text("No configs found");
@@ -56,83 +61,102 @@ void ConfigsManager::OnMenuRender()
             ImGui::TableSetupColumn("Modified", ImGuiTableColumnFlags_WidthFixed, 120);
             ImGui::TableSetupColumn("Actions", ImGuiTableColumnFlags_WidthFixed, 200);
             ImGui::TableHeadersRow();
-            
+
             for (const auto& config : configs)
             {
                 ImGui::TableNextRow();
-                
+
                 ImGui::TableSetColumnIndex(0);
                 ImGui::Text("%s", config.name.c_str());
-                
+
                 ImGui::TableSetColumnIndex(1);
                 ImGui::Text("%s", config.modifiedDate.c_str());
-                
+
                 ImGui::TableSetColumnIndex(2);
-                
+
                 if (ImGui::Button(("Load##" + config.name).c_str(), ImVec2(50, 0)))
                 {
-                    ConfigsM::LoadConfig(config.name);
+                    if (ConfigsM::LoadConfig(config.name))
+                        NOTIFY_SUCCESS_QUICK(("Loaded config: " + config.name).c_str());
+                    else
+                        NOTIFY_ERROR_QUICK(("Failed to load config: " + config.name).c_str());
                 }
-                
+
                 ImGui::SameLine();
-                
+
                 if (ImGui::Button(("Export##" + config.name).c_str(), ImVec2(50, 0)))
                 {
                     configToExport = config.name;
                     showExport = true;
                 }
-                
+
                 ImGui::SameLine();
-                
+
                 if (ImGui::Button(("Delete##" + config.name).c_str(), ImVec2(50, 0)))
                 {
                     selectedConfig = config.name;
                     showDelete = true;
                 }
             }
-            
+
             ImGui::EndTable();
         }
     }
-    
+
     if (showCreate) ImGui::OpenPopup("Create Config");
     if (showImport) ImGui::OpenPopup("Import Config");
     if (showDelete) ImGui::OpenPopup("Delete Config");
     if (showExport) ImGui::OpenPopup("Export Config");
-    
+
     if (ImGui::BeginPopupModal("Create Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
     {
         ImGui::Text("Config name:");
         ImGui::InputText("##Name", newConfigName, sizeof(newConfigName));
-        
+
         if (ImGui::Button("Create"))
         {
-            if (strlen(newConfigName) > 0 && !ConfigsM::ConfigExists(newConfigName))
+            if (strlen(newConfigName) > 0)
             {
-                if (ConfigsM::SaveConfig(newConfigName))
+                if (!ConfigsM::ConfigExists(newConfigName))
                 {
-                    showCreate = false;
-                    ImGui::CloseCurrentPopup();
+                    if (ConfigsM::SaveConfig(newConfigName))
+                    {
+                        showCreate = false;
+                        ImGui::CloseCurrentPopup();
+                        NOTIFY_SUCCESS_QUICK("Config created");
+                    }
+                    else
+                    {
+                        NOTIFY_ERROR_QUICK("Failed to create config");
+                    }
+                }
+                else
+                {
+                    NOTIFY_WARNING_QUICK("Config name already exists");
                 }
             }
+            else
+            {
+                NOTIFY_WARNING_QUICK("Config name cannot be empty");
+            }
         }
-        
+
         ImGui::SameLine();
-        
+
         if (ImGui::Button("Cancel"))
         {
             showCreate = false;
             ImGui::CloseCurrentPopup();
         }
-        
+
         ImGui::EndPopup();
     }
-    
+
     if (ImGui::BeginPopupModal("Import Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
     {
         ImGui::Text("Paste Base64 data:");
         ImGui::InputTextMultiline("##Import", importData, sizeof(importData), ImVec2(300, 100));
-        
+
         if (ImGui::Button("Import"))
         {
             if (strlen(importData) > 0)
@@ -141,52 +165,65 @@ void ConfigsManager::OnMenuRender()
                 {
                     showImport = false;
                     ImGui::CloseCurrentPopup();
+                    NOTIFY_SUCCESS_QUICK("Config imported");
+                }
+                else
+                {
+                    NOTIFY_ERROR_QUICK("Failed to import config");
                 }
             }
+            else
+            {
+                NOTIFY_WARNING_QUICK("Import data cannot be empty");
+            }
         }
-        
+
         ImGui::SameLine();
-        
+
         if (ImGui::Button("Cancel"))
         {
             showImport = false;
             ImGui::CloseCurrentPopup();
         }
-        
+
         ImGui::EndPopup();
     }
 
     if (ImGui::BeginPopupModal("Delete Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
     {
         ImGui::Text("Delete %s?", selectedConfig.c_str());
-        
+
         if (ImGui::Button("Yes"))
         {
-            ConfigsM::DeleteConfig(selectedConfig);
+            if (ConfigsM::DeleteConfig(selectedConfig))
+                NOTIFY_SUCCESS_QUICK("Config deleted");
+            else
+                NOTIFY_ERROR_QUICK("Failed to delete config");
+
             showDelete = false;
             ImGui::CloseCurrentPopup();
         }
-        
+
         ImGui::SameLine();
-        
+
         if (ImGui::Button("No"))
         {
             showDelete = false;
             ImGui::CloseCurrentPopup();
         }
-        
+
         ImGui::EndPopup();
     }
-    
+
     if (ImGui::BeginPopupModal("Export Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
     {
-        ImGui::Text("Config '%s' exported to clipboard!", configToExport.c_str());
-        ImGui::Text("Share this key with others:");
-        
         std::string exportedKey = ConfigsM::ExportConfig(configToExport);
-        
+
         if (!exportedKey.empty())
         {
+            ImGui::Text("Config '%s' exported to clipboard!", configToExport.c_str());
+            ImGui::Text("Share this key with others:");
+
             if (exportedKey.length() > 50)
             {
                 std::string shortKey = exportedKey.substr(0, 50) + "...";
@@ -197,7 +234,7 @@ void ConfigsManager::OnMenuRender()
             {
                 ImGui::Text("%s", exportedKey.c_str());
             }
-            
+
             if (OpenClipboard(nullptr))
             {
                 EmptyClipboard();
@@ -214,16 +251,17 @@ void ConfigsManager::OnMenuRender()
         else
         {
             ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.5f, 1.0f), "Failed to export config!");
+            NOTIFY_ERROR_QUICK("Failed to export config");
         }
-        
+
         if (ImGui::Button("OK", ImVec2(120, 0)))
         {
             showExport = false;
             ImGui::CloseCurrentPopup();
         }
-        
+
         ImGui::EndPopup();
     }
-    
+
     ImGui::EndChild();
 }

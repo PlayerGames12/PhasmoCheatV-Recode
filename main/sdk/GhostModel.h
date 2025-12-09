@@ -3,17 +3,16 @@
 
 namespace SDK
 {
-    // Предварительное объявление классов
     struct Animator;
 
     struct GhostModelFields
     {
         MonoBehaviourPunFields MonoBehaviourPunFields;
-        void* Fields0; // GhostAI*
-        void* Fields1; // Renderer*[]
-        void* Fields2; // Renderer*[]
-        void* Fields3; // List<Material>*
-        Animator* anim; // Animator*
+        void* Fields0;
+        void* Fields1;
+        void* Fields2;
+        void* Fields3;
+        Animator* anim;
     };
 
     struct GhostModel
@@ -83,45 +82,5 @@ namespace SDK
         LastBone = 55
     };
 
-    static const std::pair<HumanBodyBones, HumanBodyBones> kBoneConnections[] = {
-        // Туловище
-        { HumanBodyBones::Hips, HumanBodyBones::Spine },
-        { HumanBodyBones::Spine, HumanBodyBones::Chest },
-        { HumanBodyBones::Chest, HumanBodyBones::UpperChest },
-
-        // Шея/голова
-        { HumanBodyBones::UpperChest, HumanBodyBones::Neck },
-        { HumanBodyBones::Neck, HumanBodyBones::Head },
-
-        // Левая нога
-        { HumanBodyBones::Hips, HumanBodyBones::LeftUpperLeg },
-        { HumanBodyBones::LeftUpperLeg, HumanBodyBones::LeftLowerLeg },
-        { HumanBodyBones::LeftLowerLeg, HumanBodyBones::LeftFoot },
-        { HumanBodyBones::LeftFoot, HumanBodyBones::LeftToes },
-
-        // Правая нога
-        { HumanBodyBones::Hips, HumanBodyBones::RightUpperLeg },
-        { HumanBodyBones::RightUpperLeg, HumanBodyBones::RightLowerLeg },
-        { HumanBodyBones::RightLowerLeg, HumanBodyBones::RightFoot },
-        { HumanBodyBones::RightFoot, HumanBodyBones::RightToes },
-
-        // Левая рука
-        { HumanBodyBones::UpperChest, HumanBodyBones::LeftShoulder },
-        { HumanBodyBones::LeftShoulder, HumanBodyBones::LeftUpperArm },
-        { HumanBodyBones::LeftUpperArm, HumanBodyBones::LeftLowerArm },
-        { HumanBodyBones::LeftLowerArm, HumanBodyBones::LeftHand },
-
-        // Правая рука
-        { HumanBodyBones::UpperChest, HumanBodyBones::RightShoulder },
-        { HumanBodyBones::RightShoulder, HumanBodyBones::RightUpperArm },
-        { HumanBodyBones::RightUpperArm, HumanBodyBones::RightLowerArm },
-        { HumanBodyBones::RightLowerArm, HumanBodyBones::RightHand },
-
-        // Глаза/челюсть (как дополнение)
-        { HumanBodyBones::Head, HumanBodyBones::Jaw },
-        { HumanBodyBones::Head, HumanBodyBones::LeftEye },
-        { HumanBodyBones::Head, HumanBodyBones::RightEye },
-    };
-
-    DECLARE_FUNCTION_POINTER(Animator_GetBoneTransform, Transform* (*)(Animator* anim, HumanBodyBones bone, MethodInfo* methodInfo), 0x4AA4DD0);
+    DEC_MET(Animator_GetBoneTransform, Transform* (*)(Animator* anim, HumanBodyBones bone, MethodInfo* methodInfo), "UnityEngine.AnimationModule", "UnityEngine", "Animator", "GetBoneTransform", 1);
 }

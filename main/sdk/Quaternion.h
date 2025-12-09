@@ -10,4 +10,6 @@ namespace SDK
 		float Z;
 		float W;
 	};
+
+	inline Quaternion identityQuaternion = { 0, 0, 0, 0 };
 }

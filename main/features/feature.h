@@ -14,9 +14,11 @@ namespace PhasmoCheatV
         TYPE_MOVEMENT,
         TYPE_CONFIGS,
         TYPE_DIFFICULTY,
+        TYPE_MAP,
     };
 
     const char* GetFeatureTypeName(FeatureType type);
+    const char* GetFeatureTypeFullName(FeatureType type);
 
     class FeatureCore
     {
@@ -58,6 +60,7 @@ namespace PhasmoCheatV
         ~FeatureHandler();
 
         FeatureType CurrentType = TYPE_NONE;
+        char SearchBuffer[64] = { 0 };
 
         void RegisterFeature(std::string_view name, std::unique_ptr<FeatureCore> feature);
         [[nodiscard]] const auto& GetFeatures() const noexcept { return FeatureRegistry; }
@@ -75,9 +78,10 @@ namespace PhasmoCheatV
         void RenderMenu();
 
     private:
-        std::unordered_map<std::string, std::unique_ptr<FeatureCore>> FeatureRegistry;
+        std::vector<std::pair<std::string, std::unique_ptr<FeatureCore>>> FeatureRegistry;
         void ShowTypeSelector();
         void ShowFeaturesByType();
+        bool FeatureMatchesSearch(const std::string& featureName, const std::string& query) const;
     };
 
 #define CREATE_FEATURE(ClassName, Category) \
@@ -91,6 +95,24 @@ namespace PhasmoCheatV
 
 #define FEATURE_ENABLED(Feature) \
         (Feature->IsActive())
+
+#define CALL_METHOD(Category, FeatureName, MethodName) \
+    GET_FEATURE_HANDLER()->GetFeature<PhasmoCheatV::Features::Category::FeatureName>(#FeatureName)->MethodName()
+
+#define CALL_METHOD_IF_ACTIVE(Category, FeatureName, MethodName) \
+    if (auto* feature = GET_FEATURE_HANDLER()->GetFeature<PhasmoCheatV::Features::Category::FeatureName>(#FeatureName); feature && feature->IsActive()) \
+        feature->MethodName()
+
+#define CALL_METHOD_IF_ACTIVE_ARGS(Category, FeatureName, MethodName, ...) \
+    if (auto* feature = GET_FEATURE_HANDLER()->GetFeature<PhasmoCheatV::Features::Category::FeatureName>(#FeatureName); feature && feature->IsActive()) \
+        feature->MethodName(__VA_ARGS__)
+
+#define CALL_METHOD_ARGS(Category, FeatureName, MethodName, ...) \
+    GET_FEATURE_HANDLER()->GetFeature<PhasmoCheatV::Features::Category::FeatureName>(#FeatureName)->MethodName(__VA_ARGS__)
+
+#define GET_ACTIVE(Category, FeatureName) \
+    (GET_FEATURE_HANDLER()->GetFeature<PhasmoCheatV::Features::Category::FeatureName>(#FeatureName) && \
+     GET_FEATURE_HANDLER()->GetFeature<PhasmoCheatV::Features::Category::FeatureName>(#FeatureName)->IsActive())
 
     inline FeatureHandler* MainFeatureHandler{};
 }

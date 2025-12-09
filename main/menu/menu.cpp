@@ -1,18 +1,44 @@
-#include "menu.h"
+п»ї#include "menu.h"
 #include "styles.h"
+#include <random>
+#include <chrono>
 
 using namespace PhasmoCheatV;
 
 SDK::CursorLockMode Menu::previousCursorLockMode = SDK::CursorLockMode::None;
 
-void Menu::Initialize()
-{
+void Menu::Initialize() {
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
-    SetMenuStyle();
+    SetMenuDefaultStyle();
+    InitFonts();
     Initialized = true;
 }
+
+void Menu::NewYear()
+{
+    static std::vector<ImVec2> snow(80);
+    static bool init = false;
+    if (!init) {
+        init = true;
+        for (auto& s : snow)
+            s = ImVec2((float)(rand() % (int)ImGui::GetIO().DisplaySize.x),
+                (float)(rand() % (int)ImGui::GetIO().DisplaySize.y));
+    }
+
+    auto& io = ImGui::GetIO();
+    ImDrawList* dl = ImGui::GetBackgroundDrawList();
+
+    ImGui::PushFont(io.Fonts->Fonts[6]);
+    ImU32 snowColor = IM_COL32(230, 230, 255, 200);
+    for (auto& s : snow) {
+        dl->AddText(s, snowColor, "S");
+        s.y += 0.4f + (rand() % 100) / 200.f;
+        if (s.y > io.DisplaySize.y)
+            s = ImVec2((float)(rand() % (int)io.DisplaySize.x), -10.f);
+    }
+    ImGui::PopFont();
+}
+
 
 void Menu::Render()
 {
@@ -22,60 +48,100 @@ void Menu::Render()
         ImGuiWindowFlags_NoScrollbar |
         ImGuiWindowFlags_NoScrollWithMouse;
 
-    constexpr int menuWidth = 850;
-    constexpr int menuHeight = 600;
-    constexpr float tabBarWidth = 180.f;
+    constexpr int menuWidth = 900;
+    constexpr int menuHeight = 650;
+    constexpr float tabBarWidth = 200.f;
 
     ImGui::SetNextWindowSize(ImVec2(menuWidth * dpiScale, menuHeight * dpiScale), ImGuiCond_Once);
     ImGui::SetNextWindowBgAlpha(1.0f);
 
-    ImGui::Begin("Protected by VAAC##MainMenu", nullptr, windowFlags);
+    NewYear();
+
+    ImGui::Begin("##MainMenu", nullptr, windowFlags);
 
     ImVec2 contentSize = ImGui::GetContentRegionAvail();
     ImGui::BeginChild("MainLayout", contentSize, false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
     ImGui::BeginChild("TabBar", ImVec2(tabBarWidth * dpiScale, contentSize.y), true);
     {
-        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
-        ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]); // Закоментированы шрифты
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 4));
+
+        ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
+        ImGui::SetCursorPosY(20 * dpiScale);
 
         ImGui::SetCursorPosX((tabBarWidth * dpiScale - ImGui::CalcTextSize("PHASMOCHEATV").x) * 0.5f);
         ImGui::TextColored(accentPurple, "PHASMOCHEATV");
-        ImGui::SetCursorPosX((tabBarWidth * dpiScale - ImGui::CalcTextSize("VCom Team").x) * 0.5f);
-        ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.8f, 1.0f), "VCom Team");
+
+        ImGui::SetCursorPosX((tabBarWidth * dpiScale - ImGui::CalcTextSize("by VCom Team").x) * 0.5f);
+        ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.8f, 0.8f), "by VCom Team");
+        ImGui::PopFont();
+
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10 * dpiScale);
         ImGui::Separator();
-        ImGui::Spacing();
-        ImGui::Spacing();
-        ImGui::PopFont(); 
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 20 * dpiScale);
 
         auto DrawTabButton = [&](const char* label, int tabIndex) {
-            ImGui::PushStyleColor(ImGuiCol_Button, menu.currentTab == tabIndex ? accentPurpleDark : darkerBg);
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, accentPurple);
-            if (ImGui::Button(label, ImVec2(tabBarWidth * dpiScale - 15, 45 * dpiScale))) {
-                menu.currentTab = tabIndex;
+            bool isActive = menu.currentTab == tabIndex;
+            ImVec2 sz(tabBarWidth * dpiScale - 40, 50 * dpiScale);
+            float x = (tabBarWidth * dpiScale - sz.x) * 0.5f;
+            ImGui::SetCursorPosX(x);
+
+            ImGui::PushStyleColor(ImGuiCol_Button, isActive ? accentPurpleDark : ImVec4(0, 0, 0, 0));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, isActive ? accentPurple : ImVec4(0.15f, 0.15f, 0.15f, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, accentPurpleLight);
+            ImGui::PushStyleColor(ImGuiCol_Text, isActive ? ImVec4(1, 1, 1, 1) : ImVec4(0.8f, 0.8f, 0.9f, 1));
+
+            if (ImGui::Button(label, sz)) menu.currentTab = tabIndex;
+
+            if (isActive) {
+                auto p0 = ImGui::GetItemRectMin();
+                auto p1 = ImGui::GetItemRectMax();
+                ImGui::GetWindowDrawList()->AddRectFilled(
+                    ImVec2(p0.x, p1.y - 2), p1, ImGui::GetColorU32(accentPurpleLight)
+                );
             }
-            ImGui::PopStyleColor(2);
+
+            ImGui::PopStyleColor(4);
             };
 
         DrawTabButton("FEATURES", 0);
         DrawTabButton("SETTINGS", 1);
+        if (IsDebugging)
+            DrawTabButton("TEST", 2);
 
-        ImGui::Spacing();
+        float bottomBlock = 120 * dpiScale;
+
+        ImGui::SetCursorPosY(contentSize.y - bottomBlock);
+
         ImGui::Separator();
-        ImGui::Spacing();
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 20 * dpiScale);
 
-        ImGui::SetCursorPosY(contentSize.y - 50 * dpiScale);
-        ImGui::SetCursorPosX((tabBarWidth * dpiScale - (tabBarWidth * dpiScale - 15)) / 2);
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.25f, 0.05f, 0.10f, 1.00f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.45f, 0.05f, 0.15f, 1.00f));
-        if (ImGui::Button("UNLOAD CHEAT", ImVec2(tabBarWidth * dpiScale - 15, 40 * dpiScale))) {
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.2f, 0.2f, 0.3f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.2f, 0.2f, 0.5f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 0.2f, 0.2f, 0.7f));
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.6f, 0.6f, 1.0f));
+
+        ImVec2 sz(tabBarWidth * dpiScale - 40, 45 * dpiScale);
+        float x = (tabBarWidth * dpiScale - sz.x) * 0.5f;
+        ImGui::SetCursorPosX(x);
+
+        if (ImGui::Button("UNLOAD CHEAT", sz)) {
             menu.Toggle();
             CheatWork = false;
         }
-        ImGui::PopStyleColor(2);
+
+        ImGui::PopStyleColor(4);
+
+        ImGui::SetCursorPosY(ImGui::GetWindowHeight() - 30 * dpiScale);
+        ImGui::Separator();
+
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5 * dpiScale);
+        ImGui::SetCursorPosX((tabBarWidth * dpiScale - ImGui::CalcTextSize("v2.1 | MIT License").x) * 0.5f);
+        ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.6f, 0.7f), "v2.1 | MIT License");
 
         ImGui::PopStyleVar();
     }
+
     ImGui::EndChild();
 
     ImGui::SameLine();
@@ -87,89 +153,244 @@ void Menu::Render()
         case 0:
             ImGui::BeginChild("FeaturesContent", ImVec2(0, 0), true);
             {
+                ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10 * dpiScale);
+
                 if (GET_FEATURE_HANDLER())
                 {
                     GET_FEATURE_HANDLER()->RenderMenu();
                 }
                 else
                 {
-                    LOG_ERROR("GET_FEATURE_HANDLER not initialized!");
+                    ImGui::SetCursorPos(ImVec2(
+                        (ImGui::GetWindowWidth() - ImGui::CalcTextSize("Features not available").x) * 0.5f,
+                        (ImGui::GetWindowHeight() - ImGui::GetTextLineHeight()) * 0.5f
+                    ));
+                    ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), "Features not available");
                 }
             }
             ImGui::EndChild();
             break;
 
         case 1:
-            ImGui::Spacing();
-            ImGui::SetCursorPosX(20 * dpiScale);
+            ImGui::SetCursorPosY(20 * dpiScale);
+            ImGui::SetCursorPosX(25 * dpiScale);
             ImGui::BeginGroup();
+
+            ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
             ImGui::TextColored(accentPurple, "SETTINGS");
+            ImGui::PopFont();
             ImGui::Separator();
-            ImGui::Dummy(ImVec2(0, 10));
+            ImGui::Dummy(ImVec2(0, 15));
 
-            ImGui::Text("Menu Toggle Key:");
-            static char keyName[64] = "";
-            if (ImGui::Button("Click to set new key", ImVec2(tabBarWidth * dpiScale - 15, 30 * dpiScale)))
+            ImGui::BeginChild("GeneralSettings", ImVec2(0, 67 * dpiScale), true);
             {
-                static bool waitingForInput = false;
-                waitingForInput = !waitingForInput;
+                ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[7]);
+                ImGui::TextColored(ImVec4(0.8f, 0.8f, 1.0f, 1.0f), "General Settings");
+                ImGui::PopFont();
 
-                if (waitingForInput)
+                ImGui::Dummy(ImVec2(0, 5));
+                ImGui::Text("Menu Toggle Key:");
+                ImGui::SameLine(150 * dpiScale);
+
+                ImGui::PushStyleColor(ImGuiCol_Button, accentPurpleDark);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, accentPurple);
+                if (ImGui::Button("Set New Key", ImVec2(120 * dpiScale, 30 * dpiScale)))
                 {
-                    ImGui::OpenPopup("Set Menu Key");
+                    static bool waitingForInput = false;
+                    waitingForInput = !waitingForInput;
+                    if (waitingForInput)
+                    {
+                        ImGui::OpenPopup("Set Menu Key");
+                    }
+                }
+                ImGui::PopStyleColor(2);
+
+                ImGui::SameLine();
+                ImGui::TextColored(accentPurpleLight, Utils::getKeyName(MenuToggleKey).c_str());
+
+                if (ImGui::BeginPopupModal("Set Menu Key", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+                {
+                    ImGui::Text("Press any key to set as menu toggle...");
+                    ImGui::Separator();
+
+                    if (ImGui::Button("Cancel", ImVec2(120, 0)))
+                    {
+                        ImGui::CloseCurrentPopup();
+                    }
+
+                    for (int key = 0; key < 256; key++)
+                    {
+                        if (GetAsyncKeyState(key) & 0x8000)
+                        {
+                            MenuToggleKey = key;
+                            ImGui::CloseCurrentPopup();
+                            break;
+                        }
+                    }
+                    ImGui::EndPopup();
                 }
             }
+            ImGui::EndChild();
 
-            ImGui::SameLine();
-            ImGui::Text(Utils::getKeyName(MenuToggleKey).c_str());
+            ImGui::Dummy(ImVec2(0, 20));
 
-            if (ImGui::BeginPopupModal("Set Menu Key", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+            ImGui::BeginChild("OpenSource", ImVec2(0, 136 * dpiScale), true);
             {
-                ImGui::Text("Press any key to set as menu toggle...");
+                ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[7]);
+                ImGui::TextColored(accentPurple, "OPEN SOURCE");
+                ImGui::PopFont();
                 ImGui::Separator();
+                ImGui::Dummy(ImVec2(0, 9));
 
-                if (ImGui::Button("Cancel", ImVec2(120, 0)))
+                ImGui::TextColored(ImVec4(0.6f, 0.8f, 1.0f, 1.0f), "GitHub Repository");
+                ImGui::SameLine(200 * dpiScale);
+
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.2f, 0.3f, 1.0f));
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.3f, 0.4f, 1.0f));
+                if (ImGui::Button("Open GitHub", ImVec2(120 * dpiScale, 25 * dpiScale)))
                 {
-                    ImGui::CloseCurrentPopup();
+                    ShellExecuteA(0, "open", "https://github.com/PlayerGames12/PhasmoCheatV-Recode", 0, 0, SW_SHOW);
                 }
+                ImGui::PopStyleColor(2);
 
-                for (int key = 0; key < 256; key++)
+                ImGui::Dummy(ImVec2(0, 8));
+                ImGui::TextColored(ImVec4(0.8f, 0.8f, 0.8f, 1.0f), "License: MIT");
+                ImGui::TextWrapped("This project is open source and available under MIT License. Feel free to contribute!");
+            }
+            ImGui::EndChild();
+
+            ImGui::Dummy(ImVec2(0, 20));
+
+            ImGui::BeginChild("Credits", ImVec2(0, 0), true);
+            {
+                ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[7]);
+                ImGui::TextColored(accentPurple, " CREDITS");
+                ImGui::PopFont();
+                ImGui::Separator();
+                ImGui::Dummy(ImVec2(0, 10));
+
+                ImGui::TextColored(ImVec4(0.8f, 0.6f, 1.0f, 1.0f), " VCom Team");
+                ImGui::Dummy(ImVec2(0, 5));
+
+                ImGui::Columns(2, "TeamColumns", false);
+                ImGui::SetColumnWidth(0, 250 * dpiScale);
+
+                ImGui::BulletText("Artur - Coder");
+                ImGui::BulletText("Nastya - Designer");
+                ImGui::BulletText("Anna - Designer");
+                ImGui::BulletText("ViniLog - Lead Coder");
+
+                ImGui::NextColumn();
+
+                ImGui::BulletText("Kirill - Assistant Lead");
+                ImGui::BulletText("Maxim - Coder");
+                ImGui::BulletText("Nikita - Coder");
+                ImGui::BulletText("Vanya - Coder");
+                ImGui::BulletText("Ilya - Tester");
+
+                ImGui::Columns(1);
+
+                ImGui::Dummy(ImVec2(0, 5));
+
+                ImGui::TextColored(ImVec4(0.6f, 0.8f, 1.0f, 1.0f), " Special Thanks");
+                ImGui::Dummy(ImVec2(0, 5));
+                ImGui::TextWrapped("@DashaAngelBars, @TraKKRR_lIo, @MT_FORGET, @nypdgov");
+                ImGui::TextWrapped("Evelien for some functions, as well as the design of the function system");
+            }
+            ImGui::EndChild();
+
+            ImGui::EndGroup();
+            break;
+        case 2:
+            if (IsDebugging)
+            {
+                ImGui::BeginChild("TestContent", ImVec2(0, 0), true);
+                if (ImGui::Button("Test set salt"))
                 {
-                    if (GetAsyncKeyState(key) & 0x8000)
+                    if (InGame::saltShakers.empty())
+                        return;
+
+                    for (auto* saltShaker : InGame::saltShakers)
                     {
-                        MenuToggleKey = key;
-                        ImGui::CloseCurrentPopup();
-                        break;
+                        auto* usesPtr = reinterpret_cast<int32_t*>(reinterpret_cast<uint8_t*>(saltShaker) + 0x1D0);
+                        LOG_INFO("SaltShaker uses (offset 0x1D0) = {}", *usesPtr);
+                        *usesPtr = 3;
                     }
                 }
 
-                ImGui::EndPopup();
+                if (ImGui::Button("Test shop"))
+                {
+                    auto* shop = Utils::FindObjectByName("Shop Tutorial");
+                    auto* storage = Utils::FindObjectByName("Storage Tutorial");
+
+                    if (shop) {
+                        if (SDK::GameObject_get_activeSelf(shop, nullptr)) {
+                            LOG_INFO("Deactivating Shop Tutorial");
+                            SDK::GameObject_SetActive(shop, false, nullptr);
+                        }
+                    }
+                    if (storage) {
+                        if (SDK::GameObject_get_activeSelf(storage, nullptr)) {
+                            LOG_INFO("Deactivating Storage Tutorial");
+                            SDK::GameObject_SetActive(storage, false, nullptr);
+                        }
+                    }
+                }
+
+                if (ImGui::Button("Test shop cost"))
+                {
+                    LOG_INFO("CustomCost enabled");
+
+                    auto* storeInfo = Utils::GetStoreItemInfo();
+                    if (!storeInfo) {
+                        LOG_ERROR("StoreItemInfo is null");
+                        return;
+                    }
+
+                    auto item = storeInfo->Fields.ItemInfoFields.item;
+                    if (!item) {
+                        LOG_ERROR("ItemInfoFields.item is null");
+                        return;
+                    }
+
+                    item->Fields.cost = 99999.f;
+
+                    LOG_INFO("Item cost: ", item->Fields.cost);
+                }
+
+                if (ImGui::Button("Test SaltSpots"))
+                {
+                    SDK::String* saltSpotTypeName = Utils::SysStrToUnityStr("SaltSpot");
+                    SDK::Type* saltSpotType = SDK::System_Type_GetType(saltSpotTypeName, nullptr);
+                    SDK::ObjectArray* saltSpots = SDK::Object_FindObjectsOfType(saltSpotType, nullptr);
+
+                    if (!saltSpots) return;
+
+                    for (uint32_t i = 0; i < 65535; i++)
+                    {
+                        auto obj = saltSpots->Vector[i];
+                        if (!obj) break;
+
+                        SDK::SaltSpot* saltSpot = reinterpret_cast<SDK::SaltSpot*>(obj);
+
+                        bool used = saltSpot->Fields.used;
+
+                        SDK::GameObject_SetActive(saltSpot->Fields.flatSalt, false, nullptr);
+                        SDK::GameObject_SetActive(saltSpot->Fields.normalSalt, true, nullptr);
+
+                        LOG_INFO("SaltSpot #{}, normalSalt ptr = {}", i, used);
+
+                        saltSpot->Fields.used = false;
+                    }
+                }
+                
+                if (ImGui::Button("Call test"))
+                {
+					ForTestsFlag = true;
+                }
+
+                ImGui::EndChild();
             }
-
-            ImGui::Dummy(ImVec2(0, 10));
-
-            ImGui::TextColored(accentPurple, "CREDITS");
-            ImGui::Separator();
-            ImGui::TextColored(ImVec4(0.8f, 0.6f, 1.0f, 1.0f), "VCom Team");
-            ImGui::BulletText("ViniLog - Lead (writing recode solo)");
-            ImGui::BulletText("Nastya - Designer");
-            ImGui::BulletText("Artur - Lead Coder");
-            ImGui::BulletText("Anna - Designer");
-            ImGui::BulletText("Kirill - Assistant Lead Coder");
-            ImGui::BulletText("Maxim - Coder");
-            ImGui::BulletText("Nikita - Coder");
-            ImGui::BulletText("Vanya - Coder");
-            ImGui::BulletText("Ilya - Tester");
-
-            ImGui::Dummy(ImVec2(0, 10));
-            ImGui::TextColored(ImVec4(0.6f, 0.8f, 1.0f, 1.0f), "Special Thanks");
-            ImGui::BulletText("@DashaAngelBars, @TraKKRR_lIo, @MT_FORGET, @nypdgov, Evelien");
-
-            ImGui::Dummy(ImVec2(0, 10));
-            ImGui::TextColored(ImVec4(0.6f, 0.8f, 1.0f, 1.0f), "By ViniLog");
-            ImGui::BulletText("Olesya i love you");
-
-            ImGui::EndGroup();
             break;
         }
     }

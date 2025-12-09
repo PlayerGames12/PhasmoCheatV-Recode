@@ -49,4 +49,5 @@ namespace SDK
 	};
 
 	DEC_MET(Behaviour_Set_Enabled, void(*)(Behaviour* behaviour, bool enabled, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Behaviour", "set_enabled", 1);
+	DEC_MET(Behaviour_Get_Enabled, bool(*)(Behaviour* behaviour, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Behaviour", "get_enabled", 0);
 }

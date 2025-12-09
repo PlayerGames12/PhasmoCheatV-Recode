@@ -21,6 +21,8 @@ namespace PhasmoCheatV
 
 		static inline IDXGISwapChain* Swapchain;
 		static inline HWND Window;
+		static inline ID3D11Texture2D* HiddenBackBuffer = nullptr;
+		static inline ID3D11RenderTargetView* HiddenTargetView = nullptr;
 		static inline ID3D11Device* Device;
 		static inline ID3D11DeviceContext* Context;
 		static inline ID3D11RenderTargetView* TargetView;

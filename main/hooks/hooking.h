@@ -27,3 +27,4 @@ namespace PhasmoCheatV
 }
 
 #define AHK(orig, hook) PhasmoCheatV::hooking->AddHook(#orig, reinterpret_cast<PVOID*>(&(orig)), reinterpret_cast<PVOID>(hook))
+#define AHKA(name) AHK(SDK::name, Hooks::hk##name)

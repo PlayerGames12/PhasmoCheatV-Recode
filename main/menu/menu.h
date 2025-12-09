@@ -7,6 +7,7 @@ namespace PhasmoCheatV
 	{
 	public:
 		static void Initialize();
+		static void NewYear();
 		static void Render();
 		static void Toggle();
 

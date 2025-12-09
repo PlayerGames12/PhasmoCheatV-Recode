@@ -4,6 +4,8 @@
 namespace SDK
 {
     struct GhostModel;
+    struct Player;
+    struct GhostActivity;
 
     enum class GhostState : int32_t
     {
@@ -42,16 +44,13 @@ namespace SDK
         void* NavMeshAgent;
         void* GhostAudio;
         void* GhostInteraction;
-        void* GhostActivity;
-
+        GhostActivity* GhostActivity;
         GhostModel* NormalModel;
-        void* HalloweenModel;
-        void* HolidayModel;
-        void* EasterModel;
-
+        GhostModel* HalloweenModel;
+        GhostModel* HolidayModel;
+        GhostModel* EasterModel;
         void* GhostModels0;
         void* GhostModels1;
-
         bool canSwapModel;
         int32_t currrentShadowCastingMode;
         void* ghostBreadcrumbs;
@@ -59,16 +58,16 @@ namespace SDK
         void* SanityDrainer;
         bool Field14;
         int32_t LayerMask;
-        void* raycastPoint;
-        void* huntingRaycastPoint;
-        void* feetRaycastPoint;
-        float Speed;
-        float Field0;
-        float Field23;
+        Transform* raycastPoint;
+        Transform* huntingRaycastPoint;
+        Transform* feetRaycastPoint;
+        float defaultSpeed;
+        float saltSpeedMultiplier;
+        float incenseSpeedMultiplier;
         bool Field24;
         bool Field25;
-        Vector3 Field26; // Vector3
-        void* Field27; // GameObject
+        Vector3 Field26;
+        void* Field27;
         bool Field28;
         bool Field29;
         bool Field30;
@@ -77,9 +76,9 @@ namespace SDK
         float Field32;
         bool Field33;
         bool Field34;
-        bool Field35;
-        void* BansheeTarget;
-        int32_t Field37;
+        bool isTrapped;
+        Player* BansheeTarget;
+        int32_t onryoCandleBlowCounter;
         Vector3 Field38;
         void* Field39;
         void* Field40;
@@ -111,4 +110,5 @@ namespace SDK
     DEC_MET(GhostAI_Start, void(*)(GhostAI* ghostAI, MethodInfo* methodInfo), "Assembly-CSharp", "", "GhostAI", "Start", 0);
     DEC_MET(GhostAI_Update, void(*)(GhostAI* ghostAI, MethodInfo* methodInfo), "Assembly-CSharp", "", "GhostAI", "Update", 0);
     DEC_MET(GhostAI_ChangeState, void(*)(GhostAI* ghostAI, GhostState ghostState, void* photonObjectInteract, void* photonObjectInteractArray, MethodInfo* methodInfo), "Assembly-CSharp", "", "GhostAI", "ChangeState", 3);
+    DEC_MET(GhostAI_SetGhostModel, void(*)(GhostAI* ghostAI, GhostModel* ghostModel, bool resetHuntSound, MethodInfo* methodInfo), "Assembly-CSharp", "", "GhostAI", "SetGhostModel", 2);
 }

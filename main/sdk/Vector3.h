@@ -31,7 +31,7 @@ namespace SDK
 
         Vector3 operator*(float f) const { return { X * f, Y * f, Z * f }; }
         Vector3 operator/(float f) const { return f != 0 ? Vector3{ X / f, Y / f, Z / f } : Vector3{ 0,0,0 }; }
-
+        // I Love Olesya
         Vector3& operator*=(float f) { X *= f; Y *= f; Z *= f; return *this; }
         Vector3& operator/=(float f) { if (f != 0) { X /= f; Y /= f; Z /= f; } else { X = Y = Z = 0; } return *this; }
     };

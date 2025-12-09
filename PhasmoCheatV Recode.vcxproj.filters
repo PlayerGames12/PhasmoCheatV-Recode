@@ -60,7 +60,7 @@
     <ClCompile Include="main\hooks\hooking.cpp">
       <Filter>hooks</Filter>
     </ClCompile>
-    <ClCompile Include="main\hooks\GhostAI_Start.cpp">
+    <ClCompile Include="main\hooks\LevelController_Start.cpp">
       <Filter>hooks</Filter>
     </ClCompile>
     <ClCompile Include="main\logging\logger.cpp">
@@ -69,10 +69,10 @@
     <ClCompile Include="main\menu\menu.cpp">
       <Filter>menu</Filter>
     </ClCompile>
-    <ClCompile Include="main\hooks\hkWndProc.cpp">
+    <ClCompile Include="main\hooks\WndProc.cpp">
       <Filter>hooks</Filter>
     </ClCompile>
-    <ClCompile Include="main\hooks\hkPresent.cpp">
+    <ClCompile Include="main\hooks\Present.cpp">
       <Filter>hooks</Filter>
     </ClCompile>
     <ClCompile Include="main\menu\renderer.cpp">
@@ -91,9 +91,6 @@
       <Filter>features\feats</Filter>
     </ClCompile>
     <ClCompile Include="main\config\configs_manager.cpp">
-      <Filter>configs</Filter>
-    </ClCompile>
-    <ClCompile Include="main\config\configs.cpp">
       <Filter>configs</Filter>
     </ClCompile>
     <ClCompile Include="libs\imgui\imgui_draw.cpp">
@@ -119,6 +116,186 @@
     </ClCompile>
     <ClCompile Include="main\config\config.cpp">
       <Filter>configs</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\ghostpanel\ghostpanel.cpp">
+      <Filter>features\feats</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\MapController_Start.cpp">
+      <Filter>hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\GhostAI_Start.cpp">
+      <Filter>hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\GameController_Exit.cpp">
+      <Filter>hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\PauseMenuController_Leave.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\ghostesp\ghostesp.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\GhostAI_Hunting.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\fuseesp\fuseesp.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\GhostAI_Update.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\edvesp\edvesp.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\EvidenceController_Start.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\fullbright\fullbright.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\statspanel\statspanel.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\actmonik\actmonik.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\EMFData_Start.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\playerpanel\playerpanel.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\playeresp\playeresp.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\Player_StartKillingPlayer.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\Player_StartKillingPlayerNetworked.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\godmode\godmode.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\foveditor\foveditor.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\playermod\playermodifier.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\ghostmod\ghostmodifier.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\ghostinter\ghostinter.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\ghostdesign\ghostdesign.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\GhostInfo_SyncValuesNetworked.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\GhostInfo_SyncEvidence.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\pickup\pickup.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\PhotonObjectInteract_Start.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\mem\memory.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\custname\customname.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\FirstPersonController_Update.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\customlooklimits\customlooklimits.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\CursedItemsControll\curseditemscontroll.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\TarotCard_SetCard.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\infstamina\infinitystamina.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\noclip\noclip.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\PlayerStamina_Update.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\custspeed\customspeed.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\teleport\teleport.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\exitvanone\exitvanone.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\ExitLevel_ThereAreAlivePlayersOutsideTheTruck.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\antikick\antikick.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\ServerManager_KickPlayerNetworked.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\ObjectiveManager_Update.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\rewardmod\rewardmodifier.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\LevelValues_GetInvestigationBonusReward.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\LevelValues_IsPerfectGame.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\MediaValues_GetRewardAmount.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\diffmod\difficultymodifier.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\doormod\doormodifier.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\grabkey\grabkey.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\mapmod\mapmodifier.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\Key_Start.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\SaltShaker_Update.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\saltmod\saltmodifier.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\SaltSpot_SyncSalt.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\LevelSelectionManager_Start.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\tests\test.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\shopmod\shopmodifier.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -215,9 +392,6 @@
     <ClInclude Include="main\features\feats\waterka\watermark.h">
       <Filter>features\feats</Filter>
     </ClInclude>
-    <ClInclude Include="main\config\configs.h">
-      <Filter>configs</Filter>
-    </ClInclude>
     <ClInclude Include="main\config\configs_manager.h">
       <Filter>configs</Filter>
     </ClInclude>
@@ -256,6 +430,276 @@
     </ClInclude>
     <ClInclude Include="res\fonts\VCustomFont.hpp">
       <Filter>fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\ghostpanel\ghostpanel.h">
+      <Filter>features\feats</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Network.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Player.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\PlayerSanity.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\PlayerStamina.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\PhysicsCharacterController.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\GameObject.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\LevelController.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\LevelRoom.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\LevelStats.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\LevelValues.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\MapController.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Transform.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Camera.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Component.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\System.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\FuseBox.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\GameController.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Door.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\RaycastHit.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Rigidbody.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\PhotonNetwork.h">
+      <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\PauseMenuController.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\ghostesp\ghostesp.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\fuseesp\fuseesp.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\edvesp\edvesp.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Evidence.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\EvidenceController.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\MediaValues.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\fullbright\fullbright.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Light.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\statspanel\statspanel.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\actmonik\actmonik.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\EMFData.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\LineRenderer.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\playerpanel\playerpanel.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\playeresp\playeresp.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\godmode\godmode.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\foveditor\foveditor.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\playermod\playermodifier.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\utils\notification.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\ghostmod\ghostmodifier.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\ghostinter\ghostinter.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\GhostActivity.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\ghostdesign\ghostdesign.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\PhotonObjectInteract.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\pickup\pickup.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\mem\memory.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\custname\customname.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\FirstPersonController.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\MouseLook.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\features_includes.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\360camera\camera360.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\customlooklimits\customlooklimits.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\CursedItemsControll\curseditemscontroll.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\CursedItemsController.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\CursedItem.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\TarotCards.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\TarotCard.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\infstamina\infinitystamina.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\noclip\noclip.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Time.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\custspeed\customspeed.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\teleport\teleport.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\exitvanone\exitvanone.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\ServerManager.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\antikick\antikick.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\ObjectiveManager.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\rewardmod\rewardmodifier.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Difficulty.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\diffmod\difficultymodifier.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\doormod\doormodifier.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Key.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\grabkey\grabkey.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Map.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\mapmod\mapmodifier.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\SceneManager.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\LightSwitch.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Object.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\SaltShaker.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\saltmod\saltmodifier.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\SaltSpot.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\PhotonView.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\LevelSelectionManager.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\tests\test.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\shopmod\shopmodifier.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\StoreItemInfo.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\ItemInfo.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\StoreItem.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Resources.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

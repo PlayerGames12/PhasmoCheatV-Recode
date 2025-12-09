@@ -25,5 +25,5 @@ namespace SDK
 
 	DEC_MET(GhostInfo_SyncValuesNetworked, void(*)(GhostInfo* instance, int ghostType, int ghostAge, bool isMale, int ghostFirstNameID, int ghostLastNameID, bool isShy, int deathLength, int favouriteRoomID, bool isWhisper, void* photonMessageInfo, MethodInfo* methodinfo), "Assembly-CSharp", "", "GhostInfo", "SyncValuesNetworked", 10);
 
-	DEC_MET(GhostInfo_SyncEvidence, void(*)(GhostInfo* instance, int* evidence, void* info, MethodInfo* methodInfo), "Assembly-CSharp", "", "GhostInfo", "SyncEvidence", 2);
+	DEC_MET(GhostInfo_SyncEvidence, void(*)(GhostInfo* instance, int* evidence, void* photonMessageInfo, MethodInfo* methodInfo), "Assembly-CSharp", "", "GhostInfo", "SyncEvidence", 2);
 }

@@ -17,6 +17,17 @@ typedef uintptr_t il2cpp_array_size_t;
 
 typedef void (*InvokerMethod)(Il2CppMethodPointer, const MethodInfo*, void*, void**, void*);
 
+struct FieldInfo
+{
+    const char* name;
+    const Il2CppType* type;
+    Il2CppClass* parent;
+    int32_t offset;
+    uint32_t token;
+    uint8_t attrs;
+    uint8_t padding[3];
+};
+
 struct MethodInfo
 {
     Il2CppMethodPointer methodPointer;

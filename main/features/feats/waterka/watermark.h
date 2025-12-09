@@ -16,7 +16,5 @@ namespace PhasmoCheatV::Features::Visuals
 
 	private:
 		std::string CachedText;
-		static constexpr std::string_view PING_PREFIX = " | Ping: ";
-		static constexpr std::string_view SANITY_PREFIX = " | Avg. sanity: ";
 	};
 }
