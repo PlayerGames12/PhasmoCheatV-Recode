@@ -21,6 +21,9 @@ namespace PhasmoCheatV
         case Level::Warning: return "[Warning]";
         case Level::Error: return "[Error]";
         case Level::Hooks: return "[Hooks]";
+		case Level::UInfo: return "[Unity Info]";
+		case Level::UWarning: return "[Unity Warning]";
+		case Level::UError: return "[Unity Error]";
         default: return "[Unknown]";
         }
     }
@@ -40,6 +43,12 @@ namespace PhasmoCheatV
             return FOREGROUND_RED;
         case Level::Hooks:
             return FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+        case Level::UInfo:
+            return FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+        case Level::UWarning:
+            return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+        case Level::UError:
+            return FOREGROUND_RED | FOREGROUND_INTENSITY;
         default:
             return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
         }

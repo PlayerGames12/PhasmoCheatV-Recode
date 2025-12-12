@@ -69,6 +69,7 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
         AHKA(SaltShaker_Update);
         AHKA(SaltSpot_SyncSalt);
         AHKA(LevelSelectionManager_Start);
+		AHKA(Application_CallLogCallback);
 
         hookingInstance->ApplyHooks();
 

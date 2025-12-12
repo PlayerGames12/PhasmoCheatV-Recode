@@ -19,7 +19,10 @@ namespace PhasmoCheatV
             Info,
             Warning,
             Error,
-            Hooks
+            Hooks,
+            UInfo,
+			UWarning,
+			UError
         };
         explicit Logger(Level minLevel = Level::Call);
         ~Logger();
@@ -74,3 +77,13 @@ namespace PhasmoCheatV
 #define LOG_CALL_UPDATE(...) \
     if (PhasmoCheatV::logger && IsDebugging && IsUpdateCalledLogs) \
         PhasmoCheatV::logger->Log(PhasmoCheatV::Logger::Level::Call, __VA_ARGS__)
+
+#define LOG_UNITY(...) \
+    if (PhasmoCheatV::logger && IsDebugging) \
+        PhasmoCheatV::logger->Log(PhasmoCheatV::Logger::Level::UInfo, __VA_ARGS__)
+#define LOG_UNITY_WARN(...) \
+    if (PhasmoCheatV::logger && IsDebugging) \
+        PhasmoCheatV::logger->Log(PhasmoCheatV::Logger::Level::UWarning, __VA_ARGS__)
+#define LOG_UNITY_ERROR(...) \
+    if (PhasmoCheatV::logger) \
+        PhasmoCheatV::logger->Log(PhasmoCheatV::Logger::Level::UError, __VA_ARGS__)

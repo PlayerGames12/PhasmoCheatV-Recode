@@ -92,3 +92,4 @@ namespace SDK
 #include "StoreItem.h"
 #include "ItemInfo.h"
 #include "StoreItemInfo.h"
+#include "Application.h"

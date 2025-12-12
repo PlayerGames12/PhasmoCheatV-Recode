@@ -624,9 +624,9 @@ SDK::GameObject* Utils::FindObjectByName(std::string name)
 	return SDK::GameObject_Find(unityStrName, nullptr);
 }
 
-SDK::ObjectArray* Utils::FindObjectsByName()
+SDK::ObjectArray* Utils::FindObjectsOfType(std::string type)
 {
-	auto* goType = SDK::System_Type_GetType(SysStrToUnityStr("UnityEngine.GameObject"), nullptr);
+	auto* goType = SDK::System_Type_GetType(SysStrToUnityStr(type), nullptr);
 	if (!goType) return nullptr;
 
 	auto* all = SDK::Resources_FindObjectsOfTypeAll(goType, nullptr);
@@ -637,7 +637,7 @@ SDK::ObjectArray* Utils::FindObjectsByName()
 
 SDK::StoreItemInfo* Utils::GetStoreItemInfo()
 {
-	auto* list = FindObjectsByName();
+	auto* list = FindObjectsOfType("UnityEngine.GameObject");
 	if (!list) return nullptr;
 
 	for (uint32_t i = 0; i < 65535; i++)

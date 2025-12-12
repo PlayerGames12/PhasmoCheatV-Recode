@@ -70,6 +70,10 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)build\</OutDir>
+    <IntDir>$(ShortProjectName)build\intermediate\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -193,6 +197,7 @@
     <ClCompile Include="main\features\feats\tests\test.cpp" />
     <ClCompile Include="main\features\feats\waterka\watermark.cpp" />
     <ClCompile Include="main\features\feature.cpp" />
+    <ClCompile Include="main\hooks\Application_CallLogCallback.cpp" />
     <ClCompile Include="main\hooks\EMFData_Start.cpp" />
     <ClCompile Include="main\hooks\EvidenceController_Start.cpp" />
     <ClCompile Include="main\hooks\ExitLevel_Exit.cpp" />
@@ -293,6 +298,7 @@
     <ClInclude Include="main\menu\menu.h" />
     <ClInclude Include="main\menu\renderer.h" />
     <ClInclude Include="main\menu\styles.h" />
+    <ClInclude Include="main\sdk\Application.h" />
     <ClInclude Include="main\sdk\Camera.h" />
     <ClInclude Include="main\sdk\Component.h" />
     <ClInclude Include="main\sdk\CursedItem.h" />

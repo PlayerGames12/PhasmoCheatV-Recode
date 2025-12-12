@@ -297,6 +297,9 @@
     <ClCompile Include="main\features\feats\shopmod\shopmodifier.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="main\hooks\Application_CallLogCallback.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -699,6 +702,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="main\sdk\Resources.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Application.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

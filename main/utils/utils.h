@@ -38,5 +38,5 @@ namespace Utils {
 	std::string GetActiveSceneName();
 	SDK::GameObject* FindObjectByName(std::string name);
 	SDK::StoreItemInfo* GetStoreItemInfo();
-	SDK::ObjectArray* FindObjectsByName();
+	SDK::ObjectArray* FindObjectsOfType(std::string type);
 }
