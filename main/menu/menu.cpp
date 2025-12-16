@@ -2,8 +2,11 @@
 #include "styles.h"
 #include <random>
 #include <chrono>
+#include "../features/features_includes.h"
 
 using namespace PhasmoCheatV;
+
+// TODO: FIX CRASH FULLBRIGHT.
 
 SDK::CursorLockMode Menu::previousCursorLockMode = SDK::CursorLockMode::None;
 
@@ -305,90 +308,38 @@ void Menu::Render()
             if (IsDebugging)
             {
                 ImGui::BeginChild("TestContent", ImVec2(0, 0), true);
-                if (ImGui::Button("Test set salt"))
+                if (ImGui::Button("Test set Ghost"))
                 {
-                    if (InGame::saltShakers.empty())
-                        return;
-
-                    for (auto* saltShaker : InGame::saltShakers)
-                    {
-                        auto* usesPtr = reinterpret_cast<int32_t*>(reinterpret_cast<uint8_t*>(saltShaker) + 0x1D0);
-                        LOG_INFO("SaltShaker uses (offset 0x1D0) = {}", *usesPtr);
-                        *usesPtr = 3;
-                    }
+                    // Work good, but UI not updated
+                    auto* jc = Utils::GetMainMenuJournal();
+                    SDK::JournalController_SelectGhost(jc, SDK::GhostType::Demon, nullptr);
+                    LOG_INFO("JournalController_SelectGhost is called");
                 }
 
-                if (ImGui::Button("Test shop"))
+                if (ImGui::Button("Test force exit"))
                 {
-                    auto* shop = Utils::FindObjectByName("Shop Tutorial");
-                    auto* storage = Utils::FindObjectByName("Storage Tutorial");
+                    // Crash the game. Need call in the main thread of the game. 
+                    // Not work in online. 
+                    // Need real data player in PhotonMessageInfo. 
+                    // Use GetLocalPlayer, gettimestamp and more most likely
 
-                    if (shop) {
-                        if (SDK::GameObject_get_activeSelf(shop, nullptr)) {
-                            LOG_INFO("Deactivating Shop Tutorial");
-                            SDK::GameObject_SetActive(shop, false, nullptr);
-                        }
-                    }
-                    if (storage) {
-                        if (SDK::GameObject_get_activeSelf(storage, nullptr)) {
-                            LOG_INFO("Deactivating Storage Tutorial");
-                            SDK::GameObject_SetActive(storage, false, nullptr);
-                        }
-                    }
-                }
+                    auto* messageInfo = Utils::CreatePhotonMessageInfo();
 
-                if (ImGui::Button("Test shop cost"))
-                {
-                    LOG_INFO("CustomCost enabled");
+                    SDK::ExitLevel* exitLevel2 = Utils::GetExitLevel();
 
-                    auto* storeInfo = Utils::GetStoreItemInfo();
-                    if (!storeInfo) {
-                        LOG_ERROR("StoreItemInfo is null");
-                        return;
-                    }
+                    if (messageInfo)
+                        LOG_INFO("Photon create and = ", messageInfo);
+                    else
+                        LOG_INFO("Photon created failed.");
 
-                    auto item = storeInfo->Fields.ItemInfoFields.item;
-                    if (!item) {
-                        LOG_ERROR("ItemInfoFields.item is null");
-                        return;
-                    }
-
-                    item->Fields.cost = 99999.f;
-
-                    LOG_INFO("Item cost: ", item->Fields.cost);
-                }
-
-                if (ImGui::Button("Test SaltSpots"))
-                {
-                    SDK::String* saltSpotTypeName = Utils::SysStrToUnityStr("SaltSpot");
-                    SDK::Type* saltSpotType = SDK::System_Type_GetType(saltSpotTypeName, nullptr);
-                    SDK::ObjectArray* saltSpots = SDK::Object_FindObjectsOfType(saltSpotType, nullptr);
-
-                    if (!saltSpots) return;
-
-                    for (uint32_t i = 0; i < 65535; i++)
-                    {
-                        auto obj = saltSpots->Vector[i];
-                        if (!obj) break;
-
-                        SDK::SaltSpot* saltSpot = reinterpret_cast<SDK::SaltSpot*>(obj);
-
-                        bool used = saltSpot->Fields.used;
-
-                        SDK::GameObject_SetActive(saltSpot->Fields.flatSalt, false, nullptr);
-                        SDK::GameObject_SetActive(saltSpot->Fields.normalSalt, true, nullptr);
-
-                        LOG_INFO("SaltSpot #{}, normalSalt ptr = {}", i, used);
-
-                        saltSpot->Fields.used = false;
-                    }
+                    if (exitLevel2)
+                        SDK::ExitLevel_Exit(exitLevel2, messageInfo, nullptr);
                 }
                 
                 if (ImGui::Button("Call test"))
                 {
 					ForTestsFlag = true;
                 }
-
                 ImGui::EndChild();
             }
             break;

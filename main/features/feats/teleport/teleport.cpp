@@ -32,10 +32,19 @@ void Teleport::OnMenuRender()
     if (ImGui::Button("Teleport bone##teleport"))
         TeleportBone();
     if (ImGui::Button("Teleport to Truck"))
-		TeleportToTruck();
+        TeleportToTruck();
     ImGui::SameLine();
     if (ImGui::Button("Teleport to Ghost"))
         TeleportToGhost();
+
+    ImGui::Separator();
+    ImGui::Text("Winter Boxes:");
+    if (ImGui::Button("Test active all winter boxs (WARNING)"))
+        ActivateAllWinterBoxes();
+    if (ImGui::Button("Test teleport winter boxs"))
+        TeleportWinterBoxes();
+    if (ImGui::Button("Test use all winter boxs (WARNING)"))
+        UseAllWinterBoxes();
 }
 
 void Teleport::TeleportItems()
@@ -299,4 +308,106 @@ void Teleport::TeleportToGhost()
 	auto ghostVec3 = Utils::GetPosVec3(InGame::ghostAI);
     Utils::TpPlayerToVec3(localPlayer, ghostVec3);
     NOTIFY_INFO_QUICK("Teleported to Ghost.");
+}
+
+
+// EVENT
+
+SDK::GameObject* FindJackInTheBoxes()
+{
+    const char* names[] = {
+        "Jack in the boxes",
+        "Jack in the Boxes",
+        "jack in the boxes",
+        "JackInTheBoxes",
+        "jackInTheBoxes"
+    };
+    for (const char* name : names)
+    {
+        SDK::GameObject* obj = Utils::FindObjectByName(name);
+        if (obj)
+            return obj;
+    }
+    return nullptr;
+}
+
+void Teleport::ActivateAllWinterBoxes()
+{
+    auto* objMain = FindJackInTheBoxes();
+    if (!objMain)
+    {
+        LOG_INFO("Jack in the boxes object not found");
+        return;
+    }
+    LOG_INFO("Activating all winter boxes");
+    std::vector<SDK::Component*> components;
+    Utils::GetComponentsInChildren(objMain, "JackInTheBox", components, true);
+
+    for (auto* comp : components)
+    {
+        if (!comp) continue;
+        auto* gobj = SDK::Component_Get_GameObject(comp, nullptr);
+        if (!gobj) continue;
+
+        auto photonViewType = SDK::System_Type_GetType(Utils::SysStrToUnityStr("Photon.Pun.PhotonView"), nullptr);
+        auto* photonView = reinterpret_cast<SDK::PhotonView*>(SDK::GameObject_GetComponent(gobj, photonViewType, nullptr));
+        if (photonView)
+            SDK::PhotonView_RequestOwnership(photonView, nullptr);
+
+        SDK::GameObject_SetActive(gobj, true, nullptr);
+    }
+}
+
+void Teleport::TeleportWinterBoxes()
+{
+    auto* objMain = FindJackInTheBoxes();
+    if (!objMain)
+    {
+        LOG_INFO("Jack in the boxes object not found");
+        return;
+    }
+    auto* localPlayer = Utils::GetLocalPlayer();
+    if (!localPlayer)
+    {
+        LOG_INFO("Local player not found");
+        return;
+    }
+    LOG_INFO("Teleporting all winter boxes to player");
+    std::vector<SDK::Component*> components;
+    Utils::GetComponentsInChildren(objMain, "JackInTheBox", components, true);
+
+    SDK::Vector3 lpvec3 = Utils::GetPosVec3(localPlayer);
+
+    for (auto* comp : components)
+    {
+        if (!comp) continue;
+        auto* gobj = SDK::Component_Get_GameObject(comp, nullptr);
+        if (!gobj) continue;
+
+        auto photonViewType = SDK::System_Type_GetType(Utils::SysStrToUnityStr("Photon.Pun.PhotonView"), nullptr);
+        auto* photonView = reinterpret_cast<SDK::PhotonView*>(SDK::GameObject_GetComponent(gobj, photonViewType, nullptr));
+        if (photonView)
+            SDK::PhotonView_RequestOwnership(photonView, nullptr);
+
+        SDK::Transform_Set_Position(SDK::GameObject_get_transform(gobj, nullptr), { lpvec3.X, lpvec3.Y + 1.f, lpvec3.Z }, nullptr);
+    }
+}
+
+void Teleport::UseAllWinterBoxes()
+{
+    auto* objMain = FindJackInTheBoxes();
+    if (!objMain)
+    {
+        LOG_INFO("Jack in the boxes object not found");
+        return;
+    }
+    LOG_INFO("Using all winter boxes");
+    std::vector<SDK::Component*> components;
+    Utils::GetComponentsInChildren(objMain, "JackInTheBox", components, true);
+
+    for (auto* comp : components)
+    {
+        if (!comp) continue;
+        SDK::JackInTheBox_UseNetworked((SDK::JackInTheBox*)(comp), nullptr);
+    }
 }

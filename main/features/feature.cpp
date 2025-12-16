@@ -58,6 +58,7 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, FuseBoxESP);
     ADD_FEATURE(this, EvidenceESP);
     ADD_FEATURE(this, Fullbright);
+    ADD_FEATURE(this, NotifyInfo);
     ADD_FEATURE(this, PlayersPanel);
     ADD_FEATURE(this, StatsPanel);
     ADD_FEATURE(this, PlayerESP);
@@ -80,6 +81,7 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, AntiKick);
     ADD_FEATURE(this, ExitVanOne);
     ADD_FEATURE(this, RewardModifier);
+    ADD_FEATURE(this, ForceStart);
     ADD_FEATURE(this, ShopModifier);
     ADD_FEATURE(this, DifficultyModifier);
     ADD_FEATURE(this, MapModifier);
@@ -95,9 +97,12 @@ FeatureHandler::~FeatureHandler()
     MainFeatureHandler = nullptr;
 }
 
-void FeatureHandler::RegisterFeature(const std::string_view name, std::unique_ptr<FeatureCore> feature)
+void FeatureHandler::RegisterFeature(std::string_view name, std::unique_ptr<FeatureCore> feature)
 {
+    auto* ptr = feature.get();
     FeatureRegistry.emplace_back(std::string(name), std::move(feature));
+    if (ptr->IsActive())
+        ptr->OnActivate();
 }
 
 FeatureCore* FeatureHandler::FindFeature(const std::string_view name) const

@@ -39,4 +39,12 @@ namespace Utils {
 	SDK::GameObject* FindObjectByName(std::string name);
 	SDK::StoreItemInfo* GetStoreItemInfo();
 	SDK::ObjectArray* FindObjectsOfType(std::string type);
+	SDK::JournalController* GetMainMenuJournal();
+	SDK::PhotonMessageInfo* CreatePhotonMessageInfo();
+	SDK::ExitLevel* GetExitLevel();
+	SDK::ServerManager* GetServerManager();
+	void SetTagOnGObject(SDK::GameObject* gameObject, const std::string& tag);
+	std::string GetTagOnGObject(SDK::GameObject* gameObject);
+	bool CheckIsValidObjectByTag(SDK::GameObject* gameObject, const std::string& tag);
+	void GetComponentsInChildren(SDK::GameObject* root, const char* componentName, std::vector<SDK::Component*>& outComponents, bool includeInactive);
 }

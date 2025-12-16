@@ -19,4 +19,7 @@ namespace SDK
 
     DEC_MET(Transform_Get_Parent, Transform* (*)(Transform* transform, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Transform", "get_parent", 0);
     DEC_MET(Transform_Set_Parent, void(*)(Transform* transform, Transform* parent, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Transform", "set_parent", 1);
+
+    DEC_MET(Transform_get_childCount, int(*)(Transform* transform, MethodInfo*), "UnityEngine.CoreModule", "UnityEngine", "Transform", "get_childCount", 0);
+    DEC_MET(Transform_GetChild, Transform* (*)(Transform* transform, int index, MethodInfo*), "UnityEngine.CoreModule", "UnityEngine", "Transform", "GetChild", 1);
 }

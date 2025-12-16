@@ -35,3 +35,5 @@
 #include "feats/saltmod/saltmodifier.h"
 #include "feats/tests/test.h"
 #include "feats/shopmod/shopmodifier.h"
+#include "feats/forcestart/forcestart.h"
+#include "feats/notifyinfo/notifyinfo.h"

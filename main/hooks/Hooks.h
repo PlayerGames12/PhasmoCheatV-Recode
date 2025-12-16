@@ -39,5 +39,8 @@ namespace PhasmoCheatV
 		static void hkSaltSpot_SyncSalt(SDK::SaltSpot* saltSpot, void* photonMessageInfo, SDK::MethodInfo* methodInfo);
 		static std::nullptr_t hkLevelSelectionManager_Start(SDK::LevelSelectionManager* levelSelectionManager, SDK::MethodInfo* methodInfo);
 		static void hkApplication_CallLogCallback(SDK::String* logString, SDK::String* stackTrace, SDK::LogType type, bool invokedOnMainThread, SDK::MethodInfo* methodInfo);
+		static void hkServerManager_Ready(SDK::ServerManager* serverManager, bool on, SDK::MethodInfo* methodInfo);
+		static void hkDNAEvidence_GrabbedNetworked(SDK::DNAEvidence* dnaEvidence, SDK::MethodInfo* methodInfo);
+		static void hkFallTeleportBox_OnTriggerEnter(SDK::FallTeleportBox* fallTeleportBox, SDK::Collider* collider, SDK::MethodInfo* methodInfo);
 	};
 }

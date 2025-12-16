@@ -666,3 +666,155 @@ SDK::StoreItemInfo* Utils::GetStoreItemInfo()
 
 	return nullptr;
 }
+
+SDK::JournalController* Utils::GetMainMenuJournal()
+{
+	auto sceneName = GetActiveSceneName();
+	LOG_INFO(sceneName);
+
+	if (sceneName == "HideAndDontSave")
+		return nullptr;
+
+	auto* list = FindObjectsOfType("JournalController");
+	if (!list) {
+		LOG_INFO("JournalController list null");
+		return nullptr;
+	}
+
+	for (uint32_t i = 0; i < 65535; i++)
+	{
+		auto raw = list->Vector[i];
+		if (!raw) continue;
+
+		auto* jc = reinterpret_cast<SDK::JournalController*>(raw);
+		if (!jc) continue;
+
+		LOG_INFO("Found JournalController");
+		return jc;
+	}
+
+	LOG_INFO("None found");
+	return nullptr;
+}
+
+SDK::PhotonMessageInfo* Utils::CreatePhotonMessageInfo()
+{
+	if (!il2cpp_initialize()) return nullptr;
+
+	Il2CppDomain* domain = il2cpp_domain_get();
+	if (!domain) return nullptr;
+
+	il2cpp_thread_attach(domain);
+
+	Il2CppClass* pmiClass =
+		il2cpp_get_class("PhotonUnityNetworking", "Photon.Pun", "PhotonMessageInfo");
+	if (!pmiClass) return nullptr;
+
+	Il2CppObject* pmi = il2cpp_object_new_from_class(pmiClass);
+	if (!pmi) return nullptr;
+
+	const MethodInfo* ctor =
+		il2cpp_class_get_method_from_name_wrap(pmiClass, ".ctor", 0);
+	if (ctor)
+		il2cpp_runtime_invoke_wrap(ctor, pmi, nullptr, nullptr);
+
+	auto* pmic = reinterpret_cast<SDK::PhotonMessageInfo*>(pmi);
+
+	return pmic;
+}
+
+SDK::ExitLevel* Utils::GetExitLevel()
+{
+	auto* list = Utils::FindObjectsOfType("ExitLevel");
+	if (!list) return nullptr;
+
+	for (uint32_t i = 0; i < 65535; i++)
+	{
+		auto* raw = list->Vector[i];
+		if (!raw) continue;
+
+		auto* exitLevel = reinterpret_cast<SDK::ExitLevel*>(raw);
+		if (!exitLevel) continue;
+
+		LOG_INFO("Found ExitLevel");
+		return exitLevel;
+	}
+
+	return nullptr;
+}
+
+SDK::ServerManager* Utils::GetServerManager()
+{
+	auto* gameLobbyObj = FindObjectByName("Game Lobby");
+	if (!gameLobbyObj) return nullptr;
+
+	auto* type = SDK::System_Type_GetType(SysStrToUnityStr("ServerManager"), nullptr);
+	if (!type) return nullptr;
+
+	auto* serverManagerComp = reinterpret_cast<SDK::ServerManager*>(SDK::GameObject_GetComponent(gameLobbyObj, type, nullptr));
+	if (!serverManagerComp) return nullptr;
+
+	return serverManagerComp;
+}
+
+void Utils::SetTagOnGObject(SDK::GameObject* gameObject, const std::string& tag)
+{
+	auto unityStrTag = SysStrToUnityStr(tag);
+	SDK::GameObject_set_tag(gameObject, unityStrTag, nullptr);
+}
+
+std::string Utils::GetTagOnGObject(SDK::GameObject* gameObject)
+{
+	auto unityStrTag = SDK::GameObject_get_tag(gameObject, nullptr);
+	if (!unityStrTag)
+		return "UNKNOWN";
+	return UnityStrToSysStr(*unityStrTag);
+}
+
+bool Utils::CheckIsValidObjectByTag(SDK::GameObject* gameObject, const std::string& tag)
+{
+	if (!gameObject) return false;
+
+	auto* unityTag = SysStrToUnityStr(tag);
+	auto* result = SDK::GameObject_FindGameObjectsWithTag(unityTag, nullptr);
+	if (!result) return false;
+
+	for (uint32_t i = 0; i < 65535; i++)
+	{
+		SDK::GameObject* obj = result->Vector[i];
+		if (!obj) break;
+		if (obj == gameObject) return true;
+	}
+
+	return false;
+}
+
+// I'm lazy and I didn't want to use the Unity method. Yes, you can do it, but who cares :)
+void Utils::GetComponentsInChildren(SDK::GameObject* root, const char* componentName, std::vector<SDK::Component*>& outComponents, bool includeInactive)
+{
+	SDK::Transform* rootTransform = SDK::GameObject_get_transform(root, nullptr);
+
+	std::function<void(SDK::Transform*)> Traverse = [&](SDK::Transform* t)
+		{
+			SDK::GameObject* go = SDK::Component_Get_GameObject((SDK::Component*)t, nullptr);
+
+			if (includeInactive || SDK::GameObject_get_activeSelf(go, nullptr))
+			{
+				SDK::Component* comp = SDK::GameObject_GetComponentByName(go, SysStrToUnityStr(componentName), nullptr);
+				if (comp != nullptr)
+				{
+					outComponents.push_back(comp);
+					LOG_INFO("Found component on object: ", UnityStrToSysStr(*SDK::Object_Get_Name((SDK::Object*)(go), nullptr)));
+				}
+			}
+
+			int childCount = SDK::Transform_get_childCount(t, nullptr);
+			for (int i = 0; i < childCount; i++)
+			{
+				SDK::Transform* child = SDK::Transform_GetChild(t, i, nullptr);
+				Traverse(child);
+			}
+		};
+
+	Traverse(rootTransform);
+}

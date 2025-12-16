@@ -54,6 +54,9 @@ void StatsPanel::OnRender()
         DrawRow("Count events", std::to_string(ls->Fields.ghostEvents).c_str());
 
         ImGui::EndTable();
+
+		if (ImGui::Button("Collect Bone"))
+            collectBone = true;
     }
 
     ImGui::End();
@@ -72,4 +75,30 @@ void StatsPanel::OnMenuRender()
         else OnDeactivate();
     }
     ImGui::PopStyleVar();
+}
+
+void StatsPanel::StatsPanelCollectBone()
+{
+    if (!collectBone) return;
+    collectBone = false;
+    if (!InGame::evidenceController)
+    {
+        NOTIFY_ERROR_QUICK("You need to be in the game.");
+        return;
+    }
+
+    if (!SDK::PhotonNetwork_Get_IsMasterClient)
+    {
+        NOTIFY_ERROR_QUICK("You must be host to use this feature.");
+        return;
+    }
+
+    if (!InGame::evidenceController->Fields.bone)
+    {
+        NOTIFY_ERROR_QUICK("Bone not found.");
+        return;
+	}
+
+    SDK::DNAEvidence_GrabbedNetworked(InGame::evidenceController->Fields.bone, nullptr);
+    NOTIFY_SUCCESS_QUICK("Bone collected.");
 }

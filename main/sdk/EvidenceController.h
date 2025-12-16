@@ -7,9 +7,9 @@ namespace SDK
 	{
 		MonoBehaviourFields MonoBehaviourFields;
 		ListEvidence* EvidenceList;
-		void* Field2;
-		void* Field3;
-		void* Field4;
+		void* roomsToSpawnDNAEvidenceInside;
+		void* view;
+		DNAEvidence* bone;
 		Transform* GhostOrb;
 		void* Field6;
 		void* Field7;

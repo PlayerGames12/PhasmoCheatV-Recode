@@ -15,5 +15,6 @@ namespace PhasmoCheatV::Features::Movement
 		void OnMenuRender() override;
 		
 		void NoClipMain(SDK::FirstPersonController* firstPersonController);
+		void NoClipOffTeleport(SDK::FallTeleportBox* fallTeleportBox, SDK::Collider* collider, SDK::MethodInfo* methodInfo);
 	};
 }

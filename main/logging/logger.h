@@ -53,6 +53,8 @@ namespace PhasmoCheatV
         static constexpr WORD LevelToColor(Level level);
         static std::string GetTimestamp();
         bool InitializeLogDirectory();
+        FILE* StdoutFile;
+        FILE* StderrFile;
     };
     extern Logger* logger;
 }

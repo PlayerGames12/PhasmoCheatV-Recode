@@ -66,5 +66,5 @@ namespace SDK
 
 	DEC_MET(PhotonObjectInteract_Start, void(*)(PhotonObjectInteract* photonObjectInteract, MethodInfo* methodInfo), "Assembly-CSharp", "", "PhotonObjectInteract", "Start", 0);
 
-    DEC_ADDR(PCPropGrab_GrabDistance, float, "GameAssembly.dll", 0x4E7EF3C);
+    DEC_ADDR(PCPropGrab_GrabDistance, float, "GameAssembly.dll", 0x4EBD3A4);
 }

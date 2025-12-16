@@ -109,3 +109,11 @@ void NoClip::NoClipMain(SDK::FirstPersonController* firstPersonController)
     SDK::Transform_Set_Position(transform, position, nullptr);
     SDK::Rigidbody_Set_Position(rigidBody, position, nullptr);
 }
+
+void NoClip::NoClipOffTeleport(SDK::FallTeleportBox* fallTeleportBox, SDK::Collider* collider, SDK::MethodInfo* methodInfo) // Thanks to boostedyt
+{
+    if (IsActive())
+        return;
+    else
+        return SDK::FallTeleportBox_OnTriggerEnter(fallTeleportBox, collider, methodInfo);
+}

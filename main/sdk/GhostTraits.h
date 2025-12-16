@@ -29,6 +29,7 @@ namespace SDK
 		Moroi,
 		Deogen,
 		Thaye,
+		None
 	};
 
 	struct GhostTraits

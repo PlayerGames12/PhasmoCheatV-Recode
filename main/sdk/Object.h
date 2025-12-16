@@ -35,7 +35,7 @@ namespace SDK
     };
 
     DEC_MET(Object_Get_Name, SDK::String* (*)(Object* object, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Object", "get_name", 0);
-    DEC_MET(Object_Destroy, void (*)(SDK::Object* object, SDK::MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Object", "Destroy", 1);
+    DEC_MET(Object_Destroy, void(*)(SDK::Object* object, SDK::MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Object", "Destroy", 1);
     DEC_MET(Object_FindObjectsOfType, ObjectArray* (*)(Type* type, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Object", "FindObjectsOfType", 1);
-
+	DEC_MET(Object_set_name, void(*)(Object* object, String* name, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Object", "set_name", 1);
 }

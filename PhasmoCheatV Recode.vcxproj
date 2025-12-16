@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)build\</OutDir>
-    <IntDir>$(ShortProjectName)build\intermediate\</IntDir>
+    <IntDir>$(SolutionDir)build\intermediate\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -172,6 +172,7 @@
     <ClCompile Include="main\features\feats\doormod\doormodifier.cpp" />
     <ClCompile Include="main\features\feats\edvesp\edvesp.cpp" />
     <ClCompile Include="main\features\feats\exitvanone\exitvanone.cpp" />
+    <ClCompile Include="main\features\feats\forcestart\forcestart.cpp" />
     <ClCompile Include="main\features\feats\foveditor\foveditor.cpp" />
     <ClCompile Include="main\features\feats\fullbright\fullbright.cpp" />
     <ClCompile Include="main\features\feats\fuseesp\fuseesp.cpp" />
@@ -185,6 +186,7 @@
     <ClCompile Include="main\features\feats\infstamina\infinitystamina.cpp" />
     <ClCompile Include="main\features\feats\mapmod\mapmodifier.cpp" />
     <ClCompile Include="main\features\feats\noclip\noclip.cpp" />
+    <ClCompile Include="main\features\feats\notifyinfo\notifyinfo.cpp" />
     <ClCompile Include="main\features\feats\pickup\pickup.cpp" />
     <ClCompile Include="main\features\feats\playeresp\playeresp.cpp" />
     <ClCompile Include="main\features\feats\playermod\playermodifier.cpp" />
@@ -198,10 +200,12 @@
     <ClCompile Include="main\features\feats\waterka\watermark.cpp" />
     <ClCompile Include="main\features\feature.cpp" />
     <ClCompile Include="main\hooks\Application_CallLogCallback.cpp" />
+    <ClCompile Include="main\hooks\DNAEvidence_GrabbedNetworked.cpp" />
     <ClCompile Include="main\hooks\EMFData_Start.cpp" />
     <ClCompile Include="main\hooks\EvidenceController_Start.cpp" />
     <ClCompile Include="main\hooks\ExitLevel_Exit.cpp" />
     <ClCompile Include="main\hooks\ExitLevel_ThereAreAlivePlayersOutsideTheTruck.cpp" />
+    <ClCompile Include="main\hooks\FallTeleportBox_OnTriggerEnter.cpp" />
     <ClCompile Include="main\hooks\FirstPersonController_Update.cpp" />
     <ClCompile Include="main\hooks\GameController_Exit.cpp" />
     <ClCompile Include="main\hooks\GhostAI_Hunting.cpp" />
@@ -225,6 +229,7 @@
     <ClCompile Include="main\hooks\SaltShaker_Update.cpp" />
     <ClCompile Include="main\hooks\SaltSpot_SyncSalt.cpp" />
     <ClCompile Include="main\hooks\ServerManager_KickPlayerNetworked.cpp" />
+    <ClCompile Include="main\hooks\ServerManager_Ready.cpp" />
     <ClCompile Include="main\hooks\TarotCard_SetCard.cpp" />
     <ClCompile Include="main\hooks\WndProc.cpp" />
     <ClCompile Include="main\hooks\hooking.cpp" />
@@ -264,6 +269,7 @@
     <ClInclude Include="main\features\feats\doormod\doormodifier.h" />
     <ClInclude Include="main\features\feats\edvesp\edvesp.h" />
     <ClInclude Include="main\features\feats\exitvanone\exitvanone.h" />
+    <ClInclude Include="main\features\feats\forcestart\forcestart.h" />
     <ClInclude Include="main\features\feats\foveditor\foveditor.h" />
     <ClInclude Include="main\features\feats\fullbright\fullbright.h" />
     <ClInclude Include="main\features\feats\fuseesp\fuseesp.h" />
@@ -277,6 +283,7 @@
     <ClInclude Include="main\features\feats\infstamina\infinitystamina.h" />
     <ClInclude Include="main\features\feats\mapmod\mapmodifier.h" />
     <ClInclude Include="main\features\feats\noclip\noclip.h" />
+    <ClInclude Include="main\features\feats\notifyinfo\notifyinfo.h" />
     <ClInclude Include="main\features\feats\pickup\pickup.h" />
     <ClInclude Include="main\features\feats\playeresp\playeresp.h" />
     <ClInclude Include="main\features\feats\playermod\playermodifier.h" />
@@ -305,11 +312,13 @@
     <ClInclude Include="main\sdk\CursedItemsController.h" />
     <ClInclude Include="main\sdk\Cursor.h" />
     <ClInclude Include="main\sdk\Difficulty.h" />
+    <ClInclude Include="main\sdk\DNAEvidence.h" />
     <ClInclude Include="main\sdk\Door.h" />
     <ClInclude Include="main\sdk\EMFData.h" />
     <ClInclude Include="main\sdk\Evidence.h" />
     <ClInclude Include="main\sdk\EvidenceController.h" />
     <ClInclude Include="main\sdk\ExitLevel.h" />
+    <ClInclude Include="main\sdk\FallTeleportBox.h" />
     <ClInclude Include="main\sdk\FirstPersonController.h" />
     <ClInclude Include="main\sdk\FuseBox.h" />
     <ClInclude Include="main\sdk\GameController.h" />
@@ -321,6 +330,8 @@
     <ClInclude Include="main\sdk\GhostModel.h" />
     <ClInclude Include="main\sdk\GhostTraits.h" />
     <ClInclude Include="main\sdk\ItemInfo.h" />
+    <ClInclude Include="main\sdk\JackInTheBox.h" />
+    <ClInclude Include="main\sdk\JournalController.h" />
     <ClInclude Include="main\sdk\Key.h" />
     <ClInclude Include="main\sdk\LevelController.h" />
     <ClInclude Include="main\sdk\LevelRoom.h" />
@@ -339,6 +350,7 @@
     <ClInclude Include="main\sdk\Object.h" />
     <ClInclude Include="main\sdk\ObjectiveManager.h" />
     <ClInclude Include="main\sdk\PauseMenuController.h" />
+    <ClInclude Include="main\sdk\PhotonMessageInfo.h" />
     <ClInclude Include="main\sdk\PhotonNetwork.h" />
     <ClInclude Include="main\sdk\MediaValues.h" />
     <ClInclude Include="main\sdk\PhotonObjectInteract.h" />
@@ -362,6 +374,7 @@
     <ClInclude Include="main\sdk\System.h" />
     <ClInclude Include="main\sdk\TarotCard.h" />
     <ClInclude Include="main\sdk\TarotCards.h" />
+    <ClInclude Include="main\sdk\TextMeshProUGUI.h" />
     <ClInclude Include="main\sdk\Time.h" />
     <ClInclude Include="main\sdk\Transform.h" />
     <ClInclude Include="main\sdk\Vector2.h" />

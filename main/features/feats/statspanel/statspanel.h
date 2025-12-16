@@ -13,5 +13,8 @@ namespace PhasmoCheatV::Features::Visuals
 		void OnDeactivate() override {}
 		void OnRender() override;
 		void OnMenuRender() override;
+		void StatsPanelCollectBone();
+	private:
+		bool collectBone = false;
 	};
 }

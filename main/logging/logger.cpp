@@ -88,7 +88,11 @@ namespace PhasmoCheatV
         }
     }
     Logger::Logger(Level minLevel)
-        : MinLevel(minLevel), ConsoleExists(false), HConsole(nullptr)
+        : MinLevel(minLevel),
+        ConsoleExists(false),
+        HConsole(nullptr),
+        StdoutFile(nullptr),
+        StderrFile(nullptr)
     {
         if (!InitializeLogDirectory())
             throw std::runtime_error("Failed to initialize log directory");
@@ -97,9 +101,8 @@ namespace PhasmoCheatV
             ConsoleExists = AllocConsole() != 0;
             if (ConsoleExists)
             {
-                FILE* f;
-                freopen_s(&f, "CONOUT$", "w", stdout);
-                freopen_s(&f, "CONOUT$", "w", stderr);
+                freopen_s(&StdoutFile, "CONOUT$", "w", stdout);
+                freopen_s(&StderrFile, "CONOUT$", "w", stderr);
                 HConsole = GetStdHandle(STD_OUTPUT_HANDLE);
                 if (HConsole && HConsole != INVALID_HANDLE_VALUE)
                 {
@@ -117,15 +120,24 @@ namespace PhasmoCheatV
     }
     Logger::~Logger()
     {
+        if (StdoutFile)
+            fclose(StdoutFile);
+
+        if (StderrFile)
+            fclose(StderrFile);
+
         if (FileOut.is_open())
         {
             FileOut.close();
             std::string dir = Utils::GetPhasmoCheatVDirectory() + "\\logs";
             std::string lastPath = dir + "\\last-log.txt";
-            std::filesystem::copy_file(LogFilePath, lastPath, std::filesystem::copy_options::overwrite_existing);
+            std::filesystem::copy_file(LogFilePath, lastPath,
+                std::filesystem::copy_options::overwrite_existing);
         }
+
         if (ConsoleExists)
             FreeConsole();
+
         logger = nullptr;
     }
     std::string Logger::GetTimestamp()

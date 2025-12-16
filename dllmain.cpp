@@ -70,6 +70,9 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
         AHKA(SaltSpot_SyncSalt);
         AHKA(LevelSelectionManager_Start);
 		AHKA(Application_CallLogCallback);
+		AHKA(ServerManager_Ready);
+        AHKA(DNAEvidence_GrabbedNetworked);
+        AHKA(FallTeleportBox_OnTriggerEnter);
 
         hookingInstance->ApplyHooks();
 
@@ -102,7 +105,6 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
 
     loggerInstance.reset();
 
-    FreeConsole();
     CloseHandle(globalModule);
     FreeLibraryAndExitThread(globalModule, NULL);
     return 0;
