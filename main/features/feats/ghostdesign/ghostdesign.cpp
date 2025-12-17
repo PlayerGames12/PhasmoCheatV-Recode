@@ -41,7 +41,8 @@ void GhostDesigner::OnMenuRender()
         "Jinn", "Mare", "Revenant", "Shade", "Demon",
         "Yurei", "Oni", "Hantu", "Yokai", "Goryo",
         "Myling", "Onryo", "The Twins", "Raiju", "Obake",
-        "The Mimic", "Moroi", "Deogen", "Thaye"
+        "The Mimic", "Moroi", "Deogen", "Thaye", "Gallu", "Dayan",
+        "Obambo"
     };
 
     int ghostType = CONFIG_INT(GetConfigManager(), "GhostType");

@@ -265,6 +265,15 @@ std::string Utils::GhostEnumToStr(SDK::GhostType ghostType)
 	case SDK::GhostType::Thaye:
 		ghostTypeString = "Thaye";
 		break;
+	case SDK::GhostType::Gallu:
+		ghostTypeString = "Gallu";
+		break;
+	case SDK::GhostType::Dayan:
+		ghostTypeString = "Dayan";
+		break;
+	case SDK::GhostType::Obambo:
+		ghostTypeString = "Obambo";
+		break;
 	default:
 		ghostTypeString = "Unknown";
 		break;

@@ -39,11 +39,11 @@ void Teleport::OnMenuRender()
 
     ImGui::Separator();
     ImGui::Text("Winter Boxes:");
-    if (ImGui::Button("Test active all winter boxs (WARNING)"))
+    if (ImGui::Button("Active all winter boxs (WARNING)"))
         ActivateAllWinterBoxes();
-    if (ImGui::Button("Test teleport winter boxs"))
+    if (ImGui::Button("Teleport winter boxs"))
         TeleportWinterBoxes();
-    if (ImGui::Button("Test use all winter boxs (WARNING)"))
+    if (ImGui::Button("Use all winter boxs (WARNING)"))
         UseAllWinterBoxes();
 }
 

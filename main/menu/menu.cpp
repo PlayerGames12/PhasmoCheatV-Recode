@@ -308,6 +308,7 @@ void Menu::Render()
             if (IsDebugging)
             {
                 ImGui::BeginChild("TestContent", ImVec2(0, 0), true);
+
                 if (ImGui::Button("Test set Ghost"))
                 {
                     // Work good, but UI not updated

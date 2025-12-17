@@ -8,10 +8,10 @@
 namespace PhasmoCheatV::Globals
 {
 	// DEBUG
-	inline bool IsDebugging = true; 
+	inline bool IsDebugging = false; 
 	inline bool IsCalledLogs = false;
 	inline bool IsUpdateCalledLogs = false;
-	inline bool RedirectUnityLogs = true; // Warning! A lot of spam
+	inline bool RedirectUnityLogs = false; // Warning! A lot of spam
 	inline std::chrono::steady_clock::time_point CheatInjectedTime = std::chrono::steady_clock::now();
 	inline bool ForTestsFlag = false;
 
