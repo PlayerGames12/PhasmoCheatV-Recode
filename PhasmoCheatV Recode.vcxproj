@@ -200,8 +200,10 @@
     <ClCompile Include="main\features\feats\waterka\watermark.cpp" />
     <ClCompile Include="main\features\feature.cpp" />
     <ClCompile Include="main\hooks\Application_CallLogCallback.cpp" />
+    <ClCompile Include="main\hooks\CursedItemsController_Awake.cpp" />
     <ClCompile Include="main\hooks\DNAEvidence_GrabbedNetworked.cpp" />
     <ClCompile Include="main\hooks\EMFData_Start.cpp" />
+    <ClCompile Include="main\hooks\EMFData_UpdateNightMareGraph.cpp" />
     <ClCompile Include="main\hooks\EvidenceController_Start.cpp" />
     <ClCompile Include="main\hooks\ExitLevel_Exit.cpp" />
     <ClCompile Include="main\hooks\ExitLevel_ThereAreAlivePlayersOutsideTheTruck.cpp" />
@@ -218,6 +220,11 @@
     <ClCompile Include="main\hooks\LevelSelectionManager_Start.cpp" />
     <ClCompile Include="main\hooks\LevelValues_GetInvestigationBonusReward.cpp" />
     <ClCompile Include="main\hooks\LevelValues_IsPerfectGame.cpp" />
+    <ClCompile Include="main\hooks\LightningController_Start.cpp" />
+    <ClCompile Include="main\hooks\LightSwitch_Start.cpp" />
+    <ClCompile Include="main\hooks\RandomWeather_Start.cpp" />
+    <ClCompile Include="main\hooks\TarotCards_BreakItem.cpp" />
+    <ClCompile Include="main\hooks\TarotCards_GrabCard.cpp" />
     <ClCompile Include="main\hooks\MediaValues_GetRewardAmount.cpp" />
     <ClCompile Include="main\hooks\ObjectiveManager_Update.cpp" />
     <ClCompile Include="main\hooks\PauseMenuController_Leave.cpp" />
@@ -339,6 +346,7 @@
     <ClInclude Include="main\sdk\LevelStats.h" />
     <ClInclude Include="main\sdk\LevelValues.h" />
     <ClInclude Include="main\sdk\Light.h" />
+    <ClInclude Include="main\sdk\LightningController.h" />
     <ClInclude Include="main\sdk\LightSwitch.h" />
     <ClInclude Include="main\sdk\LineRenderer.h" />
     <ClInclude Include="main\sdk\Map.h" />
@@ -360,6 +368,7 @@
     <ClInclude Include="main\sdk\PlayerSanity.h" />
     <ClInclude Include="main\sdk\PlayerStamina.h" />
     <ClInclude Include="main\sdk\Quaternion.h" />
+    <ClInclude Include="main\sdk\RandomWeather.h" />
     <ClInclude Include="main\sdk\RaycastHit.h" />
     <ClInclude Include="main\sdk\Resources.h" />
     <ClInclude Include="main\sdk\Rigidbody.h" />
@@ -379,6 +388,7 @@
     <ClInclude Include="main\sdk\Transform.h" />
     <ClInclude Include="main\sdk\Vector2.h" />
     <ClInclude Include="main\sdk\Vector3.h" />
+    <ClInclude Include="main\sdk\WeatherProfile.h" />
     <ClInclude Include="main\utils\notification.h" />
     <ClInclude Include="main\utils\utils.h" />
     <ClInclude Include="res\fonts\DefFont.hpp" />

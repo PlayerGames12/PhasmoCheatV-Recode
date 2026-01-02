@@ -42,5 +42,12 @@ namespace PhasmoCheatV
 		static void hkServerManager_Ready(SDK::ServerManager* serverManager, bool on, SDK::MethodInfo* methodInfo);
 		static void hkDNAEvidence_GrabbedNetworked(SDK::DNAEvidence* dnaEvidence, SDK::MethodInfo* methodInfo);
 		static void hkFallTeleportBox_OnTriggerEnter(SDK::FallTeleportBox* fallTeleportBox, SDK::Collider* collider, SDK::MethodInfo* methodInfo);
+		static void hkLightSwitch_Start(SDK::LightSwitch* lightSwitch, SDK::MethodInfo* methodInfo);
+		static void hkLightningController_Start(SDK::LightningController* lightningController, SDK::MethodInfo* methodInfo);
+		static void hkTarotCards_GrabCard(SDK::TarotCards* tarotCards, SDK::MethodInfo* methodInfo);
+		static void hkTarotCards_BreakItem(SDK::TarotCards* tarotCards, SDK::MethodInfo* methodInfo);
+		static void hkRandomWeather_Start(SDK::RandomWeather* randomWeather, SDK::MethodInfo* methodInfo);
+		static void hkEMFData_UpdateNightMareGraph(SDK::EMFData* emfData, SDK::MethodInfo* methodInfo);
+		static void hkCursedItemsController_Awake(SDK::CursedItemsController* cursedItemsController, SDK::MethodInfo* methodInfo);
 	};
 }

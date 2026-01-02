@@ -15,5 +15,6 @@ namespace PhasmoCheatV::Features::Cursed
 		void OnMenuRender() override;
 
 		void TarotCardApplySettings(SDK::TarotCardType& type);
+		void TarotCardInfCards(SDK::TarotCards* tarotCards, SDK::MethodInfo* methodInfo);
 	};
 }

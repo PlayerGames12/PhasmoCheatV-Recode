@@ -102,6 +102,22 @@ void MapModifier::OnMenuRender()
             if (ImGui::SliderInt("Max lights", &MaxLight, 1, 100))
                 SET_CONFIG_VALUE(GetConfigManager(), "MaxLight", int32_t, MaxLight);
         }
+
+        if (ImGui::Button("Activate all lights switches"))
+            lightsModifier = 1;
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Deactivate all lights switches"))
+            lightsModifier = 2;
+
+        if (ImGui::Button("Trigger lightning"))
+            callLightning = true;
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Switch fuse box"))
+            switchFuseBox = true;
     }
 }
 
@@ -110,6 +126,108 @@ void MapModifier::MapModifierMain()
     if (IsActive() && CONFIG_BOOL(GetConfigManager(), "CustomMaxLight") && InGame::fuseBox)
     {
         InGame::fuseBox->Fields.maxLights = CONFIG_INT(GetConfigManager(), "MaxLight");
+    }
+    
+    if (IsActive() && lightsModifier == 1)
+    {
+        lightsModifier = false;
+
+        auto vectorLights = InGame::lightSwitchs;
+
+        if (vectorLights.empty())
+        {
+            NOTIFY_ERROR_QUICK("You need to be in the game.");
+            return;
+        }
+
+        for (SDK::LightSwitch* lightSwitch : vectorLights)
+        {
+            if (!lightSwitch)
+                continue;
+
+            SDK::LightSwitch_Use(lightSwitch, true, false, false, false, nullptr);
+        }
+
+        NOTIFY_SUCCESS_QUICK("All light switches has been activated.");
+    }
+    if (IsActive() && lightsModifier == 2)
+    {
+        lightsModifier = 0;
+
+        auto vectorLights = InGame::lightSwitchs;
+
+        if (vectorLights.empty())
+        {
+            NOTIFY_ERROR_QUICK("You need to be in the game.");
+            return;
+        }
+
+        for (SDK::LightSwitch* lightSwitch : vectorLights)
+        {
+            if (!lightSwitch)
+                continue;
+
+            SDK::LightSwitch_Use(lightSwitch, false, false, false, false, nullptr);
+        }
+
+        NOTIFY_SUCCESS_QUICK("All light switches has been deactivated.");
+    }
+    if (IsActive() && callLightning)
+    {
+        callLightning = false;
+
+        auto* lightningController = InGame::lightningController;
+
+        if (!lightningController)
+        {
+            NOTIFY_ERROR_QUICK("You need to be in the game.");
+            return;
+        }
+
+        auto* randomWeather = InGame::randomWeather;
+
+        if (!randomWeather)
+        {
+            NOTIFY_ERROR_QUICK("[RandomWeather] You need to be in the game.");
+            return;
+        }
+
+        auto* weatherProfile = randomWeather->Fields.currentWeatherProfile;
+
+        if (!weatherProfile)
+        {
+            NOTIFY_ERROR_QUICK("[WeatherProfile] You need to be in the game.");
+            return;
+        }
+
+        if (weatherProfile->Fields.weatherType != SDK::WeatherType::heavyRain)
+        {
+            NOTIFY_ERROR_QUICK("The weather should be heavy rain.");
+            return;
+        }
+
+        auto* methodLightning = SDK::Get_LightningController_PlayLightning();
+
+        methodLightning(lightningController, nullptr);
+
+        NOTIFY_SUCCESS_QUICK("Lightning has been triggered.");
+    }
+
+    if (IsActive() && switchFuseBox)
+    {
+        switchFuseBox = false;
+
+        auto* fuseBox = InGame::fuseBox;
+
+        if (!fuseBox)
+        { 
+            NOTIFY_ERROR_QUICK("You need to be in the game.");
+            return;
+        }
+
+        SDK::FuseBox_Use(fuseBox, nullptr);
+
+        NOTIFY_SUCCESS_QUICK("Fuse box has been switched.");
     }
 }
 

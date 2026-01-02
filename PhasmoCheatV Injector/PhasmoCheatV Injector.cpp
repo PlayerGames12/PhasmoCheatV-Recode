@@ -35,35 +35,6 @@ bool SelectDll(char* p)
     return GetOpenFileNameA(&o);
 }
 
-std::string Cut(const char* s)
-{
-    std::regex r(R"((\d\.\d{2}\.\d\.\d))");
-    std::cmatch m;
-    if (std::regex_search(s, m, r)) return m.str(1);
-    return {};
-}
-
-void PrintVersion(HANDLE p)
-{
-    HMODULE m;
-    MODULEINFO i{};
-    DWORD cb;
-    EnumProcessModules(p, &m, sizeof(m), &cb);
-    GetModuleInformation(p, m, &i, sizeof(i));
-    std::vector<uint8_t> b(i.SizeOfImage);
-    ReadProcessMemory(p, i.lpBaseOfDll, b.data(), b.size(), nullptr);
-    for (size_t x = 0; x + 9 < b.size(); x++)
-        if (b[x] == 0x33 && b[x + 1] == 0x30 && b[x + 2] == 0x2E && b[x + 3] == 0x31 && b[x + 5] == 0x2E && b[x + 7] == 0x2E)
-        {
-            auto v = Cut((char*)(b.data() + x));
-            if (!v.empty())
-            {
-                std::cout << "Version: " << v << std::endl;
-                return;
-            }
-        }
-}
-
 bool CopyToTemp(const char* src, char* out)
 {
     char tp[MAX_PATH];
@@ -89,7 +60,6 @@ int main()
     if (!p) return 0;
 
     std::cout << "PID: " << pid << std::endl;
-    PrintVersion(p);
 
     char tmp[MAX_PATH]{};
     if (!CopyToTemp(dll, tmp)) return 0;

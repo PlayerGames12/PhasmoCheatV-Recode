@@ -6,8 +6,6 @@
 
 using namespace PhasmoCheatV;
 
-// TODO: FIX CRASH FULLBRIGHT.
-
 SDK::CursorLockMode Menu::previousCursorLockMode = SDK::CursorLockMode::None;
 
 void Menu::Initialize() {
@@ -139,8 +137,8 @@ void Menu::Render()
         ImGui::Separator();
 
         ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5 * dpiScale);
-        ImGui::SetCursorPosX((tabBarWidth * dpiScale - ImGui::CalcTextSize("v2.1 | MIT License").x) * 0.5f);
-        ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.6f, 0.7f), "v2.1 | MIT License");
+        ImGui::SetCursorPosX((tabBarWidth * dpiScale - ImGui::CalcTextSize("v2.3 | MIT License").x) * 0.5f);
+        ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.6f, 0.7f), "v2.3 | MIT License");
 
         ImGui::PopStyleVar();
     }
@@ -315,26 +313,6 @@ void Menu::Render()
                     auto* jc = Utils::GetMainMenuJournal();
                     SDK::JournalController_SelectGhost(jc, SDK::GhostType::Demon, nullptr);
                     LOG_INFO("JournalController_SelectGhost is called");
-                }
-
-                if (ImGui::Button("Test force exit"))
-                {
-                    // Crash the game. Need call in the main thread of the game. 
-                    // Not work in online. 
-                    // Need real data player in PhotonMessageInfo. 
-                    // Use GetLocalPlayer, gettimestamp and more most likely
-
-                    auto* messageInfo = Utils::CreatePhotonMessageInfo();
-
-                    SDK::ExitLevel* exitLevel2 = Utils::GetExitLevel();
-
-                    if (messageInfo)
-                        LOG_INFO("Photon create and = ", messageInfo);
-                    else
-                        LOG_INFO("Photon created failed.");
-
-                    if (exitLevel2)
-                        SDK::ExitLevel_Exit(exitLevel2, messageInfo, nullptr);
                 }
                 
                 if (ImGui::Button("Call test"))

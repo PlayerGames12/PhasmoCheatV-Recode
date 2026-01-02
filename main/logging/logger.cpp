@@ -8,9 +8,11 @@
 #include <iomanip>
 #include "../Globals.h"
 using namespace PhasmoCheatV::Globals;
+
 namespace PhasmoCheatV
 {
     Logger* logger = nullptr;
+
     constexpr std::string_view Logger::LevelToString(Level level)
     {
         switch (level)
@@ -21,12 +23,13 @@ namespace PhasmoCheatV
         case Level::Warning: return "[Warning]";
         case Level::Error: return "[Error]";
         case Level::Hooks: return "[Hooks]";
-		case Level::UInfo: return "[Unity Info]";
-		case Level::UWarning: return "[Unity Warning]";
-		case Level::UError: return "[Unity Error]";
+        case Level::UInfo: return "[Unity Info]";
+        case Level::UWarning: return "[Unity Warning]";
+        case Level::UError: return "[Unity Error]";
         default: return "[Unknown]";
         }
     }
+
     constexpr WORD Logger::LevelToColor(Level level)
     {
         switch (level)
@@ -53,6 +56,7 @@ namespace PhasmoCheatV
             return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
         }
     }
+
     bool Logger::InitializeLogDirectory()
     {
         try
@@ -87,6 +91,7 @@ namespace PhasmoCheatV
             return false;
         }
     }
+
     Logger::Logger(Level minLevel)
         : MinLevel(minLevel),
         ConsoleExists(false),
@@ -96,6 +101,7 @@ namespace PhasmoCheatV
     {
         if (!InitializeLogDirectory())
             throw std::runtime_error("Failed to initialize log directory");
+
         if (IsDebugging)
         {
             ConsoleExists = AllocConsole() != 0;
@@ -118,13 +124,20 @@ namespace PhasmoCheatV
         }
         logger = this;
     }
+
     Logger::~Logger()
     {
         if (StdoutFile)
-            fclose(StdoutFile);
+        {
+            fflush(stdout);
+            StdoutFile = nullptr;
+        }
 
         if (StderrFile)
-            fclose(StderrFile);
+        {
+            fflush(stderr);
+            StderrFile = nullptr;
+        }
 
         if (FileOut.is_open())
         {
@@ -140,6 +153,7 @@ namespace PhasmoCheatV
 
         logger = nullptr;
     }
+
     std::string Logger::GetTimestamp()
     {
         auto now = std::chrono::system_clock::now();
@@ -153,6 +167,7 @@ namespace PhasmoCheatV
         ss << ts << "." << std::setfill('0') << std::setw(3) << (duration.count() % 1000);
         return ss.str();
     }
+
     void Logger::ActualLog(Level level, std::string_view msg)
     {
         if (level < MinLevel)
@@ -161,17 +176,21 @@ namespace PhasmoCheatV
             return;
         if ((level == Level::Info || level == Level::Warning) && !IsDebugging)
             return;
+
         std::string t = GetTimestamp();
         std::string s = std::string(LevelToString(level));
         std::string line = "[" + t + "] " + s + " " + std::string(msg);
+
         {
             std::lock_guard lock(LogMutex);
+
             if (HConsole && HConsole != INVALID_HANDLE_VALUE)
             {
                 SetConsoleTextAttribute(HConsole, LevelToColor(level));
                 std::cout << line << std::endl;
                 SetConsoleTextAttribute(HConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
             }
+
             if (FileOut.is_open() && FileOut.good())
             {
                 FileOut << line << "\n";

@@ -15,5 +15,7 @@ namespace PhasmoCheatV::Features::Movement
 		void OnMenuRender() override;
 
 		void CustomSpeedMain(SDK::FirstPersonController* firstPersonController);
+	private:
+		bool active = false;
 	};
 }

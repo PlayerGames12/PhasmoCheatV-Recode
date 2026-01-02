@@ -40,7 +40,7 @@ namespace Utils {
 	SDK::StoreItemInfo* GetStoreItemInfo();
 	SDK::ObjectArray* FindObjectsOfType(std::string type);
 	SDK::JournalController* GetMainMenuJournal();
-	SDK::PhotonMessageInfo* CreatePhotonMessageInfo();
+	SDK::PhotonMessageInfo* CreatePhotonMessageInfo(SDK::PhotonView* photonView);
 	SDK::ExitLevel* GetExitLevel();
 	SDK::ServerManager* GetServerManager();
 	void SetTagOnGObject(SDK::GameObject* gameObject, const std::string& tag);

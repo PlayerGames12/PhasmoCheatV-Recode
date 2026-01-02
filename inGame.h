@@ -15,6 +15,10 @@ namespace PhasmoCheatV::InGame
     inline SDK::CursedItemsController* cursedItemsController = nullptr;
     inline std::vector<SDK::Key*> keys;
     inline std::vector<SDK::SaltShaker*> saltShakers;
+    inline std::vector<SDK::LightSwitch*> lightSwitchs;
+    inline SDK::LightningController* lightningController = nullptr;
+    inline SDK::TarotCards* tarotCards = nullptr;
+    inline SDK::RandomWeather* randomWeather = nullptr;
 
     // Reset in-game pointers
     inline void Reset() {
@@ -30,5 +34,9 @@ namespace PhasmoCheatV::InGame
         keys.clear();
         saltShakers.clear();
         cursedItemsController = nullptr;
+        lightSwitchs.clear();
+        lightningController = nullptr;
+        tarotCards = nullptr;
+        randomWeather = nullptr;
     }
 }

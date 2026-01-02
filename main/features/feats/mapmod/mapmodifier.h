@@ -94,6 +94,8 @@ namespace PhasmoCheatV::Features::Map
             return MapNames::TangleWoodDrive;
         }
 
-        bool OnAllLights = false;
+        int32_t lightsModifier = 0; // 0 - false function, 1 - On, 2 - off
+        bool callLightning = false;
+        bool switchFuseBox = false;
     };
 }

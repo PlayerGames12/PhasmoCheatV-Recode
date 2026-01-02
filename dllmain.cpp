@@ -73,6 +73,23 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
 		AHKA(ServerManager_Ready);
         AHKA(DNAEvidence_GrabbedNetworked);
         AHKA(FallTeleportBox_OnTriggerEnter);
+        AHKA(LightSwitch_Start);
+        AHKA(LightningController_Start);
+        AHKA(TarotCards_BreakItem);
+        AHKA(RandomWeather_Start);
+        AHKA(CursedItemsController_Awake);
+
+        auto& funcs_grabCard = const_cast<std::vector<SDK::TarotCards_GrabCard_t>&>(SDK::Get_TarotCards_GrabCard_All());
+        for (size_t i = 0; i < funcs_grabCard.size(); i++)
+        {
+            hooking->AddHook("TarotCards_GrabCard_" + std::to_string(i), reinterpret_cast<PVOID*>(&funcs_grabCard[i]), reinterpret_cast<PVOID>(&Hooks::hkTarotCards_GrabCard));
+        }
+
+        auto& funcs_UpdateNightmareGraph = const_cast<std::vector<SDK::EMFData_UpdateNightMareGraph_t>&>(SDK::Get_EMFData_UpdateNightMareGraph_All());
+        for (size_t i = 0; i < funcs_UpdateNightmareGraph.size(); i++)
+        {
+            hooking->AddHook("EMFData_UpdateNightMareGraph_" + std::to_string(i), reinterpret_cast<PVOID*>(&funcs_UpdateNightmareGraph[i]), reinterpret_cast<PVOID>(&Hooks::hkEMFData_UpdateNightMareGraph));
+        }
 
         hookingInstance->ApplyHooks();
 
@@ -92,7 +109,7 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
         }
 
         hookingInstance->RemoveHooks();
-        hookingInstance.reset();
+        hookingInstance.reset(); 
         rendererInstance.reset();
         featureInstance.reset();
 

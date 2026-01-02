@@ -8,7 +8,7 @@
 namespace PhasmoCheatV::Globals
 {
 	// DEBUG
-	inline bool IsDebugging = false; 
+	inline bool IsDebugging = false;
 	inline bool IsCalledLogs = false;
 	inline bool IsUpdateCalledLogs = false;
 	inline bool RedirectUnityLogs = false; // Warning! A lot of spam

@@ -20,7 +20,7 @@ namespace SDK
 		void* OnClip;
 		void* OffClip;
 		bool IsOn;
-		LightSwitchArray* switches;
+		LightSwitchArray* switches; // Not work. Always = 0
 		void* PhotonInteract;
 		int32_t currentOnLights;
 		int32_t maxLights;
@@ -43,4 +43,5 @@ namespace SDK
 	};
 
 	DEC_MET(FuseBox_Start, void(*)(FuseBox* fuseBox, MethodInfo* methodInfo), "Assembly-CSharp", "", "FuseBox", "Start", 0);
+	DEC_MET(FuseBox_Use, void(*)(FuseBox* fuseBox, MethodInfo* methodInfo), "Assembly-CSharp", "", "FuseBox", "Use", 0);
 }

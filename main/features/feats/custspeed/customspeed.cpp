@@ -26,9 +26,12 @@ void CustomSpeed::CustomSpeedMain(SDK::FirstPersonController* firstPersonControl
 	if (IsActive())
 	{
 		firstPersonController->Fields.CurrentSpeed = CONFIG_FLOAT(GetConfigManager(), "Speed");
+		active = true;
 	}
 	else
 	{
-		firstPersonController->Fields.CurrentSpeed = !firstPersonController->Fields.IsSprinting ? 1.6f : 3.f;
+		if (active)
+			firstPersonController->Fields.CurrentSpeed = !firstPersonController->Fields.IsSprinting ? 1.6f : 3.f;
+		active = false;
 	}
 }

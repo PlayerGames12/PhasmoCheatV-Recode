@@ -112,4 +112,5 @@ namespace SDK
     DEC_MET(Player_ToggleFreezePlayer, void(*)(Player* player, bool freeze, MethodInfo* methodInfo), "Assembly-CSharp", "", "Player", "ToggleFreezePlayer", 1);
     DEC_MET(Player_RevivePlayer, void(*)(Player* player, bool b1, MethodInfo* methodInfo), "Assembly-CSharp", "", "Player", "RevivePlayer", 1);
     DEC_MET(Player_Revive, std::nullptr_t(*)(Player* player, void* photonMessageInfo, MethodInfo* methodInfo), "Assembly-CSharp", "", "Player", "Revive", 1);
+    DEC_MET(Player_SpawnDeadBodyNetworked, void(*)(Player* player, PhotonMessageInfo* photonMessageInfo, MethodInfo* methodInfo), "Assembly-CSharp", "", "Player", "SpawnDeadBodyNetworked", 1);
 }

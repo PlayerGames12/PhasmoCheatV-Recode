@@ -66,5 +66,5 @@ namespace SDK
 		CursedItemsControllerFields Fields;
 	};
 
-	DEC_MET(CursedItemsController_Awake, void(*)(CursedItemsController* cursedItemsController, MethodInfo* methodInfo), "Assembly-CSharp", "", "cursedItemsController", "Awake", 0);
+	DEC_MET(CursedItemsController_Awake, void(*)(CursedItemsController* cursedItemsController, MethodInfo* methodInfo), "Assembly-CSharp", "", "CursedItemsController", "Awake", 0);
 }

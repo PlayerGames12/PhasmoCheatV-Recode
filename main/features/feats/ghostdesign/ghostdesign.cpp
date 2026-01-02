@@ -37,12 +37,12 @@ void GhostDesigner::OnMenuRender()
         SET_CONFIG_VALUE(GetConfigManager(), "GhostAge", int, ghostAge);
 
     const char* ghostTypes[] = {
-        "Spirit", "Wraith", "Phantom", "Poltergeist", "Banshee",
-        "Jinn", "Mare", "Revenant", "Shade", "Demon",
-        "Yurei", "Oni", "Hantu", "Yokai", "Goryo",
-        "Myling", "Onryo", "The Twins", "Raiju", "Obake",
-        "The Mimic", "Moroi", "Deogen", "Thaye", "Gallu", "Dayan",
-        "Obambo"
+        "Spirit","Wraith","Phantom","Poltergeist","Banshee",
+        "Jinn","Mare","Revenant","Shade","Demon",
+        "Yurei","Oni","Hantu","Yokai","Goryo",
+        "Myling","Onryo","The Twins","Raiju","Obake",
+        "Mimic","Moroi","Deogen","Thaye","None",
+        "Gallu","Dayan","Obambo"
     };
 
     int ghostType = CONFIG_INT(GetConfigManager(), "GhostType");

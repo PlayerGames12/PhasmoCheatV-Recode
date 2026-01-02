@@ -706,7 +706,7 @@ SDK::JournalController* Utils::GetMainMenuJournal()
 	return nullptr;
 }
 
-SDK::PhotonMessageInfo* Utils::CreatePhotonMessageInfo()
+SDK::PhotonMessageInfo* Utils::CreatePhotonMessageInfo(SDK::PhotonView* photonView)
 {
 	if (!il2cpp_initialize()) return nullptr;
 
@@ -722,15 +722,17 @@ SDK::PhotonMessageInfo* Utils::CreatePhotonMessageInfo()
 	Il2CppObject* pmi = il2cpp_object_new_from_class(pmiClass);
 	if (!pmi) return nullptr;
 
-	const MethodInfo* ctor =
-		il2cpp_class_get_method_from_name_wrap(pmiClass, ".ctor", 0);
+	auto* localPlayer = SDK::PhotonNetwork_Get_LocalPlayer(nullptr);
+	int timestamp = SDK::PhotonNetwork_Get_ServerTimestamp(nullptr);
+
+	void* ctorArgs[3] = { localPlayer, &timestamp, photonView };
+	const MethodInfo* ctor = il2cpp_class_get_method_from_name_wrap(pmiClass, ".ctor", 3);
 	if (ctor)
-		il2cpp_runtime_invoke_wrap(ctor, pmi, nullptr, nullptr);
+		il2cpp_runtime_invoke_wrap(ctor, pmi, ctorArgs, nullptr);
 
-	auto* pmic = reinterpret_cast<SDK::PhotonMessageInfo*>(pmi);
-
-	return pmic;
+	return reinterpret_cast<SDK::PhotonMessageInfo*>(pmi);
 }
+
 
 SDK::ExitLevel* Utils::GetExitLevel()
 {
