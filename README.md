@@ -1,3 +1,19 @@
-A universal cheat on the game Phasmophobia the name PhasmoCheatV. This version is recoded. 
+# PhasmoCheatV
 
-I am not an ideal programmer, my code may contain vulnerabilities, errors, exceptions, I am just learning C++. Don't judge me harshly
+> A universal cheat for the game **Phasmophobia**.  
+> This version has been fully recoded and significantly reworked.
+
+---
+
+## ⚠️ Current Status
+
+> The game has recently been updated, which caused the cheat to stop working.  
+> I am currently working on fixing the issues -- please be patient while I update everything.
+
+---
+
+## 📌 Disclaimer
+
+> I am not a professional developer yet.  
+> This project is part of my learning process in C++, so the code may contain bugs, vulnerabilities, or unexpected behavior.
+> Please don’t judge too harshly -- feedback is always welcome.
