@@ -7,8 +7,8 @@
 
 ## ⚠️ Current Status
 
-> The game has recently been updated, which caused the cheat to stop working.  
-> I am currently working on fixing the issues -- please be patient while I update everything.
+> The cheat is now fully operational -- everything works as expected.
+> No critical issues have been reported with the current game version.
 
 ---
 
