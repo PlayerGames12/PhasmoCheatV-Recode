@@ -27,7 +27,8 @@ namespace PhasmoCheatV
             UInfo,
             UWarning,
             UError,
-            RPC
+            RPC,
+            Release
         };
         explicit Logger(Level minLevel = Level::Call);
         ~Logger();
@@ -40,6 +41,18 @@ namespace PhasmoCheatV
         }
 
         void ActualLog(Level level, std::string_view message);
+        void LogRelease(WORD color, std::string_view message);
+
+        template<typename... Args>
+        static std::string FormatMessage(const char* format, Args&&... args)
+        {
+            std::string formatStr(format);
+
+            if (ContainsPrintfFormat(formatStr))
+                return PrintfFormat(format, std::forward<Args>(args)...);
+            else
+                return ConcatenateFormat(format, std::forward<Args>(args)...);
+        }
 
     private:
         const Level MinLevel;
@@ -63,17 +76,6 @@ namespace PhasmoCheatV
             std::ostringstream ss;
             ss << std::forward<T>(arg);
             return ss.str();
-        }
-
-        template<typename... Args>
-        static std::string FormatMessage(const char* format, Args&&... args)
-        {
-            std::string formatStr(format);
-
-            if (ContainsPrintfFormat(formatStr))
-                return PrintfFormat(format, std::forward<Args>(args)...);
-            else
-                return ConcatenateFormat(format, std::forward<Args>(args)...);
         }
 
         template<typename T>
@@ -134,6 +136,9 @@ namespace PhasmoCheatV
 #define LOG_RPC(...) \
     if (PhasmoCheatV::logger && IsDebugging && IsRPCLogs) \
         PhasmoCheatV::logger->Log(PhasmoCheatV::Logger::Level::RPC, __VA_ARGS__)
+#define LOG_RELEASE(color, ...) \
+    if (PhasmoCheatV::logger) \
+        PhasmoCheatV::logger->LogRelease(color, PhasmoCheatV::Logger::FormatMessage(__VA_ARGS__))
 
 #define LOG_UNITY(...) \
     if (PhasmoCheatV::logger && IsDebugging) \

@@ -3,7 +3,7 @@
 using namespace PhasmoCheatV::Features::Visuals;
 namespace fs = std::filesystem;
 
-FontChanger::FontChanger() : FeatureCore("Font Changer", TYPE_VISUALS) 
+FontChanger::FontChanger() : FeatureCore(LANG("FontChanger_Header"), TYPE_VISUALS) 
 {
     DECLARE_CONFIG(GetConfigManager(), "SelectedFont", std::string, "Arial");
 }

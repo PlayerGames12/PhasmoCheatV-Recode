@@ -7,28 +7,25 @@ namespace SDK
 
     struct PlayerStaminaFields
     {
-        MonoBehaviourFields MonoBehaviourFields;
-        void* OutOfStaminaSource;
-        void* OutOfBreathMale;
-        void* OutOfBreathFemale;
-        Player* Player;
-        bool MaleSoundsOverride;
-        bool FemaleSoundsOverride;
-        bool isMoving;
-        bool canSprint;
-        bool isSprinting;
-        bool isWalking;
-        bool Draining;
-        bool CanDrainStamina;
-        bool NewIsSprinting;
-        bool NewIsWalking;
-        bool StaminaDrained;
-        bool Delayed;
+        MonoBehaviourFields MonoBehaviourFields; // 0x0 - 0x20
+        void* player;
+        void* networkedStamina;
+        bool unk_30;
+        bool unk_31;
+        bool unk_32;
+        bool unk_33;
+        bool unk_34;
+        bool unk_35;
+        bool unk_36;
+        bool unk_37;
+        bool unk_38;
+        bool unk_39;
+        char pad_3A[0x2];
         float CurrentStaminaRecharge;
         float CurrentStamina;
         float RestoreDelay;
-        void* OnStaminaDrained;
-        void* OnStaminaRestored;
+        void* staminaDrainedEvent;
+        void* staminaRestoredEvent;
     };
 
     struct PlayerStamina

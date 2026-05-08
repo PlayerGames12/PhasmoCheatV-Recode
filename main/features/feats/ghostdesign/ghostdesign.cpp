@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Ghost;
 
-GhostDesigner::GhostDesigner() : FeatureCore("Ghost Designer (HOST)", TYPE_GHOST)
+GhostDesigner::GhostDesigner() : FeatureCore(LANG("GhostDesigner(HOST)_Header"), TYPE_GHOST)
 {
     DECLARE_CONFIG(GetConfigManager(), "GhostAge", int, 0);
     DECLARE_CONFIG(GetConfigManager(), "GhostType", int, static_cast<int>(SDK::GhostType::Spirit));

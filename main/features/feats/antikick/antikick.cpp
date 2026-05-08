@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Misc;
 
-AntiKick::AntiKick() : FeatureCore("AntiKick", TYPE_MISC) {}
+AntiKick::AntiKick() : FeatureCore(LANG("AntiKick_Header"), TYPE_MISC) {}
 void AntiKick::OnMenuRender()
 {
 	bool enabled = IsActive();

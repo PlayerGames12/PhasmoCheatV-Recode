@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Misc;
 
-FastThermometer::FastThermometer() : FeatureCore("Fast Thermometer", TYPE_MISC) {}
+FastThermometer::FastThermometer() : FeatureCore(LANG("FastThermometer_Header"), TYPE_MISC) {}
 
 void FastThermometer::OnMenuRender()
 {

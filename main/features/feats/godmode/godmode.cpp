@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Players;
 
-GodMode::GodMode() : FeatureCore("GodMode", TYPE_PLAYERS) {}
+GodMode::GodMode() : FeatureCore(LANG("GodMode_Header"), TYPE_PLAYERS) {}
 
 void GodMode::OnMenuRender()
 {

@@ -69,7 +69,7 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, StatsPanel);
     ADD_FEATURE(this, PlayerESP);
     ADD_FEATURE(this, ActivityMonitor);
-    ADD_FEATURE(this, JackalopeESP);
+    //ADD_FEATURE(this, JackalopeESP);
 
     // Players
     ADD_FEATURE(this, GodMode);
@@ -106,6 +106,7 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, JournalModifier);
     ADD_FEATURE(this, ForceStart);
     ADD_FEATURE(this, ShopModifier);
+	ADD_FEATURE(this, SpiritBoxAlwaysAnswer);
 
     // Difficulty
     ADD_FEATURE(this, DifficultyModifier);
@@ -117,6 +118,7 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, SaltModifier);
 	ADD_FEATURE(this, AlwaysBloodMoon);
     ADD_FEATURE(this, AutoPickupBone);
+    ADD_FEATURE(this, FuseBoxModifier);
 
     // Configs
     ADD_FEATURE(this, ConfigsManager);

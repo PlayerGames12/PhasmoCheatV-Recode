@@ -6,6 +6,7 @@
 #include "libs/il2cpp/il2cpp.h"
 #include "loader/entry.h"
 #include "loader/proxy.h"
+#include "main/discordrpc/discordrpc.h"
 
 using namespace PhasmoCheatV;
 
@@ -42,6 +43,7 @@ static std::unique_ptr<FeatureHandler> featureInstance;
 extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
 {
     WaitForGameReady();
+    bool hooksApplied = false;
 
     try {
         loggerInstance = std::make_unique<Logger>(Logger::Level::Call);
@@ -49,10 +51,11 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
     catch (...) {
         return 0;
     }
+
     // Initialize SDK
     if (!SDK::Initialize()) {
         LOG_ERROR("Failed to initialize SDK");
-        return 0;
+        goto finalize;
     }
 
     try {
@@ -68,19 +71,19 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
         if (IsDebugging)
             LOG_WARN("The build is built with the IsDebugging flag in the true state, followed by the appearance of the console, as well as the execution of Test functions!");
 
-        if (SDK::Application_get_version)
-            LOG_INFO("Game version: ", Utils::GetGameVersion());
-        else
-            LOG_ERROR("Game version not founded!");
+        LOG_INFO("Game version: ", Utils::GetGameVersion());
+		LOG_INFO("Engine version: ", Utils::GetUnityVersion());
 
-		/* 2.6 Diagnostics is currently disabled due to some issues, but it will be back in the future updates.
+        Discord::Initialize();
+
+        /* 2.6-2.7 Diagnostics is currently disabled due to some issues, but it will be back in the future updates.
         if (Diagnostics::Init())
         {
             Diagnostics::Send("GameVersion", Utils::GetGameVersion());
             Diagnostics::Send("UnityVersion", Utils::GetUnityVersion());
         }
         else
-			LOG_ERROR("VT_Diagnostics initialization failed.");
+            LOG_ERROR("VT_Diagnostics initialization failed.");
         */
 
         // Set up hooks
@@ -95,8 +98,8 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
         AHKA(GhostAI_Update);
         AHKA(EvidenceController_Start);
         AHKA(EMFData_Start);
-        AHKA(Player_StartKillingPlayer);
-        AHKA(Player_StartKillingPlayerNetworked);
+        //AHKA(Player_StartKillingPlayer);
+        //AHKA(Player_StartKillingPlayerNetworked);
         AHKA(Player_Start);
         AHKA(GhostInfo_SyncValuesNetworked);
         AHKA(GhostInfo_SyncEvidence);
@@ -114,8 +117,8 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
         AHKA(SaltShaker_Update);
         AHKA(SaltSpot_SyncSalt);
         AHKA(LevelSelectionManager_Start);
-		AHKA(Application_CallLogCallback);
-		AHKA(ServerManager_Ready);
+        AHKA(Application_CallLogCallback);
+        AHKA(ServerManager_Ready);
         AHKA(DNAEvidence_GrabbedNetworked);
         AHKA(FallTeleportBox_OnTriggerEnter);
         AHKA(LightSwitch_Start);
@@ -126,12 +129,14 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
         AHKA(LiftButton_AttemptUse);
         AHKA(GameController_PlayerDied);
         AHKA(Thermometer_HoldUse);
-        AHKA(PhotonView_RPC); 
+        AHKA(PhotonView_RPC);
         AHKA(ServerManager_LoadScene);
         AHKA(LiftButton_Update);
         AHKA(DNAEvidence_Start);
         AHKA(VoodooDollPin_Use);
         AHKA(Jackalope_Awake);
+        AHKA(ScriptableRenderContext_Submit);
+        AHKA(Player_StartDeathAnimation);
 
         PHK(HandCamera_MoveNext, Hooks::hkHandCamera_MoveNext); // Use PATTERN_HOOK
 
@@ -142,6 +147,17 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
         }
 
         hookingInstance->ApplyHooks();
+        hooksApplied = true;
+
+        // only English!
+        LOG_RELEASE(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY, "Welcome, %s, to PhasmoCheatV\nPhasmophobia version: %s\n", Utils::GetPlayerName().c_str(), Utils::GetGameVersion().c_str());
+        LOG_RELEASE(FOREGROUND_BLUE | FOREGROUND_INTENSITY, std::string(32, '-').c_str(), "\n");
+        LOG_RELEASE(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY, "Menu navigation:\n");
+		LOG_RELEASE(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY, "Press", Utils::getKeyName(MenuToggleKey), "to open / close the menu\n");
+		LOG_RELEASE(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY, "Press End to emergency exit cheat\n");
+		LOG_RELEASE(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY, "Press Home to reset menu open/close button\n");
+		LOG_RELEASE(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY, "Config folder: C:\\PhasmoCheatV\\configs\n");
+        LOG_RELEASE(FOREGROUND_BLUE | FOREGROUND_INTENSITY, std::string(32, '-').c_str(), "\n");
 
         NOTIFY_INFO_QUICK(LANG("Menu_CheatInjected") + Utils::getKeyName(MenuToggleKey));
         LOG_INFO("Cheat injected successfully. The menu opens on " + Utils::getKeyName(MenuToggleKey));
@@ -149,33 +165,55 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
         InGame::ghostAI = Utils::GetGhostAI();
         if (!InGame::ghostAI) LOG_INFO("Ghost not found with tag!");
 
+        int presenceUpdateTimer = 0;
+
         while (CheatWork) {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+            if (++presenceUpdateTimer >= 150 && Globals::DiscordRPC)
+            {
+                Discord::UpdatePresence();
+                presenceUpdateTimer = 0; 
+            }
         }
-
-        LOG_INFO("Starting cleanup...");
-
-        Config::SaveConfig();
-
-        if (rendererInstance && ImGui::SaveIniSettingsToDisk) {
-            ImGui::SaveIniSettingsToDisk((Utils::GetPhasmoCheatVDirectory() + "\\menu.ini").c_str());
-        }
-
-        hookingInstance->RemoveHooks();
-        hookingInstance.reset(); 
-        rendererInstance.reset();
-        featureInstance.reset();
-
-        LOG_INFO("Cleanup completed");
-
     }
     catch (const std::exception& e) {
         LOG_ERROR(std::string("Exception in main thread: ") + e.what());
     }
 
+    LOG_INFO("Starting cleanup...");
+
+    try
+    {
+        Config::SaveConfig();
+
+        if (rendererInstance) {
+            ImGui::SaveIniSettingsToDisk((Utils::GetPhasmoCheatVDirectory() + "\\menu.ini").c_str());
+        }
+    }
+    catch (...) {}
+
+    Discord::Shutdown();
+
+    if (hooksApplied && hookingInstance)
+    {
+        try
+        {
+            hookingInstance->RemoveHooks();
+        }
+        catch (...) {}
+        hooksApplied = false;
+    }
+
+    hookingInstance.reset();
+    rendererInstance.reset();
+    featureInstance.reset();
+
+    LOG_INFO("Cleanup completed");
+
+finalize:
     loggerInstance.reset();
 
-    CloseHandle(globalModule);
     FreeLibraryAndExitThread(globalModule, NULL);
     return 0;
 }
@@ -189,16 +227,8 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID)
     {
         DisableThreadLibraryCalls(hModule);
 
-        Proxy::Initialize(hModule);
-
-        if (!IsProxyMode(hModule))
-        {
-            StartCheat(hModule);
-        }
-        else
-        {
-            StartCheat(hModule);
-        }
+        if (!IsProxyMode(hModule)) StartCheat(hModule);
+        else StartCheat(hModule);
 
         break;
     }

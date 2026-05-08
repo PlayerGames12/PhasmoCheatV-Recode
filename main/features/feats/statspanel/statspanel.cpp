@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Visuals;
 
-StatsPanel::StatsPanel() : FeatureCore("LevelStats Panel", TYPE_VISUALS) {}
+StatsPanel::StatsPanel() : FeatureCore(LANG("LevelStatsPanel_Header"), TYPE_VISUALS) {}
 
 void StatsPanel::OnRender()
 {

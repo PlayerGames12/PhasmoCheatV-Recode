@@ -21,9 +21,10 @@ namespace PhasmoCheatV::Globals
 	inline std::atomic<bool> CheatWork{ false };
 	inline bool isHunting = false;
 	inline int MenuToggleKey = VK_RETURN;
-	inline bool IsBeta = true;
-	inline std::string Version = "2.5";
-	inline std::string betaVersion = "2.5.4";
+	inline bool IsBeta = false;
+	inline std::string Version = "2.6";
+	inline std::string betaVersion = "2.6.1";
+	inline char statusRPC[128] = "Waiting...";
 
 	// IMGUI
 	inline float dpiScale = GetDpiForSystem() / 96.0f;
@@ -39,6 +40,14 @@ namespace PhasmoCheatV::Globals
 	inline ImVec4 darkBg = ImVec4(0.08f, 0.08f, 0.08f, 0.98f);
 	inline ImVec4 cardBg = ImVec4(0.12f, 0.12f, 0.14f, 1.00f);
 	inline ImVec4 headerBg = ImVec4(0.10f, 0.10f, 0.12f, 1.00f);
+	inline bool IsMenuBlur = false;
+	inline bool IsMenuRain = true;
+	inline bool DiscordRPC = false;
+	inline bool RPCShowName = false;
+	inline ImFont* g_FontMain = nullptr;
+	inline ImFont* g_FontChinese = nullptr;
+	inline ImFont* g_FontActive = nullptr;
+	inline bool g_FontChineseReady = false;
 
 	// FUNCTIONS
 	inline std::string GetVersion()

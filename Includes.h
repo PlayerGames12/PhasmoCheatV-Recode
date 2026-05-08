@@ -32,6 +32,8 @@
 #include "detours/include/detours.h"
 #include "z85/z85.h"
 #include "miniz/miniz.h"
+#include "discordrpc/include/discord_rpc.h"
+#include "discordrpc/include/discord_register.h"
 #include "main/hooks/Hooks.h"
 #include "main/hooks/hooking.h"
 #include "main/menu/menu.h"

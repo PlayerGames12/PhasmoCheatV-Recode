@@ -68,14 +68,14 @@ SDK::Network* Utils::GetNetwork()
 	if (InGame::network)
 		return InGame::network;
 
-	SDK::Network* network = SDK::Network_Get_Network(nullptr);
-
-	if (network == nullptr)
+	if (!SDK::Application_get_isPlaying(nullptr))
 		return nullptr;
+	
+	auto* network_gobj = FindObjectByName("Network"); if (!network_gobj) return nullptr;
+	auto* network_Comp = SDK::GameObject_GetComponentByName(network_gobj, SysStrToUnityStr("Network"), 0); if (!network_Comp) return nullptr;
+	InGame::network = reinterpret_cast<SDK::Network*>(network_Comp);
 
-	InGame::network = network;
-
-	return network;
+	return InGame::network;
 }
 
 SDK::ListPlayer* Utils::GetAllPlayers()
@@ -111,9 +111,19 @@ SDK::NetworkPlayerSpot* Utils::GetNetworkPlayerSpot(const SDK::Player* player)
 
 SDK::Player* Utils::GetLocalPlayer()
 {
-	if (!GetNetwork())
+	SDK::Network* network = GetNetwork();
+	if (!network)
+	{
 		return nullptr;
-	return InGame::network->Fields.localPlayer;
+	}
+
+	SDK::Player* player = network->Fields.localPlayer;
+	if (!player)
+	{
+		return nullptr;
+	}
+
+	return player;
 }
 
 std::string Utils::getKeyName(int keyCode)
@@ -449,7 +459,7 @@ std::string Utils::GetPlayerName(const SDK::Player* player)
 
 bool Utils::WTS(const SDK::Vector3& worldPos, SDK::Vector3& displayPos)
 {
-	SDK::Camera* playerCamera = GetLocalPlayer()->Fields.Camera; if (!playerCamera) return false;
+	SDK::Camera* playerCamera = GetLocalPlayer()->Fields.LocalPlayer->Fields.Camera; if (!playerCamera) return false;
 
 	SDK::Vector3 projected = SDK::Camera_WorldToScreenPoint(playerCamera, worldPos, nullptr); if (projected.Z <= 0.0f) return false;
 
@@ -464,7 +474,7 @@ bool Utils::WTS(const SDK::Vector3& worldPos, SDK::Vector3& displayPos)
 
 SDK::Transform* Utils::GetPlayerTransformCamera(const SDK::Player* player)
 {
-	return SDK::Component_Get_Transform(reinterpret_cast<SDK::Component*>(player->Fields.Camera), nullptr);
+	return SDK::Component_Get_Transform(reinterpret_cast<SDK::Component*>(player->Fields.LocalPlayer->Fields.Camera), nullptr);
 }
 
 SDK::Vector3 Utils::GetPosVec3(const SDK::Player* player)
@@ -621,7 +631,10 @@ bool Utils::IsLocalMasterClient()
 
 void Utils::TpPlayerToVec3(SDK::Player* player, const SDK::Vector3& position)
 {
-	SDK::Player_Teleport(player, position, nullptr);
+	if (!player) return;
+	auto* localPlayer = player->Fields.LocalPlayer;
+	if (!localPlayer) return;
+	SDK::LocalPlayer_TeleportPlayer(localPlayer, position, nullptr);
 }
 
 void Utils::TpPlayerToPlayer(SDK::Player* player, const SDK::Player* twoplayer)
@@ -1392,6 +1405,8 @@ bool Utils::InstallChineseFont()
 
 std::string Utils::GetGameVersion()
 {
+	if (!SDK::Application_get_version)
+		return "UNKNOWN";
 	auto* u_string = SDK::Application_get_version(0);
 	auto version = UnityStrToSysStr(*u_string);
 	return version;
@@ -1399,9 +1414,21 @@ std::string Utils::GetGameVersion()
 
 std::string Utils::GetUnityVersion()
 {
+	if (!SDK::Application_get_unityVersion)
+		return "UNKNOWN";
 	auto* u_string = SDK::Application_get_unityVersion(0);
 	auto version = UnityStrToSysStr(*u_string);
 	return version;
+}
+
+std::string Utils::GetPlayerName()
+{
+	if (!SDK::SteamFriends_GetPersonalName || !SDK::SteamAPI_Init || !SDK::SteamAPI_Init(nullptr))
+		return "Anon";
+	auto* name = SDK::SteamFriends_GetPersonalName(nullptr);
+	if (!name) return "Anon";
+	auto str_name = Utils::UnityStrToSysStr(*name);
+	return str_name;
 }
 
 bool Utils::Checks_IsRealSender(SDK::Player* pn_sender, SDK::PhotonView* view)

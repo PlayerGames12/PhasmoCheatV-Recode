@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Misc;
 
-ExitVanOne::ExitVanOne() : FeatureCore("Exit Van Solo (host)", TYPE_MISC) {}
+ExitVanOne::ExitVanOne() : FeatureCore(LANG("ExitVanSolo(host)_Header"), TYPE_MISC) {}
 void ExitVanOne::OnMenuRender()
 {
 	bool enabled = IsActive();

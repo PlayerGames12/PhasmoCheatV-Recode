@@ -37,7 +37,7 @@ const char* mapItems[] = {
     "Camp Woodwind"
 };
 
-MapModifier::MapModifier() : FeatureCore("Map Modifier", TYPE_MAP)
+MapModifier::MapModifier() : FeatureCore(LANG("MapModifier_Header"), TYPE_MAP)
 {
     DECLARE_CONFIG(GetConfigManager(), "CustomMaxLight", bool, false);
     DECLARE_CONFIG(GetConfigManager(), "MaxLight", int32_t, 10);
@@ -47,6 +47,8 @@ MapModifier::MapModifier() : FeatureCore("Map Modifier", TYPE_MAP)
 
 void MapModifier::OnMenuRender()
 {
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 6));
+
     bool AutoSelectMap = CONFIG_BOOL(GetConfigManager(), "AutoSelectMap");
     int32_t AutoVoteMapId = CONFIG_INT(GetConfigManager(), "AutoVoteMapId");
 
@@ -119,6 +121,8 @@ void MapModifier::OnMenuRender()
         if (ImGui::Button(LANG("SwitchFuseBox")))
             switchFuseBox = true;
     }
+
+    ImGui::PopStyleVar();
 }
 
 void MapModifier::MapModifierMain()

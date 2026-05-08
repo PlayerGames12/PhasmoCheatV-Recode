@@ -59,7 +59,7 @@ std::vector<SDK::HumanBodyBones> mainBones = {
     SDK::HumanBodyBones::RightToes
 };
 
-GhostESP::GhostESP() : FeatureCore("Ghost ESP", TYPE_VISUALS)
+GhostESP::GhostESP() : FeatureCore(LANG("GhostESP_Header"), TYPE_VISUALS)
 {
     DECLARE_CONFIG(GetConfigManager(), "ESPColor", ImColor, ImColor(255, 0, 0, 255));
     DECLARE_CONFIG(GetConfigManager(), "BoxType", int, 0);
@@ -531,8 +531,11 @@ void GhostESP::DrawName(const SDK::GhostAI* ghostAI, const ImColor& color)
 
     std::string nameStr =
         Utils::UnityStrToSysStr(*ghostAI->Fields.GhostInfo->Fields.GhostTraits.Name);
+    std::string typeStr =
+        Utils::GhostEnumToStr(ghostAI->Fields.GhostInfo->Fields.GhostTraits.GhostType_);
 
-    const char* name = nameStr.c_str();
+    std::string fullText = typeStr + " • " + nameStr;
+    const char* name = fullText.c_str();
 
     ImVec2 textSize = ImGui::CalcTextSize(name);
 

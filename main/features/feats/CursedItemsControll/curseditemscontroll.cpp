@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Cursed;
 
-CursedItemsControll::CursedItemsControll() : FeatureCore("CursedItems Controll", TYPE_CURSED)
+CursedItemsControll::CursedItemsControll() : FeatureCore(LANG("CursedItemsControll_Header"), TYPE_CURSED)
 {
     DECLARE_CONFIG(GetConfigManager(), "CardTypeForced", int, static_cast<int>(SDK::TarotCardType::Fool));
     DECLARE_CONFIG(GetConfigManager(), "CardForce", bool, false);
@@ -22,7 +22,8 @@ void CursedItemsControll::OnMenuRender()
         if (go_mb)
         {
             auto pv_type = SDK::System_Type_GetType(Utils::SysStrToUnityStr("Photon.Pun.PhotonView"), 0);
-            pv_mb = reinterpret_cast<SDK::PhotonView*>(SDK::GameObject_GetComponent(go_mb, pv_type, 0));
+            if (pv_type)
+                pv_mb = reinterpret_cast<SDK::PhotonView*>(SDK::GameObject_GetComponent(go_mb, pv_type, 0));
         }
 
         if (ImGui::Button(LANG("UseMusicBox")))
@@ -63,18 +64,18 @@ void CursedItemsControll::OnMenuRender()
         ImGui::EndDisabled();
     }
 
-	bool isSummoningCircleActive = Utils::IsLocalMasterClient() && InGame::cursedItemsController && InGame::cursedItemsController->Fields.SummoningCircle;
+    bool isSummoningCircleActive = Utils::IsLocalMasterClient() && InGame::cursedItemsController && InGame::cursedItemsController->Fields.SummoningCircle;
 
-	ImGui::BeginDisabled(!isSummoningCircleActive);
+    ImGui::BeginDisabled(!isSummoningCircleActive);
 
     if (ImGui::Button(LANG("StartRitual")))
-		needRitualStart = true;
+        needRitualStart = true;
 
     ImGui::EndDisabled();
 
-	bool heartPinDisabled = CONFIG_BOOL(GetConfigManager(), "HeartPinDisable");
+    bool heartPinDisabled = CONFIG_BOOL(GetConfigManager(), "HeartPinDisable");
     if (ImGui::Checkbox(LANG("DisableHeartPin"), &heartPinDisabled))
-		SET_CONFIG_VALUE(GetConfigManager(), "HeartPinDisable", bool, heartPinDisabled);
+        SET_CONFIG_VALUE(GetConfigManager(), "HeartPinDisable", bool, heartPinDisabled);
 
     bool enabled = IsActive();
     if (BCheckBox(LANG("TarotCardsModEnable"), &enabled, "b_TarotCardsModEnable"))
@@ -115,27 +116,30 @@ void CursedItemsControll::TarotCardApplySettings(SDK::TarotCardType& type)
 // Tanks VCom Team and ViniLog❤️
 void CursedItemsControll::TarotCardInfCards(SDK::TarotCards* tarotCards, SDK::MethodInfo* methodInfo)
 {
+    auto& original = SDK::Get_TarotCards_GrabCard_All();
+    original[0](tarotCards, methodInfo);
+
     if (!IsActive() || !CONFIG_BOOL(GetConfigManager(), "InfCards"))
-    {
-        auto& original = SDK::Get_TarotCards_GrabCard_All();
-        original[0](tarotCards, methodInfo);
-    }
+        return;
 
-    std::thread([tarotCards]()
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(2800));
-
-            auto* resetFunc = SDK::Get_TarotCards_ResetCardDraw();
-            if (resetFunc && tarotCards)
-            {
-                resetFunc(tarotCards, nullptr);
-            }
-
-        }).detach();
+    InGame::tarotCards = tarotCards;
+    pendingTarotReset = true;
+    tarotResetAt = std::chrono::steady_clock::now() + std::chrono::milliseconds(2800);
 }
 
 void CursedItemsControll::CursedItemsControllMain()
 {
+    if (pendingTarotReset && std::chrono::steady_clock::now() >= tarotResetAt)
+    {
+        pendingTarotReset = false;
+
+        auto* resetFunc = SDK::Get_TarotCards_ResetCardDraw();
+        if (resetFunc && InGame::tarotCards)
+        {
+            resetFunc(InGame::tarotCards, nullptr);
+        }
+    }
+
     if (!needRitualStart || !InGame::cursedItemsController)
         return;
 

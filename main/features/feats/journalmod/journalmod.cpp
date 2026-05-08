@@ -32,36 +32,39 @@ static std::unordered_map<std::string, int> ghostOrder = {
     {"Obambo", 26}
 };
 
-JournalModifier::JournalModifier() : FeatureCore("Journal Modifier", TYPE_MISC)
+JournalModifier::JournalModifier() : FeatureCore(LANG("JournalModifier_Header"), TYPE_MISC)
 {
     DECLARE_CONFIG(GetConfigManager(), "OldGhostButtonPosition", bool, false);
     DECLARE_CONFIG(GetConfigManager(), "AutoSelectGhost", bool, false);
-	DECLARE_CONFIG(GetConfigManager(), "CorrectGhostAlwaysFirst", bool, false);
+    DECLARE_CONFIG(GetConfigManager(), "CorrectGhostAlwaysFirst", bool, false);
 }
 
 void JournalModifier::OnActivate()
 {
-    if (running)
-        return;
-
-    running = true;
-
-    workerThread = std::thread(&JournalModifier::WorkerLoop, this);
-
-    LOG_INFO("JournalModifier thread started");
+    lastUpdateTime = 0.0f;
 }
 
 void JournalModifier::OnDeactivate()
 {
-    if (!running)
+    lastUpdateTime = 0.0f;
+}
+
+void JournalModifier::OnRender()
+{
+    if (!IsActive() || !InGame::ghostAI || !InGame::ghostAI->Fields.GhostInfo)
         return;
 
-    running = false;
+    const float now = SDK::Time_Get_Time(nullptr);
+    if (now <= 0.0f)
+        return;
 
-    if (workerThread.joinable())
-        workerThread.join();
+    if (lastUpdateTime > 0.0f && (now - lastUpdateTime) < 1.0f)
+        return;
 
-    LOG_INFO("JournalModifier thread stopped");
+    lastUpdateTime = now;
+
+    const int ghostType = static_cast<int>(InGame::ghostAI->Fields.GhostInfo->Fields.GhostTraits.GhostType_);
+    JournalModifierMain(ghostType);
 }
 
 void JournalModifier::OnMenuRender()
@@ -79,44 +82,20 @@ void JournalModifier::OnMenuRender()
     if (enabled)
     {
         bool oldghostpos = CONFIG_BOOL(GetConfigManager(), "OldGhostButtonPosition");
-		bool autoselectghost = CONFIG_BOOL(GetConfigManager(), "AutoSelectGhost");
-		bool correctghostalwfirst = CONFIG_BOOL(GetConfigManager(), "CorrectGhostAlwaysFirst");
+        bool autoselectghost = CONFIG_BOOL(GetConfigManager(), "AutoSelectGhost");
+        bool correctghostalwfirst = CONFIG_BOOL(GetConfigManager(), "CorrectGhostAlwaysFirst");
 
-		if (ImGui::Checkbox(LANG("OldGhostButtonPosition"), &oldghostpos))
+        if (ImGui::Checkbox(LANG("OldGhostButtonPosition"), &oldghostpos))
             SET_CONFIG_VALUE(GetConfigManager(), "OldGhostButtonPosition", bool, oldghostpos);
 
-		if (ImGui::Checkbox(LANG("AutoSelectGhost"), &autoselectghost))
+        if (ImGui::Checkbox(LANG("AutoSelectGhost"), &autoselectghost))
             SET_CONFIG_VALUE(GetConfigManager(), "AutoSelectGhost", bool, autoselectghost);
 
-		if (ImGui::Checkbox(LANG("CorrectGhostAlwaysFirst"), &correctghostalwfirst))
+        if (ImGui::Checkbox(LANG("CorrectGhostAlwaysFirst"), &correctghostalwfirst))
             SET_CONFIG_VALUE(GetConfigManager(), "CorrectGhostAlwaysFirst", bool, correctghostalwfirst);
     }
 
     ImGui::PopStyleVar();
-}
-
-void JournalModifier::WorkerLoop()
-{
-    while (running)
-    {
-        if (!IsActive())
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            continue;
-        }
-
-        if (!InGame::ghostAI)
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            continue;
-        }
-
-        int ghostType = static_cast<int>(InGame::ghostAI->Fields.GhostInfo->Fields.GhostTraits.GhostType_);
-
-        JournalModifierMain(ghostType);
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    }
 }
 
 void JournalModifier::JournalModifierMain(int GhostType)

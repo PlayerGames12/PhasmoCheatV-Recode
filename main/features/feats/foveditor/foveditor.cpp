@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Players;
 
-FoVEditor::FoVEditor() : FeatureCore("FoVEditor", TYPE_PLAYERS)
+FoVEditor::FoVEditor() : FeatureCore(LANG("FoVEditor_Header"), TYPE_PLAYERS)
 {
     DECLARE_CONFIG(GetConfigManager(), "CustomFoVValue", float, 90.f);
     DECLARE_CONFIG(GetConfigManager(), "DefaultFoVValue", float, 90.f);
@@ -46,7 +46,7 @@ void FoVEditor::FoVEditorMain()
 {
     auto localPlayer = Utils::GetLocalPlayer();
     if (!localPlayer) return;
-    auto Camera = localPlayer->Fields.Camera;
+    auto Camera = localPlayer->Fields.LocalPlayer->Fields.Camera;
     if (!Camera) return;
     float defFoV = SDK::Camera_Get_FieldOfView(Camera, nullptr);
     bool saved = CONFIG_BOOL(GetConfigManager(), "DefaultFoVSaved");

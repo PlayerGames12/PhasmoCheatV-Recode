@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Players;
 
-CustomLookLimits::CustomLookLimits() : FeatureCore("Custom Look Limits", TYPE_PLAYERS)
+CustomLookLimits::CustomLookLimits() : FeatureCore(LANG("CustomLookLimits_Header"), TYPE_PLAYERS)
 {
 	DECLARE_CONFIG(GetConfigManager(), "NoLimits", bool, false);
 	DECLARE_CONFIG(GetConfigManager(), "MinX", float, -90.f);
@@ -46,7 +46,7 @@ void CustomLookLimits::OnDeactivate()
 	if (!localPlayer)
 		return;
 
-	auto firstPersonController = localPlayer->Fields.FirstPersonController;
+	auto firstPersonController = InGame::firstPersonController;
 	if (!firstPersonController)
 		return;
 

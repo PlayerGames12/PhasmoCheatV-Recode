@@ -11,13 +11,11 @@ namespace PhasmoCheatV::Features::Misc
 
 		void OnActivate() override;
 		void OnDeactivate() override;
-		void OnRender() override {};
+		void OnRender() override;
 		void OnMenuRender() override;
 		void JournalModifierMain(int GhostType);
 
 	private:
-		std::thread workerThread;
-		std::atomic<bool> running = false;
-		void WorkerLoop();
+		float lastUpdateTime = 0.0f;
 	};
 }

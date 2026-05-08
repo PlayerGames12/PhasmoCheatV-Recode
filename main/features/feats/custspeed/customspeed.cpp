@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Movement;
 
-CustomSpeed::CustomSpeed() : FeatureCore("Custom Speed", TYPE_MOVEMENT)
+CustomSpeed::CustomSpeed() : FeatureCore(LANG("CustomSpeed_Header"), TYPE_MOVEMENT)
 {
 	DECLARE_CONFIG(GetConfigManager(), "Speed", float, 1.6f);
 }

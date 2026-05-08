@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Visuals;
 
-PotatoeEsp::PotatoeEsp() : FeatureCore("Potatoe ESP", TYPE_VISUALS)
+PotatoeEsp::PotatoeEsp() : FeatureCore(LANG("PotatoeESP_Header"), TYPE_VISUALS)
 {
     DECLARE_CONFIG(GetConfigManager(), "Color", ImColor, ImColor(255, 255, 255, 255));
 } 

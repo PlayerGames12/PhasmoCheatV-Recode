@@ -7,6 +7,10 @@ void Hooks::hkFirstPersonController_Update(SDK::FirstPersonController* firstPers
 {
 	LOG_CALL_UPDATE("Called FirstPersonController_Update");
 
+	if (CheatWork)
+		if (InGame::firstPersonController != firstPersonController)
+			InGame::firstPersonController = firstPersonController;
+
 	SDK::FirstPersonController_Update(firstPersonController, methodInfo);
 
 	CALL_METHOD_ARGS(Players, CustomLookLimits, CustomLookLimitsMain, firstPersonController);

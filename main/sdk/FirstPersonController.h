@@ -27,11 +27,13 @@ namespace SDK
 		Vector3 MoveDir;
 		PhysicsCharacterController* PhysicsCharacterController;
 		bool Crouching;
+		bool Field20;
 		float CurrentSpeed;
 		Vector3 DesiredMove;
 		RaycastHit HitInfo;
 		void* OnStartSprint;
 		void* OnStartWalk;
+		void* Field27;
 	};
 
 	struct FirstPersonController

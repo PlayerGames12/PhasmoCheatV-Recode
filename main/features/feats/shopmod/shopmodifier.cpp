@@ -2,7 +2,19 @@
 
 using namespace PhasmoCheatV::Features::Misc;
 
-ShopModifier::ShopModifier() : FeatureCore("Shop Modifier", TYPE_MISC)
+namespace
+{
+    void DisableTutorialByName(const char* tutorialName)
+    {
+        auto* tutorial = Utils::FindObjectByName(tutorialName);
+        if (!tutorial)
+            return;
+
+        SDK::GameObject_SetActive(tutorial, false, nullptr);
+    }
+}
+
+ShopModifier::ShopModifier() : FeatureCore(LANG("ShopModifier_Header"), TYPE_MISC)
 {
     DECLARE_CONFIG(GetConfigManager(), "SkipShopTutorials", bool, false);
     DECLARE_CONFIG(GetConfigManager(), "CustomCost", bool, false);
@@ -85,26 +97,31 @@ void ShopModifier::OnMenuRender()
 
 void ShopModifier::OnActivate()
 {
-    if (running.load()) return;
-
-    running.store(true);
-    workerThread = std::thread([this]()
-        {
-            while (running.load())
-            {
-                ShopModifierMain();
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            }
-        });
+    lastUpdateTime = 0.0f;
+    lastTutorialLookupTime = 0.0f;
 }
 
 void ShopModifier::OnDeactivate()
 {
-    if (!running.load()) return;
+    lastUpdateTime = 0.0f;
+    lastTutorialLookupTime = 0.0f;
+}
 
-    running.store(false);
-    if (workerThread.joinable())
-        workerThread.join();
+void ShopModifier::OnRender()
+{
+    if (!IsActive())
+        return;
+
+    const float now = SDK::Time_Get_Time(nullptr);
+    if (now <= 0.0f)
+        return;
+
+    // Run at a lower cadence to reduce lobby CPU overhead.
+    if (lastUpdateTime > 0.0f && (now - lastUpdateTime) < 0.25f)
+        return;
+
+    lastUpdateTime = now;
+    ShopModifierMain();
 }
 
 void ShopModifier::ShopModifierMain()
@@ -115,86 +132,63 @@ void ShopModifier::ShopModifierMain()
     if (InGame::ghostAI)
         return;
 
-    if (CONFIG_BOOL(GetConfigManager(), "SkipShopTutorials"))
-    {
-        auto* shop = Utils::FindObjectByName("Shop Tutorial");
-        auto* storage = Utils::FindObjectByName("Storage Tutorial");
-        auto* loadout = Utils::FindObjectByName("Loadout Tutorial");
+    const bool skipShopTutorials = CONFIG_BOOL(GetConfigManager(), "SkipShopTutorials");
+    const bool customCost = CONFIG_BOOL(GetConfigManager(), "CustomCost");
+    const bool customCount = CONFIG_BOOL(GetConfigManager(), "CustomCount");
+    const bool customUpgradeCost = CONFIG_BOOL(GetConfigManager(), "CustomUpgradeCost");
+    const bool customRequiredLevel = CONFIG_BOOL(GetConfigManager(), "CustomRequiredLevel");
 
-        if (shop) {
-            if (SDK::GameObject_get_activeSelf(shop, nullptr)) {
-                SDK::GameObject_SetActive(shop, false, nullptr);
-            }
-        }
-        if (storage) {
-            if (SDK::GameObject_get_activeSelf(storage, nullptr)) {
-                SDK::GameObject_SetActive(storage, false, nullptr);
-            }
-        }
-        if (loadout) {
-            if (SDK::GameObject_get_activeSelf(loadout, nullptr)) {
-                SDK::GameObject_SetActive(loadout, false, nullptr);
-            }
+    if (!skipShopTutorials && !customCost && !customCount && !customUpgradeCost && !customRequiredLevel)
+        return;
+
+    if (skipShopTutorials)
+    {
+        const float now = SDK::Time_Get_Time(nullptr);
+        if (now > 0.0f && (lastTutorialLookupTime <= 0.0f || (now - lastTutorialLookupTime) >= 1.0f))
+        {
+            lastTutorialLookupTime = now;
+            DisableTutorialByName("Shop Tutorial");
+            DisableTutorialByName("Storage Tutorial");
+            DisableTutorialByName("Loadout Tutorial");
         }
     }
 
-    if (CONFIG_BOOL(GetConfigManager(), "CustomCost"))
+    if (!customCost && !customCount && !customUpgradeCost && !customRequiredLevel)
+        return;
+
+    auto* storeInfo = Utils::GetStoreItemInfo();
+    if (!storeInfo)
+        return;
+
+    auto* item = storeInfo->Fields.ItemInfoFields.item;
+    if (!item)
+        return;
+
+    if (customCost)
     {
-        auto* storeInfo = Utils::GetStoreItemInfo();
-        if (!storeInfo) {
-            return;
-        }
-
-        auto* item = storeInfo->Fields.ItemInfoFields.item;
-        if (!item) {
-            return;
-        }
-
-        item->Fields.cost = CONFIG_INT(GetConfigManager(), "CustomCostValue");
+        const int value = CONFIG_INT(GetConfigManager(), "CustomCostValue");
+        if (item->Fields.cost != value)
+            item->Fields.cost = value;
     }
 
-    if (CONFIG_BOOL(GetConfigManager(), "CustomCount"))
+    if (customCount)
     {
-        auto* storeInfo = Utils::GetStoreItemInfo();
-        if (!storeInfo) {
-            return;
-        }
-
-        auto* item = storeInfo->Fields.ItemInfoFields.item;
-        if (!item) {
-            return;
-        }
-
-        item->Fields.m_amountOwned = CONFIG_INT(GetConfigManager(), "CustomCountValue");
+        const int value = CONFIG_INT(GetConfigManager(), "CustomCountValue");
+        if (item->Fields.m_amountOwned != value)
+            item->Fields.m_amountOwned = value;
     }
 
-    if (CONFIG_BOOL(GetConfigManager(), "CustomUpgradeCost"))
+    if (customUpgradeCost)
     {
-        auto* storeInfo = Utils::GetStoreItemInfo();
-        if (!storeInfo) {
-            return;
-        }
-
-        auto* item = storeInfo->Fields.ItemInfoFields.item;
-        if (!item) {
-            return;
-        }
-
-        item->Fields.upgradeCost = CONFIG_INT(GetConfigManager(), "CustomUpgradeCostValue");
+        const int value = CONFIG_INT(GetConfigManager(), "CustomUpgradeCostValue");
+        if (item->Fields.upgradeCost != value)
+            item->Fields.upgradeCost = value;
     }
 
-    if (CONFIG_BOOL(GetConfigManager(), "CustomRequiredLevel"))
+    if (customRequiredLevel)
     {
-        auto* storeInfo = Utils::GetStoreItemInfo();
-        if (!storeInfo) {
-            return;
-        }
-
-        auto* item = storeInfo->Fields.ItemInfoFields.item;
-        if (!item) {
-            return;
-        }
-
-        item->Fields.requiredLevel = CONFIG_INT(GetConfigManager(), "CustomRequiredLevelValue");
+        const int value = CONFIG_INT(GetConfigManager(), "CustomRequiredLevelValue");
+        if (item->Fields.requiredLevel != value)
+            item->Fields.requiredLevel = value;
     }
 }

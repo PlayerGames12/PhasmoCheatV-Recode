@@ -149,7 +149,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>$(ProjectDir)libs\detours\lib\syelog.lib;$(ProjectDir)libs\detours\lib\detours.lib;urlmon.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)libs\detours\lib\syelog.lib;$(ProjectDir)libs\detours\lib\detours.lib;$(ProjectDir)libs\discordrpc\lib\discord-rpc.lib;urlmon.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -171,9 +171,11 @@
     <ClCompile Include="main\config\configs_manager.cpp" />
     <ClCompile Include="main\config\LanguageManager.cpp" />
     <ClCompile Include="main\diagnostics\diagnostics.cpp" />
+    <ClCompile Include="main\discordrpc\discordrpc.cpp" />
     <ClCompile Include="main\features\feats\actmonik\actmonik.cpp" />
     <ClCompile Include="main\features\feats\alwaysbloodmoon\alwaysbloodmoon.cpp" />
     <ClCompile Include="main\features\feats\antikick\antikick.cpp" />
+    <ClCompile Include="main\features\feats\autogame\autogame.cpp" />
     <ClCompile Include="main\features\feats\autopickupbone\autopickupbone.cpp" />
     <ClCompile Include="main\features\feats\crosshairmod\crosshairmod.cpp" />
     <ClCompile Include="main\features\feats\customlooklimits\customlooklimits.cpp" />
@@ -191,6 +193,7 @@
     <ClCompile Include="main\features\feats\foveditor\foveditor.cpp" />
     <ClCompile Include="main\features\feats\fullbright\fullbright.cpp" />
     <ClCompile Include="main\features\feats\fuseesp\fuseesp.cpp" />
+    <ClCompile Include="main\features\feats\fusemod\fusemod.cpp" />
     <ClCompile Include="main\features\feats\ghostdesign\ghostdesign.cpp" />
     <ClCompile Include="main\features\feats\ghostesp\ghostesp.cpp" />
     <ClCompile Include="main\features\feats\ghostinter\ghostinter.cpp" />
@@ -202,6 +205,7 @@
     <ClCompile Include="main\features\feats\jackalopeesp\jackalopeesp.cpp" />
     <ClCompile Include="main\features\feats\journalmod\journalmod.cpp" />
     <ClCompile Include="main\features\feats\photomod\photomod.cpp" />
+    <ClCompile Include="main\features\feats\spiritboxalw\spiritboxalw.cpp" />
     <ClCompile Include="main\features\feats\vanbuttonmod\vanbuttonmod.cpp" />
     <ClCompile Include="main\features\feats\mapmod\mapmodifier.cpp" />
     <ClCompile Include="main\features\feats\noclip\noclip.cpp" />
@@ -228,6 +232,7 @@
     <ClCompile Include="main\hooks\EMFData_Start.cpp" />
     <ClCompile Include="main\hooks\EMFData_UpdateNightMareGraph.cpp" />
     <ClCompile Include="main\hooks\EvidenceController_Start.cpp" />
+    <ClCompile Include="main\hooks\EVPRecorder_CanAnswer.cpp" />
     <ClCompile Include="main\hooks\ExitLevel_Exit.cpp" />
     <ClCompile Include="main\hooks\ExitLevel_ThereAreAlivePlayersOutsideTheTruck.cpp" />
     <ClCompile Include="main\hooks\FallTeleportBox_OnTriggerEnter.cpp" />
@@ -252,7 +257,9 @@
     <ClCompile Include="main\hooks\LightSwitch_Start.cpp" />
     <ClCompile Include="main\hooks\PhotonView_RPC.cpp" />
     <ClCompile Include="main\hooks\Player_Start.cpp" />
+    <ClCompile Include="main\hooks\Player_StartDeathAnimation.cpp" />
     <ClCompile Include="main\hooks\RandomWeather_Start.cpp" />
+    <ClCompile Include="main\hooks\ScriptableRenderContext_Submit.cpp" />
     <ClCompile Include="main\hooks\ServerManager_LoadScene.cpp" />
     <ClCompile Include="main\hooks\TarotCards_BreakItem.cpp" />
     <ClCompile Include="main\hooks\TarotCards_GrabCard.cpp" />
@@ -261,8 +268,6 @@
     <ClCompile Include="main\hooks\PauseMenuController_Leave.cpp" />
     <ClCompile Include="main\hooks\PhotonObjectInteract_Start.cpp" />
     <ClCompile Include="main\hooks\PlayerStamina_Update.cpp" />
-    <ClCompile Include="main\hooks\Player_StartKillingPlayer.cpp" />
-    <ClCompile Include="main\hooks\Player_StartKillingPlayerNetworked.cpp" />
     <ClCompile Include="main\hooks\Present.cpp" />
     <ClCompile Include="main\hooks\SaltShaker_Update.cpp" />
     <ClCompile Include="main\hooks\SaltSpot_SyncSalt.cpp" />
@@ -307,10 +312,12 @@
     <ClInclude Include="main\config\LanguageManager.h" />
     <ClInclude Include="main\config\Translations.h" />
     <ClInclude Include="main\diagnostics\diagnostics.h" />
+    <ClInclude Include="main\discordrpc\discordrpc.h" />
     <ClInclude Include="main\features\feats\actmonik\actmonik.h" />
     <ClInclude Include="main\features\feats\360camera\camera360.h" />
     <ClInclude Include="main\features\feats\alwaysbloodmoon\alwaysbloodmoon.h" />
     <ClInclude Include="main\features\feats\antikick\antikick.h" />
+    <ClInclude Include="main\features\feats\autogame\autogame.h" />
     <ClInclude Include="main\features\feats\autopickupbone\autopickupbone.h" />
     <ClInclude Include="main\features\feats\crosshairmod\crosshairmod.h" />
     <ClInclude Include="main\features\feats\customlooklimits\customlooklimits.h" />
@@ -328,6 +335,7 @@
     <ClInclude Include="main\features\feats\foveditor\foveditor.h" />
     <ClInclude Include="main\features\feats\fullbright\fullbright.h" />
     <ClInclude Include="main\features\feats\fuseesp\fuseesp.h" />
+    <ClInclude Include="main\features\feats\fusemod\fusemod.h" />
     <ClInclude Include="main\features\feats\ghostdesign\ghostdesign.h" />
     <ClInclude Include="main\features\feats\ghostesp\ghostesp.h" />
     <ClInclude Include="main\features\feats\ghostinter\ghostinter.h" />
@@ -339,6 +347,7 @@
     <ClInclude Include="main\features\feats\jackalopeesp\jackalopeesp.h" />
     <ClInclude Include="main\features\feats\journalmod\journalmod.h" />
     <ClInclude Include="main\features\feats\photomod\photomod.h" />
+    <ClInclude Include="main\features\feats\spiritboxalw\spiritboxalw.h" />
     <ClInclude Include="main\features\feats\vanbuttonmod\vanbuttonmod.h" />
     <ClInclude Include="main\features\feats\mapmod\mapmodifier.h" />
     <ClInclude Include="main\features\feats\noclip\noclip.h" />
@@ -364,7 +373,10 @@
     <ClInclude Include="main\hooks\Hooks.h" />
     <ClInclude Include="main\logging\logger.h" />
     <ClInclude Include="main\mem\memory.h" />
+    <ClInclude Include="main\menu\effects\directx_blur.h" />
     <ClInclude Include="main\menu\menu.h" />
+    <ClInclude Include="main\menu\effects\pshader.h" />
+    <ClInclude Include="main\menu\effects\rain.h" />
     <ClInclude Include="main\menu\renderer.h" />
     <ClInclude Include="main\menu\styles.h" />
     <ClInclude Include="main\sdk\Animator.h" />
@@ -385,6 +397,7 @@
     <ClInclude Include="main\sdk\Equipment.h" />
     <ClInclude Include="main\sdk\Evidence.h" />
     <ClInclude Include="main\sdk\EvidenceController.h" />
+    <ClInclude Include="main\sdk\EVPRecorder.h" />
     <ClInclude Include="main\sdk\ExitLevel.h" />
     <ClInclude Include="main\sdk\FallTeleportBox.h" />
     <ClInclude Include="main\sdk\FirstPersonController.h" />
@@ -416,6 +429,8 @@
     <ClInclude Include="main\sdk\LightningController.h" />
     <ClInclude Include="main\sdk\LightSwitch.h" />
     <ClInclude Include="main\sdk\LineRenderer.h" />
+    <ClInclude Include="main\sdk\LocalPCPlayer.h" />
+    <ClInclude Include="main\sdk\LocalPlayer.h" />
     <ClInclude Include="main\sdk\Map.h" />
     <ClInclude Include="main\sdk\MapController.h" />
     <ClInclude Include="main\sdk\MethodInfo.h" />
@@ -446,8 +461,10 @@
     <ClInclude Include="main\sdk\SaltSpot.h" />
     <ClInclude Include="main\sdk\SceneManager.h" />
     <ClInclude Include="main\sdk\Screen.h" />
+    <ClInclude Include="main\sdk\ScriptableRenderContext.h" />
     <ClInclude Include="main\sdk\sdk.h" />
     <ClInclude Include="main\sdk\ServerManager.h" />
+    <ClInclude Include="main\sdk\SteamFriends.h" />
     <ClInclude Include="main\sdk\StoreItem.h" />
     <ClInclude Include="main\sdk\StoreItemInfo.h" />
     <ClInclude Include="main\sdk\String.h" />

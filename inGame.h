@@ -4,6 +4,7 @@
 namespace PhasmoCheatV::InGame
 {
 	inline bool LiftButtonOpenedByCheat = false;
+    inline bool FuseBoxSwitchedByCheat = false;
 
     inline SDK::GhostAI* ghostAI = nullptr;
     inline SDK::LevelController* levelController = nullptr;
@@ -25,10 +26,12 @@ namespace PhasmoCheatV::InGame
     inline SDK::HandCamera* handCamera = nullptr;
     inline SDK::DifficultySettings* difficultySettings = nullptr;
 	inline std::vector<SDK::Jackalope*> jackalope;
+	inline SDK::FirstPersonController* firstPersonController = nullptr;
 
     // Reset in-game pointers
     inline void Reset() {
 		LiftButtonOpenedByCheat = false;
+        FuseBoxSwitchedByCheat = false;
 
         ghostAI = nullptr;
         levelController = nullptr;
@@ -49,6 +52,7 @@ namespace PhasmoCheatV::InGame
         levelSelectionManager = nullptr;
         handCamera = nullptr;
         difficultySettings = nullptr;
+		firstPersonController = nullptr;
         jackalope.clear();
     }
 }

@@ -6,6 +6,16 @@
 
 using namespace PhasmoCheatV;
 
+inline std::string GetChineseFontPath()
+{
+    std::string path = Utils::GetPhasmoCheatVDirectory() + "\\ChinaLang.ttf";
+
+    if (std::filesystem::exists(path))
+        return path;
+
+    return "C:\\Windows\\Fonts\\msyh.ttc";
+}
+
 inline void SetMenuDefaultStyle()
 {
     ImGuiStyle& style = ImGui::GetStyle();
@@ -34,7 +44,8 @@ inline void SetMenuDefaultStyle()
     ImVec4* colors = style.Colors;
 
     colors[ImGuiCol_WindowBg] = darkBg;
-    colors[ImGuiCol_ChildBg] = darkerBg;
+    if (Globals::IsMenuBlur) colors[ImGuiCol_ChildBg].w = 0.0f;
+    else colors[ImGuiCol_ChildBg] = darkerBg;
     colors[ImGuiCol_FrameBg] = cardBg;
     colors[ImGuiCol_FrameBgHovered] = ImVec4(0.18f, 0.18f, 0.20f, 1.00f);
     colors[ImGuiCol_FrameBgActive] = ImVec4(0.22f, 0.22f, 0.24f, 1.00f);
@@ -79,24 +90,12 @@ inline void InitFonts()
     bool isChinese = LanguageManager::GetCurrentLanguage() == Language::ZH;
 
     // 0
-    if (isChinese)
-    {
-        io.Fonts->AddFontFromFileTTF(
-            (Utils::GetPhasmoCheatVDirectory() + "\\ChinaLang.ttf").c_str(),
-            18.f,
-            &fontConfig,
-            io.Fonts->GetGlyphRangesChineseFull()
-        );
-    }
-    else
-    {
-        io.Fonts->AddFontFromMemoryCompressedTTF(
-            DefFont_compressed_data,
-            DefFont_compressed_size,
-            19.f,
-            &fontConfig
-        );
-    }
+    g_FontMain = io.Fonts->AddFontFromMemoryCompressedTTF(
+        DefFont_compressed_data,
+        DefFont_compressed_size,
+        19.f,
+        &fontConfig
+    );
 
     // 1
     io.Fonts->AddFontFromMemoryCompressedTTF(
@@ -161,4 +160,22 @@ inline void InitFonts()
         50.f,
         &fontConfig
     );
+    // 10
+    std::string cnPath = GetChineseFontPath();
+    if (std::filesystem::exists(cnPath))
+    {
+        g_FontChinese = io.Fonts->AddFontFromFileTTF(
+            cnPath.c_str(),
+            18.f,
+            &fontConfig,
+            io.Fonts->GetGlyphRangesChineseFull()
+        );
+
+        g_FontChineseReady = (g_FontChinese != nullptr);
+    }
+    else
+    {
+        g_FontChinese = g_FontMain;
+        g_FontChineseReady = false;
+    }
 }

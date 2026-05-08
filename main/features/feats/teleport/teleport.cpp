@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Movement;
 
-Teleport::Teleport() : FeatureCore("Teleport", TYPE_MOVEMENT)
+Teleport::Teleport() : FeatureCore(LANG("Teleport_Header"), TYPE_MOVEMENT)
 {
     auto config = GetConfigManager();
     DECLARE_CONFIG(config, "SavedPointX", float, 0.0f);
@@ -352,8 +352,11 @@ void Teleport::TeleportToTruck()
         if (!transform)
             continue;
 
-        Utils::TpPlayerToVec3(localPlayer,
-            SDK::Transform_Get_Position(transform, nullptr));
+		auto pos = SDK::Transform_Get_Position(transform, nullptr);
+
+        pos.Y -= 2.f;
+
+        Utils::TpPlayerToVec3(localPlayer, pos);
         NOTIFY_INFO_QUICK(LANG("TP_ToTruck"));
         return;
     }

@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Visuals;
 
-GhostPanel::GhostPanel() : FeatureCore("Ghost Panel", TYPE_VISUALS)
+GhostPanel::GhostPanel() : FeatureCore(LANG("GhostPanel_Header"), TYPE_VISUALS)
 {
     DECLARE_CONFIG(GetConfigManager(), "BansheeTargetSetting", bool, false);
     DECLARE_CONFIG(GetConfigManager(), "IsHideSettings", bool, false);
@@ -58,7 +58,7 @@ void GhostPanel::OnRender()
     ImGui::Begin("###GhostWindow", nullptr, ghostWindowFlags);
 
     ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
-    ImGui::TextColored(ImVec4(0.51f, 0.25f, 0.96f, 1.00f), "GHOST PROFILE");
+	ImGui::TextColored(ImVec4(0.51f, 0.25f, 0.96f, 1.00f), "GHOST PROFILE"); // font don't support russian and chinese language, so we use english for this title
     ImGui::PopFont();
     ImGui::Separator();
     ImGui::Spacing();
@@ -81,38 +81,36 @@ void GhostPanel::OnRender()
                 ImGui::TextWrapped("%s", value);
             };
 
-        DrawRow("Name", Utils::UnityStrToSysStr(*ghostTraits.Name).c_str(), CONFIG_BOOL(GetConfigManager(), "HideName"));
+        DrawRow(LANG("GhostName"), Utils::UnityStrToSysStr(*ghostTraits.Name).c_str(), CONFIG_BOOL(GetConfigManager(), "HideName"));
 
-        DrawRow("Type", Utils::GhostEnumToStr(ghostTraits.GhostType_).c_str(), CONFIG_BOOL(GetConfigManager(), "HideType"));
+        DrawRow(LANG("GhostType"), Utils::GhostEnumToStr(ghostTraits.GhostType_).c_str(), CONFIG_BOOL(GetConfigManager(), "HideType"));
 
-        DrawRow("Age", std::to_string(ghostTraits.GhostAge).c_str(), CONFIG_BOOL(GetConfigManager(), "HideAge"));
-
-        DrawRow("State", Utils::GhostEnumToStr(InGame::ghostAI->Fields.currentState).c_str(), CONFIG_BOOL(GetConfigManager(), "HideState"));
+        DrawRow(LANG("GhostAge"), std::to_string(ghostTraits.GhostAge).c_str(), CONFIG_BOOL(GetConfigManager(), "HideAge"));
+        DrawRow(LANG("GhostState"), Utils::GhostEnumToStr(InGame::ghostAI->Fields.currentState).c_str(), CONFIG_BOOL(GetConfigManager(), "HideState"));
 
         if (ghostTraits.GhostType_ == SDK::GhostType::Mimic)
-            DrawRow("Mimic Type", Utils::GhostEnumToStr(ghostTraits.MimicType).c_str(), CONFIG_BOOL(GetConfigManager(), "HideMimicType"));
+            DrawRow(LANG("MimicType"), Utils::GhostEnumToStr(ghostTraits.MimicType).c_str(), CONFIG_BOOL(GetConfigManager(), "HideMimicType"));
 
         if (CONFIG_BOOL(GetConfigManager(), "BansheeTargetSetting") &&
             ghostTraits.GhostType_ == SDK::GhostType::Banshee)
         {
             if (const auto& bansheeTarget = InGame::ghostAI->Fields.BansheeTarget)
-                DrawRow("Target", Utils::GetPlayerName(bansheeTarget).c_str(), CONFIG_BOOL(GetConfigManager(), "HideBansheeTarget"));
+                DrawRow(LANG("BansheeTarget"), Utils::GetPlayerName(bansheeTarget).c_str(), CONFIG_BOOL(GetConfigManager(), "HideBansheeTarget"));
         }
 
         if (const auto& evidence = GetGhostEvidenceString(); !evidence.empty())
-            DrawRow("Evidence", evidence.c_str(), CONFIG_BOOL(GetConfigManager(), "HideEvidence"));
-
+            DrawRow(LANG("Evidence"), evidence.c_str(), CONFIG_BOOL(GetConfigManager(), "HideEvidence"));
         if (const auto& levelRoom = ghostInfo->Fields.favouriteRoom;
             levelRoom && levelRoom->Fields.RoomName)
         {
-            DrawRow("Favorite Room", Utils::UnityStrToSysStr(*levelRoom->Fields.RoomName).c_str(), CONFIG_BOOL(GetConfigManager(), "HideRoom"));
+            DrawRow(LANG("FavoriteRoom"), Utils::UnityStrToSysStr(*levelRoom->Fields.RoomName).c_str(), CONFIG_BOOL(GetConfigManager(), "HideRoom"));
         }
 
         if (InGame::levelController && InGame::levelController->Fields.currentGhostRoom)
         {
             const auto ghostRoom = InGame::levelController->Fields.currentGhostRoom;
             if (ghostRoom->Fields.RoomName)
-                DrawRow("Location", Utils::UnityStrToSysStr(*ghostRoom->Fields.RoomName).c_str(), CONFIG_BOOL(GetConfigManager(), "HideLocation"));
+                DrawRow(LANG("Location"), Utils::UnityStrToSysStr(*ghostRoom->Fields.RoomName).c_str(), CONFIG_BOOL(GetConfigManager(), "HideLocation"));
         }
 
         ImGui::TableNextRow();

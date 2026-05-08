@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Visuals;
 
-PlayersPanel::PlayersPanel() : FeatureCore("Players Panel", TYPE_VISUALS)
+PlayersPanel::PlayersPanel() : FeatureCore(LANG("PlayersPanel_Header"), TYPE_VISUALS)
 {
     DECLARE_CONFIG(GetConfigManager(), "ShowSanity", bool, true);
     DECLARE_CONFIG(GetConfigManager(), "ShowCurrentRoom", bool, true);
@@ -74,20 +74,20 @@ void PlayersPanel::OnRender()
             ImGui::TableSetColumnIndex(0);
             ImGui::TextColored(ImVec4(0.9f, 0.8f, 0.5f, 1.0f), "%s", Utils::GetPlayerName(player).c_str());
             ImGui::TableSetColumnIndex(1);
-            ImGui::Text(player == localPlayer ? "(You)" : "");
+            ImGui::Text(player == localPlayer ? LANG("You") : "");
 
             if (CONFIG_BOOL(GetConfigManager(), "ShowSanity"))
             {
                 const int sanity = player->Fields.IsDead
                     ? 0
                     : static_cast<int>(100.f - Utils::GetPlayerSanity(player));
-                DrawRow("Sanity", player->Fields.IsDead ? "DEAD" : std::to_string(sanity).c_str());
+                DrawRow(LANG("PlayerSanity"), player->Fields.IsDead ? LANG("Dead") : std::to_string(sanity).c_str());
             }
 
             if (CONFIG_BOOL(GetConfigManager(), "ShowCurrentRoom"))
             {
                 if (const auto levelRoom = player->Fields.LevelRoom; levelRoom && levelRoom->Fields.RoomName)
-                    DrawRow("Current Room", Utils::UnityStrToSysStr(*levelRoom->Fields.RoomName).c_str());
+                    DrawRow(LANG("PlayerRoom"), Utils::UnityStrToSysStr(*levelRoom->Fields.RoomName).c_str());
             }
 
             if ((CONFIG_BOOL(GetConfigManager(), "ShowTemperature")))
@@ -96,25 +96,25 @@ void PlayersPanel::OnRender()
                 {
                     char tempBuf[16];
                     snprintf(tempBuf, sizeof(tempBuf), "%.2f", levelRoom->Fields.temperature);
-                    DrawRow("Temperature", tempBuf);
+                    DrawRow(LANG("PlayerTemperature"), tempBuf);
                 }
             }
 
             if (CONFIG_BOOL(GetConfigManager(), "ShowLevel"))
-                DrawRow("Level", std::to_string(spot->Fields.Level).c_str());
+                DrawRow(LANG("PlayerLevel"), std::to_string(spot->Fields.Level).c_str());
             if (CONFIG_BOOL(GetConfigManager(), "ShowExperience"))
-                DrawRow("Experience", std::to_string(spot->Fields.Experience).c_str());
+                DrawRow(LANG("PlayerExperience"), std::to_string(spot->Fields.Experience).c_str());
             if (CONFIG_BOOL(GetConfigManager(), "ShowPrestige"))
-                DrawRow("Prestige", std::to_string(spot->Fields.Prestige).c_str());
+                DrawRow(LANG("PlayerPrestige"), std::to_string(spot->Fields.Prestige).c_str());
             if (CONFIG_BOOL(GetConfigManager(), "ShowHackerFlag"))
-                DrawRow("Is Hacker", spot->Fields.IsHacker ? "Yes" : "No");
+                DrawRow(LANG("PlayerHacker"), spot->Fields.IsHacker ? LANG("Yes") : LANG("No"));
 
             if (CONFIG_BOOL(GetConfigManager(), "ShowAverageSanity") && i == 0 && InGame::mapController && InGame::mapController->Fields.GameController)
             {
                 const float avgSanity = 100.f - SDK::GameController_GetAveragePlayerInsanity(InGame::mapController->Fields.GameController, nullptr);
                 char avgBuf[16];
                 snprintf(avgBuf, sizeof(avgBuf), "%.0f%%", avgSanity);
-                DrawRow("Average Sanity", avgBuf);
+                DrawRow(LANG("AverageSanity"), avgBuf);
             }
         }
 

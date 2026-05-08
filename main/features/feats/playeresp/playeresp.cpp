@@ -54,7 +54,17 @@ const std::vector<std::pair<SDK::HumanBodyBones, SDK::HumanBodyBones>> PlayerESP
     {SDK::HumanBodyBones::RightFoot, SDK::HumanBodyBones::RightToes}
 };
 
-PlayerESP::PlayerESP() : FeatureCore("Player ESP", TYPE_VISUALS)
+const std::vector<SDK::HumanBodyBones> PlayerESP::ESSENTIAL_BONES = {
+    SDK::HumanBodyBones::Head,
+    SDK::HumanBodyBones::Neck,
+    SDK::HumanBodyBones::Hips,
+    SDK::HumanBodyBones::LeftHand,
+    SDK::HumanBodyBones::RightHand,
+    SDK::HumanBodyBones::LeftFoot,
+    SDK::HumanBodyBones::RightFoot
+};
+
+PlayerESP::PlayerESP() : FeatureCore(LANG("PlayerESP_Header"), TYPE_VISUALS)
 {
     DECLARE_CONFIG(GetConfigManager(), "ShowPlayerSanity", bool, true);
     DECLARE_CONFIG(GetConfigManager(), "ShowDeadStatus", bool, true);
@@ -76,7 +86,7 @@ void PlayerESP::OnRender()
     const auto players = Utils::GetAllPlayers();
     const auto localPlayer = Utils::GetLocalPlayer();
 
-    if (players == nullptr || localPlayer == nullptr)
+    if (players == nullptr || localPlayer == nullptr || players->Fields.Items == nullptr)
         return;
 
     const bool showSanity = CONFIG_BOOL(GetConfigManager(), "ShowPlayerSanity");
@@ -91,9 +101,14 @@ void PlayerESP::OnRender()
     const ImColor color = CONFIG_COLOR(GetConfigManager(), "Color");
 
     const auto draw = ImGui::GetBackgroundDrawList();
-    const int playerCount = players->Fields.Size;
     const auto& playerVector = players->Fields.Items->Vector;
 
+    const auto network = Utils::GetNetwork();
+    const auto spotsList = (network && network->Fields.NetworkPlayerSpots && network->Fields.NetworkPlayerSpots->Fields.Items)
+        ? network->Fields.NetworkPlayerSpots
+        : nullptr;
+
+    const int playerCount = players->Fields.Size;
     for (int playerIndex = 0; playerIndex < playerCount; playerIndex++)
     {
         const auto player = playerVector[playerIndex];
@@ -101,41 +116,50 @@ void PlayerESP::OnRender()
             continue;
 
         std::unordered_map<SDK::HumanBodyBones, SDK::Vector3> bonePositions;
-        if (!GetBonePositions(player, bonePositions))
+        bonePositions.reserve(showSkeleton ? MAIN_BONES.size() : ESSENTIAL_BONES.size());
+
+        if (!GetBonePositions(player, bonePositions, showSkeleton))
+            continue;
+
+        std::unordered_map<SDK::HumanBodyBones, SDK::Vector3> screenBonePositions;
+        screenBonePositions.reserve(bonePositions.size());
+        for (const auto& [bone, worldPos] : bonePositions)
+        {
+            SDK::Vector3 screenPos;
+            if (Utils::WTS(worldPos, screenPos) && screenPos.Z > 0)
+                screenBonePositions.emplace(bone, screenPos);
+        }
+
+        if (screenBonePositions.empty())
             continue;
 
         ImVec2 boxMin, boxMax;
-        bool hasValidBox = CalculateBoundingBox(bonePositions, boxMin, boxMax);
+        bool hasValidBox = CalculateBoundingBox(screenBonePositions, boxMin, boxMax);
 
         if (showSkeleton)
-        {
-            DrawSkeleton(player, color, 1.5f);
-        }
+            DrawSkeleton(screenBonePositions, color, 1.5f);
 
         if (showBox && hasValidBox)
-        {
             draw->AddRect(boxMin, boxMax, color);
-        }
 
-        SDK::Vector3 headScreenPos;
+        SDK::Vector3 headScreenPos{};
         bool hasHeadPos = false;
-        if (bonePositions.find(SDK::HumanBodyBones::Head) != bonePositions.end())
+        if (const auto headIt = screenBonePositions.find(SDK::HumanBodyBones::Head); headIt != screenBonePositions.end())
         {
-            SDK::Vector3 headWorldPos = bonePositions[SDK::HumanBodyBones::Head];
-            hasHeadPos = Utils::WTS(headWorldPos, headScreenPos) && headScreenPos.Z > 0;
+            headScreenPos = headIt->second;
+            hasHeadPos = true;
         }
 
-        float infoX, infoY;
+        float infoX = 0.0f;
+        float infoY = 0.0f;
         if (hasValidBox)
         {
-
-            infoX = boxMax.x + 5;
+            infoX = boxMax.x + 5.0f;
             infoY = boxMin.y;
         }
         else if (hasHeadPos)
         {
-
-            infoX = headScreenPos.X + 5;
+            infoX = headScreenPos.X + 5.0f;
             infoY = headScreenPos.Y;
         }
         else
@@ -143,23 +167,27 @@ void PlayerESP::OnRender()
             continue;
         }
 
-        std::string playerName = Utils::GetPlayerName(player);
+        SDK::NetworkPlayerSpot* spot = nullptr;
+        if (spotsList && playerIndex < spotsList->Fields.Size)
+            spot = spotsList->Fields.Items->Vector[playerIndex];
 
-        float nameY, nameX;
+        std::string playerName;
+        if (spot && spot->Fields.AccountName)
+            playerName = Utils::UnityStrToSysStr(*spot->Fields.AccountName);
+        else
+            playerName = Utils::GetPlayerName(player);
+
+        float nameX = 0.0f;
+        float nameY = 0.0f;
         if (hasValidBox)
         {
             nameX = boxMin.x;
-            nameY = boxMin.y - 20;
-        }
-        else if (hasHeadPos)
-        {
-            nameX = headScreenPos.X;
-            nameY = headScreenPos.Y - 20;
+            nameY = boxMin.y - 20.0f;
         }
         else
         {
-            nameX = infoX;
-            nameY = infoY - 20;
+            nameX = headScreenPos.X;
+            nameY = headScreenPos.Y - 20.0f;
         }
 
         draw->AddText(ImVec2(nameX, nameY), color, playerName.c_str());
@@ -169,7 +197,7 @@ void PlayerESP::OnRender()
         if (showDeadStatus && player->Fields.IsDead)
         {
             draw->AddText(ImVec2(infoX, currentInfoY), IM_COL32(255, 0, 0, 255), "DEAD");
-            currentInfoY += 15;
+            currentInfoY += 15.0f;
         }
 
         if (showRoom)
@@ -178,113 +206,60 @@ void PlayerESP::OnRender()
             {
                 std::string roomText = "Room: " + Utils::UnityStrToSysStr(*levelRoom->Fields.RoomName);
                 draw->AddText(ImVec2(infoX, currentInfoY), color, roomText.c_str());
-                currentInfoY += 15;
+                currentInfoY += 15.0f;
             }
         }
 
-        if (showPrestige)
+        if (showPrestige && spot)
         {
-            if (const auto network = Utils::GetNetwork(); network && network->Fields.NetworkPlayerSpots)
-            {
-                const auto spots = network->Fields.NetworkPlayerSpots;
-                if (spots && playerIndex < spots->Fields.Size)
-                {
-                    const auto spot = spots->Fields.Items->Vector[playerIndex];
-                    if (spot)
-                    {
-                        std::string prestigeText = "Prestige: " + std::to_string(spot->Fields.Prestige);
-                        draw->AddText(ImVec2(infoX, currentInfoY), color, prestigeText.c_str());
-                        currentInfoY += 15;
-                    }
-                }
-            }
+            std::string prestigeText = "Prestige: " + std::to_string(spot->Fields.Prestige);
+            draw->AddText(ImVec2(infoX, currentInfoY), color, prestigeText.c_str());
+            currentInfoY += 15.0f;
         }
 
-        if (showExperience)
+        if (showExperience && spot)
         {
-            if (const auto network = Utils::GetNetwork(); network && network->Fields.NetworkPlayerSpots)
-            {
-                const auto spots = network->Fields.NetworkPlayerSpots;
-                if (spots && playerIndex < spots->Fields.Size)
-                {
-                    const auto spot = spots->Fields.Items->Vector[playerIndex];
-                    if (spot)
-                    {
-                        std::string expText = "Exp: " + std::to_string(spot->Fields.Experience);
-                        draw->AddText(ImVec2(infoX, currentInfoY), color, expText.c_str());
-                        currentInfoY += 15;
-                    }
-                }
-            }
+            std::string expText = "Exp: " + std::to_string(spot->Fields.Experience);
+            draw->AddText(ImVec2(infoX, currentInfoY), color, expText.c_str());
+            currentInfoY += 15.0f;
         }
 
-        if (showLevel)
+        if (showLevel && spot)
         {
-            if (const auto network = Utils::GetNetwork(); network && network->Fields.NetworkPlayerSpots)
-            {
-                const auto spots = network->Fields.NetworkPlayerSpots;
-                if (spots && playerIndex < spots->Fields.Size)
-                {
-                    const auto spot = spots->Fields.Items->Vector[playerIndex];
-                    if (spot)
-                    {
-                        std::string levelText = "Level: " + std::to_string(spot->Fields.Level);
-                        draw->AddText(ImVec2(infoX, currentInfoY), color, levelText.c_str());
-                        currentInfoY += 15;
-                    }
-                }
-            }
-        }
-
-        if (showSprinting && player->Fields.PlayerStamina)
-        {
-            if (player->Fields.PlayerStamina->Fields.isSprinting)
-            {
-                draw->AddText(ImVec2(infoX, currentInfoY), IM_COL32(0, 255, 0, 255), "SPRINTING");
-                currentInfoY += 15;
-            }
+            std::string levelText = "Level: " + std::to_string(spot->Fields.Level);
+            draw->AddText(ImVec2(infoX, currentInfoY), color, levelText.c_str());
+            currentInfoY += 15.0f;
         }
 
         if (showSanity && !player->Fields.IsDead)
         {
-            const float sanity = 100.f - Utils::GetPlayerSanity(player);
-            const float barWidth = 8.0f;
-            const float barHeight = 50.0f;
+            float sanity = 100.0f - Utils::GetPlayerSanity(player);
+            sanity = std::clamp(sanity, 0.0f, 100.0f);
+
+            constexpr float barWidth = 8.0f;
+            constexpr float barHeight = 50.0f;
 
             ImVec2 barPos;
             if (hasValidBox)
-            {
-
-                barPos = ImVec2(boxMin.x - barWidth - 5, boxMin.y);
-            }
-            else if (hasHeadPos)
-            {
-
-                barPos = ImVec2(headScreenPos.X - barWidth - 5, headScreenPos.Y - barHeight / 2);
-            }
+                barPos = ImVec2(boxMin.x - barWidth - 5.0f, boxMin.y);
             else
-            {
-                continue;
-            }
+                barPos = ImVec2(headScreenPos.X - barWidth - 5.0f, headScreenPos.Y - (barHeight * 0.5f));
 
             draw->AddRectFilled(barPos, ImVec2(barPos.x + barWidth, barPos.y + barHeight), IM_COL32(0, 0, 0, 255));
 
-            float filledHeight = (barHeight * sanity / 100.0f);
-            ImVec2 fillEnd = ImVec2(barPos.x + barWidth, barPos.y + filledHeight);
+            const float filledHeight = barHeight * (sanity / 100.0f);
+            const ImVec2 fillEnd(barPos.x + barWidth, barPos.y + filledHeight);
             draw->AddRectFilled(barPos, fillEnd, IM_COL32(255, 255, 0, 255));
-
             draw->AddRect(barPos, ImVec2(barPos.x + barWidth, barPos.y + barHeight), color);
 
-            std::string sanityText = std::to_string(static_cast<int>(sanity)) + "%";
-            const auto textSize = ImGui::CalcTextSize(sanityText.c_str());
-
-            draw->AddText(ImVec2(barPos.x - textSize.x - 2, barPos.y + (barHeight - textSize.y) / 2),
-                color, sanityText.c_str());
+            const std::string sanityText = std::to_string(static_cast<int>(sanity)) + "%";
+            const ImVec2 textSize = ImGui::CalcTextSize(sanityText.c_str());
+            draw->AddText(ImVec2(barPos.x - textSize.x - 2.0f, barPos.y + (barHeight - textSize.y) * 0.5f), color, sanityText.c_str());
         }
     }
 }
 
-bool PlayerESP::GetBonePositions(const SDK::Player* player, std::unordered_map<SDK::HumanBodyBones, SDK::Vector3>& bonePositions)
+bool PlayerESP::GetBonePositions(const SDK::Player* player, std::unordered_map<SDK::HumanBodyBones, SDK::Vector3>& bonePositions, bool includeAllBones)
 {
     if (!player)
         return false;
@@ -293,7 +268,8 @@ bool PlayerESP::GetBonePositions(const SDK::Player* player, std::unordered_map<S
     if (!animator)
         return false;
 
-    for (auto bone : MAIN_BONES)
+    const auto& bonesToRead = includeAllBones ? MAIN_BONES : ESSENTIAL_BONES;
+    for (auto bone : bonesToRead)
     {
         SDK::Transform* boneTransform = nullptr;
 
@@ -301,7 +277,7 @@ bool PlayerESP::GetBonePositions(const SDK::Player* player, std::unordered_map<S
         {
             boneTransform = SDK::Animator_GetBoneTransform(animator, bone, nullptr);
         }
-        catch (const std::exception& e)
+        catch (const std::exception&)
         {
             continue;
         }
@@ -328,15 +304,12 @@ bool PlayerESP::CalculateBoundingBox(const std::unordered_map<SDK::HumanBodyBone
 
     for (const auto& bonePair : bonePositions)
     {
-        SDK::Vector3 screenPos;
-        if (Utils::WTS(bonePair.second, screenPos) && screenPos.Z > 0)
-        {
-            minX = std::min<float>(minX, screenPos.X);
-            maxX = std::max<float>(maxX, screenPos.X);
-            minY = std::min<float>(minY, screenPos.Y);
-            maxY = std::max<float>(maxY, screenPos.Y);
-            hasValidPoints = true;
-        }
+        const SDK::Vector3& screenPos = bonePair.second;
+        minX = std::min<float>(minX, screenPos.X);
+        maxX = std::max<float>(maxX, screenPos.X);
+        minY = std::min<float>(minY, screenPos.Y);
+        maxY = std::max<float>(maxY, screenPos.Y);
+        hasValidPoints = true;
     }
 
     if (!hasValidPoints)
@@ -349,53 +322,35 @@ bool PlayerESP::CalculateBoundingBox(const std::unordered_map<SDK::HumanBodyBone
     return true;
 }
 
-void PlayerESP::DrawSkeleton(const SDK::Player* player, const ImColor& color, float thickness)
+void PlayerESP::DrawSkeleton(const std::unordered_map<SDK::HumanBodyBones, SDK::Vector3>& bonePositions, const ImColor& color, float thickness)
 {
-    if (!player)
-        return;
-
-    std::unordered_map<SDK::HumanBodyBones, SDK::Vector3> bonePositions;
-    if (!GetBonePositions(player, bonePositions))
+    if (bonePositions.empty())
         return;
 
     auto drawList = ImGui::GetBackgroundDrawList();
 
     for (const auto& connection : SKELETON_CONNECTIONS)
     {
-        auto fromBone = connection.first;
-        auto toBone = connection.second;
-
-        if (bonePositions.find(fromBone) == bonePositions.end() ||
-            bonePositions.find(toBone) == bonePositions.end())
+        const auto fromIt = bonePositions.find(connection.first);
+        const auto toIt = bonePositions.find(connection.second);
+        if (fromIt == bonePositions.end() || toIt == bonePositions.end())
             continue;
 
-        const auto& fromPos = bonePositions.at(fromBone);
-        const auto& toPos = bonePositions.at(toBone);
-
-        SDK::Vector3 fromScreen, toScreen;
-        if (Utils::WTS(fromPos, fromScreen) && Utils::WTS(toPos, toScreen) &&
-            fromScreen.Z > 0 && toScreen.Z > 0)
-        {
-            drawList->AddLine(
-                ImVec2(fromScreen.X, fromScreen.Y),
-                ImVec2(toScreen.X, toScreen.Y),
-                color,
-                thickness
-            );
-        }
+        drawList->AddLine(
+            ImVec2(fromIt->second.X, fromIt->second.Y),
+            ImVec2(toIt->second.X, toIt->second.Y),
+            color,
+            thickness
+        );
     }
 
     for (const auto& bonePair : bonePositions)
     {
-        SDK::Vector3 screenPos;
-        if (Utils::WTS(bonePair.second, screenPos) && screenPos.Z > 0)
-        {
-            drawList->AddCircleFilled(
-                ImVec2(screenPos.X, screenPos.Y),
-                thickness * 0.8f,
-                color
-            );
-        }
+        drawList->AddCircleFilled(
+            ImVec2(bonePair.second.X, bonePair.second.Y),
+            thickness * 0.8f,
+            color
+        );
     }
 }
 

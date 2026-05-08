@@ -11,11 +11,11 @@ namespace PhasmoCheatV::Features::Misc
 
 		void OnActivate() override;
 		void OnDeactivate() override;
-		void OnRender() override {}
+		void OnRender() override;
 		void OnMenuRender() override;
 		void ShopModifierMain();
 	private:
-		std::thread workerThread;
-		std::atomic<bool> running{ false };
+		float lastUpdateTime = 0.0f;
+		float lastTutorialLookupTime = 0.0f;
 	};
 }

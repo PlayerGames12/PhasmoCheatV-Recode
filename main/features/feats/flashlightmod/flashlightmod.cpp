@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Misc;
 
-FlashLightModifier::FlashLightModifier() : FeatureCore("Flashlight Modifier", TYPE_MISC) 
+FlashLightModifier::FlashLightModifier() : FeatureCore(LANG("FlashlightModifier_Header"), TYPE_MISC) 
 {
 	DECLARE_CONFIG(GetConfigManager(), "NoFlicker", bool, false);
 	DECLARE_CONFIG(GetConfigManager(), "DisableDifficultyCheck", bool, false);

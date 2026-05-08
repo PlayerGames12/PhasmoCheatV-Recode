@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Visuals;
 
-Fullbright::Fullbright() : FeatureCore("Fullbright", TYPE_VISUALS)
+Fullbright::Fullbright() : FeatureCore(LANG("Fullbright_Header"), TYPE_VISUALS)
 {
     DECLARE_CONFIG(GetConfigManager(), "Intensity", float, 1.f);
 }

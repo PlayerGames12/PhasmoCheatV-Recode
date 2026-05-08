@@ -31,12 +31,11 @@ namespace SDK
 
         Vector3 operator*(float f) const { return { X * f, Y * f, Z * f }; }
         Vector3 operator/(float f) const { return f != 0 ? Vector3{ X / f, Y / f, Z / f } : Vector3{ 0,0,0 }; }
-        // I Love Olesya
+        // Made with love
         Vector3& operator*=(float f) { X *= f; Y *= f; Z *= f; return *this; }
         Vector3& operator/=(float f) { if (f != 0) { X /= f; Y /= f; Z /= f; } else { X = Y = Z = 0; } return *this; }
     };
 
     DEC_MET(Vector3_get_magnitude, float(*)(Vector3* vec3, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Vector3", "get_magnitude", 0);
     DEC_MET(Vector3_get_normalized, Vector3(*)(Vector3* vec3, MethodInfo*), "UnityEngine.CoreModule", "UnityEngine", "Vector3", "get_normalized", 0);
-
 }

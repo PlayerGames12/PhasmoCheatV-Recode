@@ -64,8 +64,10 @@ namespace Utils {
 	bool InstallChineseFont();
 	std::string GetGameVersion();
 	std::string GetUnityVersion();
+	std::string GetPlayerName();
 	bool Checks_IsRealSender(SDK::Player* pn_sender, SDK::PhotonView* view); // Method was lightweight
 	float Distance(const SDK::Vector3& a, const SDK::Vector3& b);
+	
 
 	template<typename T>
 	void* VectorToIl2CppArray(const std::vector<T>& vec, const char* assembly, const char* namespaze, const char* clazzName)

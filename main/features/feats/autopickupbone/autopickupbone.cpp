@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Map;
 
-AutoPickupBone::AutoPickupBone() : FeatureCore("Auto pickup bone", TYPE_MAP) {}
+AutoPickupBone::AutoPickupBone() : FeatureCore(LANG("Autopickupbone_Header"), TYPE_MAP) {}
 
 void AutoPickupBone::OnMenuRender()
 {

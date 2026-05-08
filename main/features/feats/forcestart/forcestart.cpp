@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Misc;
 
-ForceStart::ForceStart() : FeatureCore("Force Start", TYPE_MISC) {}
+ForceStart::ForceStart() : FeatureCore(LANG("ForceStart_Header"), TYPE_MISC) {}
 
 void ForceStart::OnActivate()
 {

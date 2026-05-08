@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Map;
 
-SaltModifier::SaltModifier() : FeatureCore("Salt Modifier (ONLY YOU)", TYPE_MAP)
+SaltModifier::SaltModifier() : FeatureCore(LANG("SaltModifier(ONLYYOU)_Header"), TYPE_MAP)
 {
     DECLARE_CONFIG(GetConfigManager(), "InfinitySalt", bool, false);
     DECLARE_CONFIG(GetConfigManager(), "NoSaltUsedGhost", bool, false);

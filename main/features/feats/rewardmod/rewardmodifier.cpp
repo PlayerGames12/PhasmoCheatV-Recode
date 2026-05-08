@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Misc;
 
-RewardModifier::RewardModifier() : FeatureCore("Reward Modifier", TYPE_MISC)
+RewardModifier::RewardModifier() : FeatureCore(LANG("RewardModifier_Header"), TYPE_MISC)
 {
     DECLARE_CONFIG(GetConfigManager(), "InvestigationBonus", int, 1000);
     DECLARE_CONFIG(GetConfigManager(), "InvestigationBonusEnabled", bool, false);

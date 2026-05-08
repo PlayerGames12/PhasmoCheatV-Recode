@@ -17,4 +17,5 @@ namespace SDK
 	DEC_MET(Application_CallLogCallback, void(*)(String* logString, String* stackTrace, LogType type, bool invokedOnMainThread, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Application", "CallLogCallback", 4);
 	DEC_MET(Application_get_version, String* (*)(MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Application", "get_version", 0);
 	DEC_MET(Application_get_unityVersion, String* (*)(MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Application", "get_unityVersion", 0);
+	DEC_MET(Application_get_isPlaying, bool(*)(MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Application", "get_isPlaying", 0);
 }

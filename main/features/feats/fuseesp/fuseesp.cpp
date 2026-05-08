@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Visuals;
 
-FuseBoxESP::FuseBoxESP() : FeatureCore("FuseBox ESP", TYPE_VISUALS)
+FuseBoxESP::FuseBoxESP() : FeatureCore(LANG("FuseBoxESP_Header"), TYPE_VISUALS)
 {
 	TextBuffer.reserve(INITIAL_BUFFER_SIZE);
 

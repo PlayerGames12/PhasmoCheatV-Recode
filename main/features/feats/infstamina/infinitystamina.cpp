@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Movement;
 
-InfinityStamina::InfinityStamina() : FeatureCore("Infinity Stamina", TYPE_MOVEMENT) {}
+InfinityStamina::InfinityStamina() : FeatureCore(LANG("InfinityStamina_Header"), TYPE_MOVEMENT) {}
 
 void InfinityStamina::OnMenuRender()
 {

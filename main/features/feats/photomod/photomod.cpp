@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Misc;
 
-PhotoModifier::PhotoModifier() : FeatureCore("Photo Modifier", TYPE_MISC)
+PhotoModifier::PhotoModifier() : FeatureCore(LANG("PhotoModifier_Header"), TYPE_MISC)
 {
 	DECLARE_CONFIG(GetConfigManager(), "AutoPhoto", bool, false);
 	DECLARE_CONFIG(GetConfigManager(), "x5photo", bool, false);
@@ -74,7 +74,7 @@ void PhotoModifier::PhotoModifierAutoPhoto()
 	auto* PhotoCamera = Utils::get_PlayerHandCamera(localPlayer);
 	if (!PhotoCamera) return;
 
-	if (!Utils::IsPlayerVisibleGhost(localPlayer->Fields.Camera, ghostTransform))
+	if (!Utils::IsPlayerVisibleGhost(localPlayer->Fields.LocalPlayer->Fields.Camera, ghostTransform))
 		return;
 
 	if (!Utils::IsGhostVisible(ghostAI))

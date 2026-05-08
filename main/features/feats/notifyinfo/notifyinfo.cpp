@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Visuals;
 
-NotifyInfo::NotifyInfo() : FeatureCore("Notify Info", TYPE_VISUALS) 
+NotifyInfo::NotifyInfo() : FeatureCore(LANG("NotifyInfo_Header"), TYPE_VISUALS) 
 {
 	DECLARE_CONFIG(GetConfigManager(), "HuntingNotify", bool, true);
 	DECLARE_CONFIG(GetConfigManager(), "CollectBoneNotify", bool, false);
@@ -23,6 +23,8 @@ void NotifyInfo::OnMenuRender()
 
 void NotifyInfo::RenderNotifyHunt(SDK::GhostAI* ghostAI, bool Hunting)
 {
+	if (!IsActive()) return;
+
 	std::string txt;
 	if (isHunting == false && Hunting == false)
 		txt = LANG("GhostTriedHunt");
@@ -34,5 +36,7 @@ void NotifyInfo::RenderNotifyHunt(SDK::GhostAI* ghostAI, bool Hunting)
 
 void NotifyInfo::RenderNotifyBone()
 {
+	if (!IsActive()) return;
+
 	NOTIFY_INFO_QUICK(LANG("BoneCollected"));
 }

@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Map;
 
-VanButtonModifier::VanButtonModifier() : FeatureCore("Van Button Modifier", TYPE_MAP)
+VanButtonModifier::VanButtonModifier() : FeatureCore(LANG("VanButtonModifier_Header"), TYPE_MAP)
 {
     DECLARE_CONFIG(GetConfigManager(), "SkipVanAnim", bool, false);
     DECLARE_CONFIG(GetConfigManager(), "AutoOpenVanDoor", bool, false);

@@ -3,7 +3,11 @@
 #include <random>
 #include <chrono>
 #include "../features/features_includes.h"
+#include "effects/rain.h"
+#include "effects/directx_blur.h"
 #include <filesystem>
+#include "../discordrpc/discordrpc.h"
+
 inline ImVec2 operator+(const ImVec2& lhs, const ImVec2& rhs) { return ImVec2(lhs.x + rhs.x, lhs.y + rhs.y); }
 
 using namespace PhasmoCheatV; namespace fs = std::filesystem;
@@ -14,6 +18,7 @@ void Menu::Initialize() {
     ImGui::CreateContext();
     SetMenuDefaultStyle();
     InitFonts();
+    dx_blur_init(renderer->Swapchain, renderer->Device, renderer->Context);
     Initialized = true;
 }
 
@@ -57,14 +62,25 @@ void Menu::Render()
     constexpr float tabBarWidth = 200.f;
 
     ImGui::SetNextWindowSize(ImVec2(menuWidth * dpiScale, menuHeight * dpiScale), ImGuiCond_Once);
-    ImGui::SetNextWindowBgAlpha(0.0f);
+    ImGui::SetNextWindowBgAlpha(1.0f);
 
-    ImGui::Begin("##MainMenu", nullptr, windowFlags);
+    ImGui::Begin("Developed with love by VComDev / VCom Team##MainMenu", nullptr, windowFlags);
+
+    ImDrawList* dl = ImGui::GetWindowDrawList();
+
+    ImVec2 pos = ImGui::GetWindowPos();
+    ImVec2 size = ImGui::GetWindowSize();
+
+    if (Globals::IsMenuBlur)
+        dx_blur_draw(dl, pos, pos + size, 15.f);
+
+    if (Globals::IsMenuRain)
+        Rain();
 
     ImVec2 contentSize = ImGui::GetContentRegionAvail();
     ImGui::BeginChild("MainLayout", contentSize, false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-    ImGui::BeginChild("TabBar", ImVec2(tabBarWidth * dpiScale, contentSize.y), true);
+    ImGui::BeginChild("TabBar", ImVec2(tabBarWidth * dpiScale, contentSize.y), false);
     {
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 4));
 
@@ -138,7 +154,7 @@ void Menu::Render()
         }
         else
         {
-			ImGui::Text("Proxy don't support \nunloading. Please close \nthe game to exit.");
+			ImGui::Text(LANG("Proxy_Unload"));
         }
 
         ImGui::PopStyleColor(4);
@@ -165,12 +181,12 @@ void Menu::Render()
 
     ImGui::SameLine();
 
-    ImGui::BeginChild("ContentArea", ImVec2(contentSize.x - tabBarWidth * dpiScale, contentSize.y), true);
+    ImGui::BeginChild("ContentArea", ImVec2(contentSize.x - tabBarWidth * dpiScale, contentSize.y), false);
     {
         switch (menu.currentTab)
         {
         case 0:
-            ImGui::BeginChild("FeaturesContent", ImVec2(0, 0), true);
+            ImGui::BeginChild("FeaturesContent", ImVec2(0, 0), false);
             {
                 ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10 * dpiScale);
 
@@ -229,97 +245,6 @@ void Menu::Render()
                     ImGui::TextColored(accentPurpleLight, Utils::getKeyName(MenuToggleKey).c_str());
 
                     ImGui::Spacing();
-                    ImGui::Text("Language");
-
-                    static const char* langItems[] = { "EN", "RU", "ZH" };
-                    static int currentLang = (int)LanguageManager::GetCurrentLanguage();
-                    static bool isInstallingFont = false;
-                    static bool isRestartScheduled = false;
-
-                    ImGui::SetNextItemWidth(120 * dpiScale);
-
-                    if (isInstallingFont || isRestartScheduled)
-                    {
-                        ImGui::BeginDisabled();
-                    }
-
-                    int newLang = currentLang;
-                    if (ImGui::Combo("##lang", &newLang, langItems, 3))
-                    {
-                        Language oldLanguage = (Language)currentLang;
-                        Language newLanguage = (Language)newLang;
-
-                        if (oldLanguage != newLanguage && (newLanguage == Language::ZH || oldLanguage == Language::ZH))
-                        {
-                            isRestartScheduled = true;
-                            LanguageManager::SetLanguage(newLanguage);
-                            LanguageManager::SaveLanguage();
-
-                            if (newLanguage == Language::ZH)
-                            {
-                                isInstallingFont = true;
-
-                                std::thread([]()
-                                    {
-                                        if (!Utils::InstallChineseFont())
-                                        {
-                                            LOG_ERROR("Failed to install Chinese font");
-                                            isInstallingFont = false;
-                                            isRestartScheduled = false;
-                                            return;
-                                        }
-
-                                        LOG_INFO("Chinese font installed. Restarting in 5 seconds...");
-                                        isInstallingFont = false;
-
-                                        std::this_thread::sleep_for(std::chrono::seconds(5));
-                                        CheatWork = false;
-                                    }).detach();
-                            }
-                            else
-                            {
-                                LOG_INFO("Language changed from ZH to %s. Restarting in 5 seconds...", langItems[newLang]);
-
-                                std::thread([]()
-                                    {
-                                        std::this_thread::sleep_for(std::chrono::seconds(5));
-                                        CheatWork = false;
-                                    }).detach();
-                            }
-
-                            currentLang = newLang;
-                        }
-                        else if (oldLanguage != newLanguage)
-                        {
-                            LanguageManager::SetLanguage(newLanguage);
-                            LanguageManager::SaveLanguage();
-                            currentLang = newLang;
-                        }
-                    }
-
-                    if (isInstallingFont || isRestartScheduled)
-                    {
-                        ImGui::EndDisabled();
-
-                        if (isInstallingFont)
-                        {
-                            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 200, 100, 255));
-                            ImGui::Text("Installing Chinese font... Please wait...");
-                            ImGui::PopStyleColor();
-
-                            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(200, 200, 200, 255));
-                            ImGui::TextWrapped("The modification will restart automatically in 5 seconds after installation.");
-                            ImGui::PopStyleColor();
-                        }
-                        else if (isRestartScheduled)
-                        {
-                            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(200, 200, 200, 255));
-                            ImGui::TextWrapped("The modification will restart automatically in 5 seconds.");
-                            ImGui::PopStyleColor();
-                        }
-                    }
-
-                    ImGui::Spacing();
                     if (ImGui::Button(LANG("Menu_ClearCache"), ImVec2(160 * dpiScale, 30 * dpiScale)))
                     {
                         std::string logsPath = Utils::GetPhasmoCheatVDirectory() + "\\logs";
@@ -336,12 +261,70 @@ void Menu::Render()
                         }
                         catch (...) {}
                     }
+
+                    ImGui::Spacing();
+                    if (ImGui::Checkbox(LANG("Menu_DiscordRPC"), &Globals::DiscordRPC))
+                    {
+                        Config::SaveConfig();
+						Globals::DiscordRPC ? Discord::Initialize() : Discord::Shutdown();
+                    }
+					if (Globals::DiscordRPC)
+                        if (ImGui::Checkbox(LANG("Menu_RPCShowName"), &Globals::RPCShowName)) Config::SaveConfig();
+
+                    ImGui::Spacing();
+                    ImGui::Text("Language");
+
+                    ImGui::SetNextItemWidth(120 * dpiScale);
+
+                    if (ImGui::Button(LANG("Menu_DownloadOurChineseFont")))
+                    {
+                        std::thread([]()
+                            {
+                                std::string path = Utils::GetPhasmoCheatVDirectory() + "\\ChinaLang.ttf";
+
+                                if (Utils::InstallChineseFont())
+                                {
+                                    ImGuiIO& io = ImGui::GetIO();
+                                    ImFontConfig cfg;
+
+                                    g_FontChinese = io.Fonts->AddFontFromFileTTF(
+                                        path.c_str(),
+                                        18.f,
+                                        &cfg,
+                                        io.Fonts->GetGlyphRangesChineseFull()
+                                    );
+
+                                    io.Fonts->Build();
+
+                                    g_FontChineseReady = true;
+                                }
+                            }).detach();
+                    }
+
+                    static const char* langItems[] = { LANG("Menu_Language_EN"), LANG("Menu_Language_RU"),LANG("Menu_Language_CN") };
+                    static int currentLang = (int)LanguageManager::GetCurrentLanguage();
+                    if (ImGui::Combo("##lang", &currentLang, langItems, 3))
+                    {
+                        Language lang = (Language)currentLang;
+
+                        LanguageManager::SetLanguage(lang);
+                        LanguageManager::SaveLanguage();
+
+                        ImGuiIO& io = ImGui::GetIO();
+
+                        if (lang == Language::ZH)
+                            g_FontActive = g_FontChinese;
+                        else
+                            g_FontActive = g_FontMain;
+
+                        io.FontDefault = g_FontActive;
+                    }
                 }
 
                 ImGui::NextColumn();
                 {
                     ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[7]);
-                    ImGui::TextColored(ImVec4(0.8f, 0.8f, 1.f, 1.f), "Colors");
+                    ImGui::TextColored(ImVec4(0.8f, 0.8f, 1.f, 1.f), LANG("Menu_SettText"));
                     ImGui::PopFont();
 
                     ImGui::Spacing();
@@ -359,28 +342,37 @@ void Menu::Render()
 
                     ImGui::Spacing();
 
-                    if (ImGui::Button("Save Colors", ImVec2(160 * dpiScale, 30 * dpiScale)))
+                    if (ImGui::Checkbox(LANG("Menu_IsBlur"), &Globals::IsMenuBlur))
+                        Config::SaveConfig();
+                    if (ImGui::Checkbox(LANG("Menu_IsRain"), &Globals::IsMenuRain))
+                        Config::SaveConfig();
+
+
+                    ImGui::Spacing();
+
+                    if (ImGui::Button(LANG("Menu_ApplyColors"), ImVec2(160 * dpiScale, 30 * dpiScale)))
                     {
-                        PhasmoCheatV::Config::SaveConfig();
+                        Config::SaveConfig();
+						SetMenuDefaultStyle();
                     }
 
                     ImGui::SameLine();
 
-                    if (ImGui::Button("Reset Colors", ImVec2(140 * dpiScale, 30 * dpiScale)))
+                    if (ImGui::Button(LANG("Menu_ResetColors"), ImVec2(140 * dpiScale, 30 * dpiScale)))
                     {
-                        PhasmoCheatV::Globals::ResetColors();
-                        PhasmoCheatV::Config::SaveConfig();
+                        Globals::ResetColors();
+                        Config::SaveConfig();
                     }
 
                     if (changed)
                     {
-                        PhasmoCheatV::Config::SaveConfig();
+                        Config::SaveConfig();
                     }
                 }
 
                 ImGui::Columns(1);
 
-                if (ImGui::BeginPopupModal("Set Menu Key", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                if (ImGui::BeginPopupModal(LANG("Menu_SetMenuKey"), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                 {
                     ImGui::Text(LANG("Menu_PressKey"));
                     ImGui::Separator();
@@ -418,7 +410,7 @@ void Menu::Render()
             ImGui::Separator();
             ImGui::Dummy(ImVec2(0, 15));
 
-            ImGui::BeginChild("OpenSource", ImVec2(0, 150 * dpiScale), true);
+            ImGui::BeginChild("OpenSource", ImVec2(0, 150 * dpiScale), false);
             {
                 ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[7]);
                 ImGui::TextColored(accentPurple, LANG("Menu_OpenSource"));
@@ -446,7 +438,7 @@ void Menu::Render()
 
             ImGui::Dummy(ImVec2(0, 20));
 
-            ImGui::BeginChild("Credits", ImVec2(0, 0), true);
+            ImGui::BeginChild("Credits", ImVec2(0, 0), false);
             {
                 ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[7]);
                 ImGui::TextColored(accentPurple, LANG("Menu_Credits"));
@@ -475,7 +467,7 @@ void Menu::Render()
 
                 ImGui::Dummy(ImVec2(0, 8));
                 ImGui::TextColored(ImVec4(0.6f, 0.8f, 1.0f, 1.0f), LANG("Menu_SpecialThanks"));
-                ImGui::TextWrapped("@DashaAngelBars, @TraKKRR_lIo, @MT_FORGET, Evelien, @nypdgov, @nezuukichi, @LingQiao1206");
+                ImGui::TextWrapped("@DashaAngelBars, @TraKKRR_lIo, @MT_FORGET, Evelien, @nypdgov, @nezuukichi, @LingQiao1206, .gashopeless");
             }
             ImGui::EndChild();
 
@@ -496,7 +488,7 @@ void Menu::Render()
             ImGui::Separator();
             ImGui::Dummy(ImVec2(0, 10));
 
-            ImGui::BeginChild("HotkeysList", ImVec2(0, 0), true);
+            ImGui::BeginChild("HotkeysList", ImVec2(0, 0), false);
             {
                 if (BindSystem::Binds.empty())
                 {
@@ -558,10 +550,10 @@ void Menu::Render()
             ImGui::EndGroup();
         }
         break;
-        case 4:
+        case 4: // tech part not supported more languages. Only English
             if (IsDebugging)
             {
-                ImGui::BeginChild("TestContent", ImVec2(0, 0), true);
+                ImGui::BeginChild("TestContent", ImVec2(0, 0), false);
 
                 if (ImGui::Button("Dump contracts (map + id)"))
                 {
@@ -588,6 +580,19 @@ void Menu::Render()
 
                         LOG_INFO("[", i, "] map=", mapNameStr, " id=", uniqueId);
                     }
+                }
+
+                if (ImGui::Button("Test steam name"))
+                {
+                    if (SDK::SteamFriends_GetPersonalName && SDK::SteamFriends_SetRichPresence)
+                    {
+						auto* name = SDK::SteamFriends_GetPersonalName(nullptr);
+						LOG_INFO("Name = ", Utils::UnityStrToSysStr(*name));
+						bool set = SDK::SteamFriends_SetRichPresence(Utils::SysStrToUnityStr("status"), Utils::SysStrToUnityStr("Testing PhasmoCheatV"), nullptr);
+                        LOG_INFO(set);
+                    }
+                    else
+						LOG_ERROR("SteamFriends_GetPersonalName is null");
                 }
 
                 if (ImGui::Button("Call test"))

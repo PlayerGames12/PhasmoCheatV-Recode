@@ -1,6 +1,7 @@
 ﻿#include "../includes.h"
 #include "../features/features_includes.h"
 #include "../config/BindSystem.h"
+#include "../menu/effects/directx_blur.h"
 
 using namespace PhasmoCheatV;
 
@@ -43,6 +44,8 @@ HRESULT __stdcall Hooks::HkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval
     ID3D11DepthStencilView* original_depth;
     Renderer::Context->OMGetRenderTargets(1, &original_target, &original_depth);
     Renderer::Context->OMSetRenderTargets(1, &Renderer::TargetView, nullptr);
+    
+    dx_blur_update();
 
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
@@ -50,18 +53,12 @@ HRESULT __stdcall Hooks::HkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval
 
     if (menu.Open)
     {
-        if (FirstOpenMenu) // temp
-        {
-            GET_FEATURE_HANDLER()->ApplyConfigStates();
-			FirstOpenMenu = false;
-        }
-
         Menu::Render();
     }
 
     BindSystem::ProcessBinds();
 
-    if (GET_FEATURE_HANDLER() && !FirstOpenMenu) // temp                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+    if (GET_FEATURE_HANDLER())                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
     {
         GET_FEATURE_HANDLER()->RenderAll();
     }

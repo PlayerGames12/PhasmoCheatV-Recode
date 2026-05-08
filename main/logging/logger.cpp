@@ -112,23 +112,20 @@ namespace PhasmoCheatV
         if (!InitializeLogDirectory())
             throw std::runtime_error("Failed to initialize log directory");
 
-        if (IsDebugging)
+        ConsoleExists = AllocConsole() != 0;
+        if (ConsoleExists)
         {
-            ConsoleExists = AllocConsole() != 0;
-            if (ConsoleExists)
+            freopen_s(&StdoutFile, "CONOUT$", "w", stdout);
+            freopen_s(&StderrFile, "CONOUT$", "w", stderr);
+            HConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+            if (HConsole && HConsole != INVALID_HANDLE_VALUE)
             {
-                freopen_s(&StdoutFile, "CONOUT$", "w", stdout);
-                freopen_s(&StderrFile, "CONOUT$", "w", stderr);
-                HConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-                if (HConsole && HConsole != INVALID_HANDLE_VALUE)
+                DWORD mode;
+                if (GetConsoleMode(HConsole, &mode))
                 {
-                    DWORD mode;
-                    if (GetConsoleMode(HConsole, &mode))
-                    {
-                        SetConsoleMode(HConsole, mode & ~ENABLE_QUICK_EDIT_MODE);
-                        SetConsoleTitleA("PhasmoCheatV Console");
-                        SetConsoleOutputCP(CP_UTF8);
-                    }
+                    SetConsoleMode(HConsole, mode & ~ENABLE_QUICK_EDIT_MODE);
+                    SetConsoleTitleA("PhasmoCheatV Console");
+                    SetConsoleOutputCP(CP_UTF8);
                 }
             }
         }
@@ -186,38 +183,51 @@ namespace PhasmoCheatV
         if ((level == Level::Call || level == Level::Debug) && !IsCalledLogs)
             return;
 
-        bool isBasicLevel =
-            level == Level::Info ||
-            level == Level::Warning ||
-            level == Level::Error;
-
-        if (ConsoleExists)
-        {
-            if ((level == Level::Info || level == Level::Warning) && !IsDebugging)
-                return;
-        }
-
-        if (!ConsoleExists && !isBasicLevel)
-            return;
-
         std::string t = GetTimestamp();
         std::string s = std::string(LevelToString(level));
         std::string line = "[" + t + "] " + s + " " + std::string(msg);
 
         std::lock_guard lock(LogMutex);
 
-        if (HConsole && HConsole != INVALID_HANDLE_VALUE)
-        {
-            SetConsoleTextAttribute(HConsole, LevelToColor(level));
-            std::cout << line << std::endl;
-            SetConsoleTextAttribute(HConsole,
-                FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-        }
-
         if (FileOut.is_open() && FileOut.good())
         {
             FileOut << line << "\n";
             FileOut.flush();
+        }
+
+        if (!ConsoleExists || !HConsole || HConsole == INVALID_HANDLE_VALUE)
+            return;
+
+        if (!IsDebugging)
+        {
+            if (level == Level::Info ||
+                level == Level::Warning ||
+                level == Level::Error)
+            {
+                return;
+            }
+        }
+
+        if ((level == Level::Call || level == Level::Debug) && !IsCalledLogs)
+            return;
+
+        SetConsoleTextAttribute(HConsole, LevelToColor(level));
+        std::cout << line << std::endl;
+        SetConsoleTextAttribute(HConsole,
+            FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+    }
+
+    void Logger::LogRelease(WORD color, std::string_view message)
+    {
+        std::lock_guard lock(LogMutex);
+
+        if (HConsole && HConsole != INVALID_HANDLE_VALUE)
+        {
+            SetConsoleTextAttribute(HConsole, color);
+            std::cout << message << std::endl;
+
+            SetConsoleTextAttribute(HConsole,
+                FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
         }
     }
 }

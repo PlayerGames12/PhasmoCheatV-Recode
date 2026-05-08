@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Players;
 
-CrosshairModifier::CrosshairModifier() : FeatureCore("Crosshair Modifier", TYPE_PLAYERS)
+CrosshairModifier::CrosshairModifier() : FeatureCore(LANG("CrosshairModifier_Header"), TYPE_PLAYERS)
 {
     DECLARE_CONFIG(GetConfigManager(), "CrosshairColor", ImColor, ImColor(255, 100, 255, 255));
     DECLARE_CONFIG(GetConfigManager(), "IsRGB", bool, false);

@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Visuals;
 
-Watermark::Watermark() : FeatureCore("Watermark", TYPE_VISUALS)
+Watermark::Watermark() : FeatureCore(LANG("Watermark_Header"), TYPE_VISUALS)
 {
     DECLARE_CONFIG(GetConfigManager(), "ShowSanity", bool, true);
     DECLARE_CONFIG(GetConfigManager(), "ShowPing", bool, true);
@@ -29,7 +29,7 @@ void Watermark::OnRender()
         CachedText.append(" FPS");
     }
 
-    if (Utils::GetCheatUptimeSeconds() > 5) // Wait cheat initialized else crash game
+    if (SDK::Application_get_isPlaying(0) && Utils::GetLocalPlayer())
     {
         if (showPing && SDK::PhotonNetwork_Get_IsConnected(nullptr))
         {

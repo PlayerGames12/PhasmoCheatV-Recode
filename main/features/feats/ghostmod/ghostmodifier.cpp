@@ -7,7 +7,7 @@ const char* ghostStateList[] = {
     "GhostAbility", "Mannequin", "TeleportObject", "Interact", "SummoningCircle", "MusicBox", "Dots", "Salt"
 };
 
-GhostModifier::GhostModifier() : FeatureCore("Ghost Modifier", TYPE_GHOST)
+GhostModifier::GhostModifier() : FeatureCore(LANG("GhostModifier_Header"), TYPE_GHOST)
 {
     DECLARE_CONFIG(GetConfigManager(), "CustomSpeedEnabled", bool, false);
     DECLARE_CONFIG(GetConfigManager(), "GhostSpeed", float, 3.f);

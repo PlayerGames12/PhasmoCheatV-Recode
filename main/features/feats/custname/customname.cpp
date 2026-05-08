@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Players;
 
-CustomName::CustomName() : FeatureCore("Custom name", TYPE_PLAYERS)
+CustomName::CustomName() : FeatureCore(LANG("Customname_Header"), TYPE_PLAYERS)
 {
     DECLARE_CONFIG(GetConfigManager(), "Nickname", std::string, "PhasmoCheatV");
 }

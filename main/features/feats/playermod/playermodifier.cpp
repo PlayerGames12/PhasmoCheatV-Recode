@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Players;
 
-PlayerModifier::PlayerModifier() : FeatureCore("Player Modifier", TYPE_PLAYERS) {}
+PlayerModifier::PlayerModifier() : FeatureCore(LANG("PlayerModifier_Header"), TYPE_PLAYERS) {}
 
 void PlayerModifier::OnMenuRender()
 {
@@ -58,61 +58,12 @@ void PlayerModifier::OnMenuRender()
 
         if (player == localPlayer || isLocalMasterClient)
         {
-            {
-                std::string label = std::string(LANG("KillPlayer")) + "###kill_" + std::to_string(i);
-                if (ImGui::Button(label.c_str()))
-                {
-                    if (player->Fields.IsDead)
-                        NOTIFY_ERROR_QUICK(LANG("PlayerAlreadyDead"));
-                    else
-                        isLocalMasterClient
-                        ? SDK::Player_StartKillingPlayer(player, nullptr)
-                        : SDK::Player_KillPlayer(player, nullptr);
-                }
-            }
-
-            ImGui::SameLine();
-
-            {
-                std::string label = std::string(LANG("RevivePlayer")) + "###revive_" + std::to_string(i);
-                if (ImGui::Button(label.c_str()))
-                {
-                    if (!player->Fields.IsDead)
-                    {
-                        NOTIFY_ERROR_QUICK(LANG("PlayerAlreadyAlive"));
-                    }
-                    else
-                    {
-                        if (isLocalMasterClient)
-                            SDK::Player_RevivePlayer(player, true, nullptr);
-                        else
-                            SDK::Player_Revive(player, nullptr, nullptr);
-                    }
-                }
-            }
-
-            {
-                std::string label = std::string(LANG("FreezePlayer")) + "###freeze_" + std::to_string(i);
-                if (ImGui::Button(label.c_str()))
-                    SDK::Player_ToggleFreezePlayer(player, true, nullptr);
-            }
-
-            ImGui::SameLine();
-
-            {
-                std::string label = std::string(LANG("UnfreezePlayer")) + "###unfreeze_" + std::to_string(i);
-                if (ImGui::Button(label.c_str()))
-                    SDK::Player_ToggleFreezePlayer(player, false, nullptr);
-            }
-
             if (!player->Fields.IsDead)
             {
                 static int sanityValue = 100;
 
                 std::string sliderLabel = std::string(LANG("SanityValue")) + "###sanity_" + std::to_string(i);
                 ImGui::SliderInt(sliderLabel.c_str(), &sanityValue, 0, 100);
-
-                ImGui::SameLine();
 
                 std::string btnLabel = std::string(LANG("SetSanity")) + "###setsanity_" + std::to_string(i);
                 if (ImGui::Button(btnLabel.c_str()))

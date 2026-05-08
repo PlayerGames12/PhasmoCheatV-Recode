@@ -19,5 +19,7 @@ namespace PhasmoCheatV::Features::Cursed
 
 	private:
 		bool needRitualStart = false;
+		bool pendingTarotReset = false;
+		std::chrono::steady_clock::time_point tarotResetAt{};
 	};
 }

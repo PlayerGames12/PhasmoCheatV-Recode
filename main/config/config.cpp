@@ -10,7 +10,11 @@ namespace PhasmoCheatV::Config
         nlohmann::json defaultConfig;
 
         defaultConfig["menu_settings"] = {
-            {"toggle_key", Globals::MenuToggleKey}
+            {"toggle_key", Globals::MenuToggleKey},
+            {"menu_blur", Globals::IsMenuBlur},
+            {"menu_rain", Globals::IsMenuRain},
+            {"discord_rpc", Globals::DiscordRPC},
+			{"rpc_show_name", Globals::RPCShowName}
         };
 
         defaultConfig["globals_colors"] = {
@@ -178,9 +182,24 @@ namespace PhasmoCheatV::Config
 
             MergeConfigWithDefaults(data);
 
-            if (data.contains("menu_settings") && data["menu_settings"].contains("toggle_key"))
+            if (data.contains("menu_settings"))
             {
-                Globals::MenuToggleKey = data["menu_settings"]["toggle_key"].get<int>();
+                auto& m = data["menu_settings"];
+
+                if (m.contains("toggle_key"))
+                    Globals::MenuToggleKey = m["toggle_key"].get<int>();
+
+                if (m.contains("menu_blur"))
+                    Globals::IsMenuBlur = m["menu_blur"].get<bool>();
+
+                if (m.contains("menu_rain"))
+                    Globals::IsMenuRain = m["menu_rain"].get<bool>();
+
+				if (m.contains("discord_rpc"))
+                    Globals::DiscordRPC = m["discord_rpc"].get<bool>();
+
+				if (m.contains("rpc_show_name"))
+                    Globals::RPCShowName = m["rpc_show_name"].get<bool>();
             }
 
             if (data.contains("globals_colors"))
@@ -290,6 +309,10 @@ namespace PhasmoCheatV::Config
 
         Json menuSettings;
         menuSettings["toggle_key"] = Globals::MenuToggleKey;
+        menuSettings["menu_blur"] = Globals::IsMenuBlur;
+        menuSettings["menu_rain"] = Globals::IsMenuRain;
+		menuSettings["discord_rpc"] = Globals::DiscordRPC;  
+        menuSettings["rpc_show_name"] = Globals::RPCShowName;
         data["menu_settings"] = menuSettings;
 
         Json globalsColors;

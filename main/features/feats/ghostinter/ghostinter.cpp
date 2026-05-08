@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Ghost;
 
-GhostInteractor::GhostInteractor() : FeatureCore("Ghost Interaction Control", TYPE_GHOST) {}
+GhostInteractor::GhostInteractor() : FeatureCore(LANG("GhostInteractionControl_Header"), TYPE_GHOST) {}
 
 static bool CanTrigger()
 {

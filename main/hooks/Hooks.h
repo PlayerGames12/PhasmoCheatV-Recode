@@ -60,5 +60,8 @@ namespace PhasmoCheatV
 		static bool hkHandCamera_MoveNext(SDK::HandCamera* handCamera, SDK::MethodInfo* methodInfo);
 		static void hkVoodooDollPin_Use(SDK::VoodooDollPin* voodooDolPin, void* doll, SDK::Player* pn_player, bool lastPin, bool isNoSanityUse, SDK::MethodInfo* methodInfo);
 		static void hkJackalope_Awake(SDK::Jackalope* jackalope, SDK::MethodInfo* methodInfo);
+		static bool hkEVPRecorder_CanAnswer(SDK::EVPRecorder* recorder, SDK::MethodInfo* methodInfo);
+		static void hkScriptableRenderContext_Submit(SDK::ScriptableRenderContext* context, SDK::MethodInfo* methodInfo);
+		static std::nullptr_t hkPlayer_StartDeathAnimation(SDK::Player* player, int32_t a1, bool a2, void* photon, SDK::MethodInfo* methodInfo);
 	};
 }

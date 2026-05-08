@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Players;
 
-Pickup::Pickup() : FeatureCore("Pickup", TYPE_PLAYERS)
+Pickup::Pickup() : FeatureCore(LANG("Pickup_Header"), TYPE_PLAYERS)
 {
 	DECLARE_CONFIG(GetConfigManager(), "CustomThrow", float, 3.f);
 	DECLARE_CONFIG(GetConfigManager(), "ThrowMultiplier", bool, false);
