@@ -108,7 +108,7 @@ void Fullbright::FullbrightMain() {
         SDK::Transform_Set_Parent(lightTransform, playerTransform, nullptr);
     }
     SDK::Vector3 playerPos = Utils::GetPosVec3(localPlayer);
-    playerPos.Y += 5.f; // raise light above player head so floor is lit
+    playerPos.Y += 3.5f; // raise light above player head so floor is lit
     SDK::Transform_Set_Position(lightTransform, playerPos, nullptr);
     SDK::Transform_Set_Rotation(lightTransform, SDK::identityQuaternion, nullptr);
 }
