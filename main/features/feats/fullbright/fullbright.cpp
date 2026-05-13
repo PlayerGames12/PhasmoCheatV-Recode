@@ -5,6 +5,7 @@ using namespace PhasmoCheatV::Features::Visuals;
 Fullbright::Fullbright() : FeatureCore(LANG("Fullbright_Header"), TYPE_VISUALS)
 {
     DECLARE_CONFIG(GetConfigManager(), "Intensity", float, 1.f);
+    DECLARE_CONFIG(GetConfigManager(), "Range", float, 30.f);
 }
 
 void Fullbright::OnMenuRender()
@@ -21,9 +22,13 @@ void Fullbright::OnMenuRender()
 
     if (enabled) {
         float intensity = CONFIG_FLOAT(GetConfigManager(), "Intensity");
+        float range = CONFIG_FLOAT(GetConfigManager(), "Range");
 
-        if (ImGui::SliderFloat("##Intensity", &intensity, 0.1f, 100.f, "%.1f intensity"))
+        if (ImGui::SliderFloat("##Intensity", &intensity, 0.1f, 10.f, (std::string("%.1f ") + LANG("LightIntensity")).c_str()))
             SET_CONFIG_VALUE(GetConfigManager(), "Intensity", float, intensity);
+
+        if (ImGui::SliderFloat("##Range", &range, 1.f, 100.f, (std::string("%.0f ") + LANG("LightRange")).c_str()))
+            SET_CONFIG_VALUE(GetConfigManager(), "Range", float, range);
 
         if (ImGui::Button(LANG("ForceApply")))
             FullbrightMain();
@@ -51,6 +56,7 @@ void Fullbright::FullbrightMain() {
     }
 
     float intensity = CONFIG_FLOAT(GetConfigManager(), "Intensity");
+    float range = CONFIG_FLOAT(GetConfigManager(), "Range");
 
     if (!gameObject) {
         gameObject = (SDK::GameObject*)CreateIl2CppObject("UnityEngine.CoreModule", "UnityEngine", "GameObject");
@@ -64,8 +70,9 @@ void Fullbright::FullbrightMain() {
         SDK::Component* lightComponent = SDK::GameObject_AddComponent(gameObject, lightType, nullptr);
         if (!lightComponent) return;
         SDK::Light* light = (SDK::Light*)lightComponent;
+        SDK::Light_type_set(light, SDK::LightType::Point, nullptr);
         SDK::Light_intensity_set(light, intensity, nullptr);
-        SDK::Light_type_set(light, SDK::LightType::Directional, nullptr);
+        SDK::Light_range_set(light, range, nullptr);
         SDK::Light_shadows_set(light, SDK::ShadowsType::None, nullptr);
         SDK::Light_renderMode_set(light, SDK::RenderMode::ForceVertex, nullptr);
         SDK::GameObject_SetActive(gameObject, true, nullptr);
@@ -83,6 +90,7 @@ void Fullbright::FullbrightMain() {
             );
         if (light) {
             SDK::Light_intensity_set(light, intensity, nullptr);
+            SDK::Light_range_set(light, range, nullptr);
         }
         if (!SDK::GameObject_get_activeSelf(gameObject, nullptr)) {
             SDK::GameObject_SetActive(gameObject, true, nullptr);
@@ -93,12 +101,14 @@ void Fullbright::FullbrightMain() {
     if (!localPlayer) return;
     auto lightTransform = SDK::GameObject_get_transform(gameObject, nullptr);
     if (!lightTransform) return;
-    auto cameraTransform = Utils::GetPlayerTransformCamera(localPlayer);
-    if (!cameraTransform) return;
+    auto playerTransform = SDK::Component_Get_Transform((SDK::Component*)localPlayer, nullptr);
+    if (!playerTransform) return;
     auto currentParent = SDK::Transform_Get_Parent(lightTransform, nullptr);
-    if (currentParent != cameraTransform) {
-        SDK::Transform_Set_Parent(lightTransform, cameraTransform, nullptr);
+    if (currentParent != playerTransform) {
+        SDK::Transform_Set_Parent(lightTransform, playerTransform, nullptr);
     }
-    SDK::Transform_Set_Position(lightTransform, Utils::GetPosVec3(localPlayer), nullptr);
+    SDK::Vector3 playerPos = Utils::GetPosVec3(localPlayer);
+    playerPos.Y += 5.f; // raise light above player head so floor is lit
+    SDK::Transform_Set_Position(lightTransform, playerPos, nullptr);
     SDK::Transform_Set_Rotation(lightTransform, SDK::identityQuaternion, nullptr);
 }

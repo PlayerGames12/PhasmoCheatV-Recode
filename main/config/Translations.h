@@ -533,6 +533,8 @@ inline void RegisterAllTranslations()
     ADD_STR("FontChanger_Header", "Font Changer", u8"Смена шрифта игры", u8"字体修改器");
     ADD_STR("ForceStart_Header", "Force Start", u8"Принудительный старт", u8"强制开始");
     ADD_STR("Fullbright_Header", "Fullbright", u8"Полная яркость", u8"高亮模式");
+    ADD_STR("LightIntensity", "Intensity", u8"Интенсивность", u8"灯光强度");
+    ADD_STR("LightRange", "Range", u8"Дальность", u8"光照范围");
     ADD_STR("FuseBoxESP_Header", "FuseBox ESP", u8"ESP на предохранители", u8"电闸高亮");
     ADD_STR("GhostDesigner(HOST)_Header", "Ghost Designer (HOST)", u8"Дизайнер призраков (ХОСТ)", u8"鬼魂编辑器（房主）");
     ADD_STR("GhostESP_Header", "Ghost ESP", u8"ESP на призраков", u8"鬼魂高亮");
