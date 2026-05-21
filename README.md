@@ -7,7 +7,8 @@
 
 ## ⚠️ Current Status
 
-> Modification closed.
+> The cheat is now fully operational -- everything works as expected.
+> No critical issues have been reported with the current game version.
 
 ---
 
