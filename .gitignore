@@ -363,3 +363,8 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /build
+
+# Hide
+backup.zip
+unlockcosmeticks/
+/unlockcosmetics
