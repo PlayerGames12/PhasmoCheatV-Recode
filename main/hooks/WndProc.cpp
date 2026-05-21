@@ -30,6 +30,12 @@ LRESULT __stdcall Hooks::HkWndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LP
         NOTIFY_INFO_QUICK("The menu opening button has been reset.");
     }
 
+	if (uMsg == WM_KEYUP && wParam == VK_DELETE)
+    {
+        Globals::IsDebugging = !Globals::IsDebugging;
+		NOTIFY_INFO_QUICK("Debug mode ", Globals::IsDebugging ? "enabled" : "disabled");
+    }
+
     if (menu.Open)
     {
         ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);

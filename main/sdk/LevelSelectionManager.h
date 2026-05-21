@@ -18,7 +18,7 @@ namespace SDK
 		void* totalRoomsText;
 		void* totalFloorsText;
 		ContractsArray* contracts;
-		void* votedContract;
+		Contract* votedContract;
 		void* mostVotedMaps;
 	};
 

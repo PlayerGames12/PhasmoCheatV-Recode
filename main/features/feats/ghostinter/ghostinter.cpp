@@ -39,17 +39,25 @@ void GhostInteractor::OnMenuRender()
         { "TwinInteraction",        &TriggerTwin        },
     };
 
-    for (size_t i = 0; i < sizeof(buttons) / sizeof(buttons[0]); i++)
+    for (size_t i = 0; i < std::size(buttons); i++)
     {
-        std::string label = std::string(LANG(buttons[i].code)) + "##ghostInteractor_" + std::to_string(i);
+        std::string label =
+            std::string(LANG(buttons[i].code)) +
+            "##ghostInteractor_" +
+            std::to_string(i);
 
-        if (ImGui::Button(label.c_str(), ImVec2(220, 0)))
-        {
-            if (CanTrigger())
-                *buttons[i].flag = true;
-        }
+        BButton(
+            label.c_str(),
+            "ghostInteractor_" + std::to_string(i),
+            ([buttons, i]()
+                {
+                    if (CanTrigger())
+                        *buttons[i].flag = true;
+                })
+        );
 
-        if (i % 2 == 0 && i + 1 < sizeof(buttons) / sizeof(buttons[0]))
+        if (i % 2 == 0 &&
+            i + 1 < std::size(buttons))
             ImGui::SameLine();
     }
 }

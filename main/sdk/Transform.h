@@ -27,4 +27,6 @@ namespace SDK
 
     DEC_MET(Transform_SetSiblingIndex, void(*)(Transform* transform, int32_t index, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Transform", "SetSiblingIndex", 1);
     DEC_MET(Transform_GetSiblingIndex, int32_t(*)(Transform* transform, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Transform", "GetSiblingIndex", 0);
+
+	DEC_MET(Transform_Find, Transform* (*)(Transform* transform, SDK::String* name, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Transform", "Find", 1);
 }

@@ -29,7 +29,7 @@ void Watermark::OnRender()
         CachedText.append(" FPS");
     }
 
-    if (SDK::Application_get_isPlaying(0) && Utils::GetLocalPlayer())
+    if (SDK::Application_get_isPlaying(nullptr) && Utils::GetLocalPlayer())
     {
         if (showPing && SDK::PhotonNetwork_Get_IsConnected(nullptr))
         {

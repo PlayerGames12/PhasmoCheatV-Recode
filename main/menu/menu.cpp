@@ -276,31 +276,6 @@ void Menu::Render()
 
                     ImGui::SetNextItemWidth(120 * dpiScale);
 
-                    if (ImGui::Button(LANG("Menu_DownloadOurChineseFont")))
-                    {
-                        std::thread([]()
-                            {
-                                std::string path = Utils::GetPhasmoCheatVDirectory() + "\\ChinaLang.ttf";
-
-                                if (Utils::InstallChineseFont())
-                                {
-                                    ImGuiIO& io = ImGui::GetIO();
-                                    ImFontConfig cfg;
-
-                                    g_FontChinese = io.Fonts->AddFontFromFileTTF(
-                                        path.c_str(),
-                                        18.f,
-                                        &cfg,
-                                        io.Fonts->GetGlyphRangesChineseFull()
-                                    );
-
-                                    io.Fonts->Build();
-
-                                    g_FontChineseReady = true;
-                                }
-                            }).detach();
-                    }
-
                     static const char* langItems[] = { LANG("Menu_Language_EN"), LANG("Menu_Language_RU"),LANG("Menu_Language_CN") };
                     static int currentLang = (int)LanguageManager::GetCurrentLanguage();
                     if (ImGui::Combo("##lang", &currentLang, langItems, 3))
@@ -371,8 +346,7 @@ void Menu::Render()
                 }
 
                 ImGui::Columns(1);
-
-                if (ImGui::BeginPopupModal(LANG("Menu_SetMenuKey"), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                if (ImGui::BeginPopupModal(LANG("Set Menu Key"), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                 {
                     ImGui::Text(LANG("Menu_PressKey"));
                     ImGui::Separator();
@@ -384,6 +358,15 @@ void Menu::Render()
                     {
                         if (GetAsyncKeyState(key) & 0x8000)
                         {
+							// reserved by cheat, not allowed to bind
+                            if (key == VK_DELETE ||
+                                key == VK_HOME ||
+                                key == VK_END)
+                            {
+								NOTIFY_ERROR_QUICK(LANG("Menu_KeyReserved"));
+                                break;
+                            }
+
                             MenuToggleKey = key;
                             ImGui::CloseCurrentPopup();
                             break;
@@ -467,7 +450,7 @@ void Menu::Render()
 
                 ImGui::Dummy(ImVec2(0, 8));
                 ImGui::TextColored(ImVec4(0.6f, 0.8f, 1.0f, 1.0f), LANG("Menu_SpecialThanks"));
-                ImGui::TextWrapped("@DashaAngelBars, @TraKKRR_lIo, @MT_FORGET, Evelien, @nypdgov, @nezuukichi, @LingQiao1206, .gashopeless");
+                ImGui::TextWrapped("@DashaAngelBars, @TraKKRR_lIo, @MT_FORGET, Evelien, @nypdgov, @nezuukichi, @LingQiao1206, .gashopeless, softvoidds");
             }
             ImGui::EndChild();
 
@@ -580,19 +563,6 @@ void Menu::Render()
 
                         LOG_INFO("[", i, "] map=", mapNameStr, " id=", uniqueId);
                     }
-                }
-
-                if (ImGui::Button("Test steam name"))
-                {
-                    if (SDK::SteamFriends_GetPersonalName && SDK::SteamFriends_SetRichPresence)
-                    {
-						auto* name = SDK::SteamFriends_GetPersonalName(nullptr);
-						LOG_INFO("Name = ", Utils::UnityStrToSysStr(*name));
-						bool set = SDK::SteamFriends_SetRichPresence(Utils::SysStrToUnityStr("status"), Utils::SysStrToUnityStr("Testing PhasmoCheatV"), nullptr);
-                        LOG_INFO(set);
-                    }
-                    else
-						LOG_ERROR("SteamFriends_GetPersonalName is null");
                 }
 
                 if (ImGui::Button("Call test"))

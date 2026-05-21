@@ -38,4 +38,7 @@ namespace SDK
 
     DEC_MET(Vector3_get_magnitude, float(*)(Vector3* vec3, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Vector3", "get_magnitude", 0);
     DEC_MET(Vector3_get_normalized, Vector3(*)(Vector3* vec3, MethodInfo*), "UnityEngine.CoreModule", "UnityEngine", "Vector3", "get_normalized", 0);
+	DEC_MET(Vector3_ProjectOnPlane, Vector3(*)(Vector3 vec, Vector3 planeNormal, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Vector3", "ProjectOnPlane", 2);
+	DEC_MET(Vector3_up, Vector3(*)(MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Vector3", "get_up", 0);
+	DEC_MET(Vector3_Normalize, Vector3(*)(Vector3 value, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Vector3", "Normalize", 1);
 }

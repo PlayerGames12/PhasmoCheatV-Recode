@@ -4,6 +4,7 @@
 namespace SDK
 {
 	struct Player;
+	struct PlayerStamina;
 
 	struct LocalPlayerFields
 	{
@@ -11,6 +12,24 @@ namespace SDK
 		Player* Player;
 		void* journalController;
 		Camera* Camera;
+		bool Field3;
+		char pad_000[0x7];
+		GameObject* Field4;
+		void* playerCharacterAnimations;
+		void* playerGraphics;
+		LocalPlayerVoice* voice;
+		void* breath;
+		bool Field9;
+		char pad_001[0x7];
+		void* playerInput;
+		void* photonView;
+		void* localHeadMountedSocket;
+		void* physicsCharacterController;
+		float Field14;
+		float Field15;
+		float Field16;
+		float Field17;
+		PlayerStamina* stamina;
 	};
 
 	struct LocalPlayer

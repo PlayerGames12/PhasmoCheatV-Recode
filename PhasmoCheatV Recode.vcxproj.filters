@@ -210,7 +210,7 @@
     <ClCompile Include="main\features\feats\customlooklimits\customlooklimits.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="main\features\feats\CursedItemsControll\curseditemscontroll.cpp">
+    <ClCompile Include="main\features\feats\curseditemscontroll\curseditemscontroll.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="main\hooks\TarotCard_SetCard.cpp">
@@ -442,6 +442,27 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="main\hooks\Player_StartDeathAnimation.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\showmic\showmic.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\musicpanel\musicpanel.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\GameController_Awake.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\RewardManager_Awake.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\SceneManagement_Internal_SceneLoaded.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\hooks\CosmeticsUnlocker.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\cosmeticsunlocker\cosmeticunlocker.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -740,7 +761,7 @@
     <ClInclude Include="main\features\feats\customlooklimits\customlooklimits.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="main\features\feats\CursedItemsControll\curseditemscontroll.h">
+    <ClInclude Include="main\features\feats\curseditemscontroll\curseditemscontroll.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="main\sdk\CursedItemsController.h">
@@ -1055,5 +1076,50 @@
     <ClInclude Include="main\sdk\LocalPlayer.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="main\sdk\Journal_PhotoPage.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\JournalMedia.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Media.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="res\images\mic_off.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="res\images\mic_on.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\showmic\showmic.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Voice.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\musicpanel\musicpanel.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\Button.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\RewardManager.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\SceneManagement.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Xdsat\Downloads\Telegram Desktop\Translations_upd.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\sdk\CosmeticUnlocker.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\cosmeticsunlocker\cosmeticunlocker.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

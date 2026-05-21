@@ -5,6 +5,7 @@
 #include <Windows.h>
 #include "../libs/imgui/imgui.h"
 #include "../features/feature.h"
+#include <functional>
 
 namespace BindSystem
 {
@@ -15,6 +16,7 @@ namespace BindSystem
 
     inline std::map<std::string, KeyBind> Binds;
     inline std::optional<std::string> WaitingBind;
+    inline std::map<std::string, std::function<void()>> ButtonCallbacks;
 
     inline const char* KeyToString(int key)
     {
@@ -46,43 +48,68 @@ namespace BindSystem
         {
             for (int i = 1; i < 256; ++i)
             {
-                if (i == VK_LBUTTON || i == VK_RBUTTON || i == VK_MBUTTON) continue;
+                if (i == VK_LBUTTON ||
+                    i == VK_RBUTTON ||
+                    i == VK_MBUTTON)
+                    continue;
+
                 if (GetAsyncKeyState(i) & 0x8000)
                 {
-                    Binds[WaitingBind.value()].Key = i;
+                    Binds[*WaitingBind].Key = i;
                     WaitingBind.reset();
                     break;
                 }
             }
-            if (GetAsyncKeyState(VK_ESCAPE) & 0x8000)
+
+            if (WaitingBind.has_value() &&
+                (GetAsyncKeyState(VK_ESCAPE) & 0x8000))
+            {
+                Binds[*WaitingBind].Key = 0;
                 WaitingBind.reset();
+            }
 
             return;
         }
 
         for (auto& [uniqueKey, bind] : Binds)
         {
-            if (bind.Key == 0) continue;
+            if (bind.Key == 0)
+                continue;
 
-            if (GetAsyncKeyState(bind.Key) & 1)
+            if (!(GetAsyncKeyState(bind.Key) & 1))
+                continue;
+
+            if (auto it = ButtonCallbacks.find(uniqueKey);
+                it != ButtonCallbacks.end())
             {
-                std::string featureName = uniqueKey.substr(0, uniqueKey.find("##"));
-                auto* cfg = PhasmoCheatV::GetConfigManagerByName(featureName);
-                if (!cfg) continue;
-
-                auto* feature = PhasmoCheatV::MainFeatureHandler->FindFeature(featureName);
-                if (!feature) continue;
-
-                bool oldState = feature->IsActive();
-                bool newState = !oldState;
-
-                SET_CONFIG_VALUE(feature->GetConfigManager(), "Enabled", bool, newState);
-
-                if (!oldState && newState)
-                    feature->OnActivate();
-                else if (oldState && !newState)
-                    feature->OnDeactivate();
+                it->second();
+                continue;
             }
+
+            std::string featureName =
+                uniqueKey.substr(0, uniqueKey.find("##"));
+
+            auto* feature =
+                PhasmoCheatV::MainFeatureHandler
+                ->FindFeature(featureName);
+
+            if (!feature)
+                continue;
+
+            bool oldState = feature->IsActive();
+            bool newState = !oldState;
+
+            SET_CONFIG_VALUE(
+                feature->GetConfigManager(),
+                "Enabled",
+                bool,
+                newState
+            );
+
+            if (!oldState && newState)
+                feature->OnActivate();
+            else if (oldState && !newState)
+                feature->OnDeactivate();
         }
     }
 
@@ -139,7 +166,48 @@ namespace BindSystem
 
         return changed;
     }
+
+    inline bool BButtonImpl(
+        const char* label,
+        const std::string& bindId,
+        const std::function<void()>& callback)
+    {
+        std::string uniqueKey =
+            std::string(label) + "##" + bindId;
+
+        if (Binds.find(uniqueKey) == Binds.end())
+            Binds[uniqueKey] = KeyBind{ 0 };
+
+        ButtonCallbacks[uniqueKey] = callback;
+
+        bool pressed = ImGui::Button(label);
+
+        if (pressed && callback)
+            callback();
+
+        if (ImGui::IsItemHovered() &&
+            ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+        {
+            if (!WaitingBind.has_value())
+                WaitingBind = uniqueKey;
+            else if (*WaitingBind == uniqueKey)
+                WaitingBind.reset();
+        }
+
+        ImGui::SameLine();
+
+        bool isWaiting = (WaitingBind == uniqueKey);
+
+        std::string text =
+            isWaiting ? "..." : KeyToString(Binds[uniqueKey].Key);
+
+        ImGui::TextDisabled("[%s]", text.c_str());
+
+        return pressed;
+    }
 }
 
 #define BCheckBox(label, v, bindId) \
     BindSystem::BCheckBoxImpl(label, v, typeid(*this).name(), bindId)
+#define BButton(label, bindId, callback) \
+    BindSystem::BButtonImpl(label, bindId, callback)

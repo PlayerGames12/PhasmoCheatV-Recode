@@ -32,7 +32,9 @@ namespace SDK
 		None,
 		Gallu,
 		Dayan,
-		Obambo
+		Obambo,
+		Kormos,
+		Aswang
 	};
 
 	struct GhostTraits

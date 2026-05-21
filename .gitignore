@@ -365,6 +365,5 @@ FodyWeavers.xsd
 /build
 
 # Hide
-backup.zip
-unlockcosmeticks/
+/backup.zip
 /unlockcosmetics

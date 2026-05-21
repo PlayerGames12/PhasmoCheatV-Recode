@@ -326,42 +326,21 @@ void Teleport::TeleportToTruck()
     if (!InGame::mapController)
         return NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
 
-    auto trucks = SDK::GameObject_FindGameObjectsWithTag(
-        Utils::SysStrToUnityStr("Truck"), nullptr);
-    if (!trucks)
+    auto obj = Utils::FindObjectByName("TruckFloorCollider");
+
+    if (!obj)
         return NOTIFY_ERROR_QUICK(LANG("TP_TruckNotFound"));
 
-    for (uint32_t i = 0; i < 65535; i++)
-    {
-        SDK::GameObject* obj = nullptr;
-        memcpy(&obj,
-            reinterpret_cast<uint8_t*>(trucks) + 0x20 + i * sizeof(void*),
-            sizeof(void*));
-        if (!obj)
-            break;
+    auto transform = SDK::GameObject_get_transform(obj, nullptr);
+    if (!transform)
+        return NOTIFY_ERROR_QUICK(LANG("TP_TruckNotFound"));
 
-        auto namePtr = SDK::Object_Get_Name(
-            reinterpret_cast<SDK::Object*>(obj), nullptr);
-        if (!namePtr)
-            continue;
+    auto pos = SDK::Transform_Get_Position(transform, nullptr);
+    pos.Y += 2.f;
 
-        if (Utils::UnityStrToSysStr(*namePtr).find("Truck") == std::string::npos)
-            continue;
+    Utils::TpPlayerToVec3(localPlayer, pos);
 
-        auto transform = SDK::GameObject_get_transform(obj, nullptr);
-        if (!transform)
-            continue;
-
-		auto pos = SDK::Transform_Get_Position(transform, nullptr);
-
-        pos.Y -= 2.f;
-
-        Utils::TpPlayerToVec3(localPlayer, pos);
-        NOTIFY_INFO_QUICK(LANG("TP_ToTruck"));
-        return;
-    }
-
-    NOTIFY_ERROR_QUICK(LANG("TP_TruckNotFound"));
+    NOTIFY_INFO_QUICK(LANG("TP_ToTruck"));
 }
 
 void Teleport::TeleportToGhost()
@@ -387,8 +366,7 @@ void Teleport::TeleportToBasement()
     if (!InGame::mapController)
         return NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
 
-    SDK::GameObject* circleObj = SDK::GameObject_Find(
-        Utils::SysStrToUnityStr("Summoning Circle Spawn"), nullptr);
+    SDK::GameObject* circleObj = Utils::FindObjectByName("Summoning Circle Spawn");
 
     if (!circleObj)
         return NOTIFY_ERROR_QUICK("Summoning Circle Spawn not found!");
@@ -431,7 +409,7 @@ void Teleport::TeleportToEntrance()
 
     auto IsBlocked = [&](SDK::Vector3 pos) -> bool
         {
-            SDK::ColliderArray* colliders = SDK::Physics_OverlapSphere(pos, checkRadius, 0);
+            SDK::ColliderArray* colliders = SDK::Physics_OverlapSphere(pos, checkRadius, nullptr);
             bool blocked = colliders && colliders->MaxLength > 0;
             return blocked;
         };

@@ -71,7 +71,7 @@ namespace PhasmoCheatV
         [[nodiscard]] T* GetFeature(std::string_view name) const
         {
             if (auto feature = FindFeature(name))
-                return dynamic_cast<T*>(feature);
+                return static_cast<T*>(feature);
             return nullptr;
         }
 

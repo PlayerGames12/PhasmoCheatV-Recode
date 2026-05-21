@@ -67,6 +67,8 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, PlayersPanel);
     ADD_FEATURE(this, FontChanger);
     ADD_FEATURE(this, StatsPanel);
+    ADD_FEATURE(this, ShowMicro);
+	ADD_FEATURE(this, MusicPanel);
     ADD_FEATURE(this, PlayerESP);
     ADD_FEATURE(this, ActivityMonitor);
     //ADD_FEATURE(this, JackalopeESP);
@@ -107,6 +109,7 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, ForceStart);
     ADD_FEATURE(this, ShopModifier);
 	ADD_FEATURE(this, SpiritBoxAlwaysAnswer);
+	ADD_FEATURE(this, AutoGame);
 
     // Difficulty
     ADD_FEATURE(this, DifficultyModifier);
@@ -122,6 +125,11 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
 
     // Configs
     ADD_FEATURE(this, ConfigsManager);
+
+    // Hided | MISC
+#if COSMETICSUNLOCKER
+    ADD_FEATURE(this, CosmeticUnlocker);
+#endif
 
     MainFeatureHandler = this;
 }

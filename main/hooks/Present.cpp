@@ -5,7 +5,10 @@
 
 using namespace PhasmoCheatV;
 
-static bool FirstOpenMenu = true;
+bool IsFocused()
+{
+    return GetForegroundWindow() == Renderer::Window;
+}
 
 HRESULT __stdcall Hooks::HkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
 {
@@ -56,7 +59,8 @@ HRESULT __stdcall Hooks::HkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval
         Menu::Render();
     }
 
-    BindSystem::ProcessBinds();
+    if (IsFocused())
+        BindSystem::ProcessBinds();
 
     if (GET_FEATURE_HANDLER())                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
     {

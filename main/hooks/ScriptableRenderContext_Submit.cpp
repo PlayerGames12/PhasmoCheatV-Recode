@@ -1,4 +1,5 @@
 #include "../Includes.h"
+#include "../features/features_includes.h"
 #include "../discordrpc/discordrpc.h"
 
 using namespace PhasmoCheatV;
@@ -9,6 +10,8 @@ void Hooks::hkScriptableRenderContext_Submit(SDK::ScriptableRenderContext* conte
 
 	if (CheatWork)
 		Discord::DiscordRPCStatusHandler();
+
+	CALL_METHOD_IF_ACTIVE(Misc, AutoGame, AutoGameHandler);
 
 	SDK::ScriptableRenderContext_Submit(context, methodInfo);
 }

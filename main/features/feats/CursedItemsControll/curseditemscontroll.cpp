@@ -16,22 +16,22 @@ void CursedItemsControll::OnMenuRender()
 
     if (musicBoxExists)
     {
-        auto* go_mb = SDK::Component_Get_GameObject(reinterpret_cast<SDK::Component*>(InGame::cursedItemsController->Fields.MusicBox), 0);
+        auto* go_mb = SDK::Component_Get_GameObject(reinterpret_cast<SDK::Component*>(InGame::cursedItemsController->Fields.MusicBox), nullptr);
         SDK::PhotonView* pv_mb = nullptr;
 
         if (go_mb)
         {
-            auto pv_type = SDK::System_Type_GetType(Utils::SysStrToUnityStr("Photon.Pun.PhotonView"), 0);
+            auto pv_type = SDK::System_Type_GetType(Utils::SysStrToUnityStr("Photon.Pun.PhotonView"), nullptr);
             if (pv_type)
-                pv_mb = reinterpret_cast<SDK::PhotonView*>(SDK::GameObject_GetComponent(go_mb, pv_type, 0));
+                pv_mb = reinterpret_cast<SDK::PhotonView*>(SDK::GameObject_GetComponent(go_mb, pv_type, nullptr));
         }
 
         if (ImGui::Button(LANG("UseMusicBox")))
         {
             if (pv_mb)
-                SDK::PhotonView_RequestOwnership(pv_mb, 0);
+                SDK::PhotonView_RequestOwnership(pv_mb, nullptr);
 
-            if (Utils::Checks_IsRealSender(SDK::PhotonNetwork_Get_LocalPlayer(0), pv_mb))
+            if (Utils::Checks_IsRealSender(SDK::PhotonNetwork_Get_LocalPlayer(nullptr), pv_mb))
             {
                 bool isOn = true;
 
@@ -47,13 +47,13 @@ void CursedItemsControll::OnMenuRender()
                 auto parameters = Utils::VectorToIl2CppArray<void*>(params, "mscorlib", "System", "Object");
                 if (!parameters) return;
 
-                SDK::PhotonView_RPC(pv_mb, Utils::SysStrToUnityStr("UseNetworked"), SDK::RpcTarget::All, parameters, 0);
+                SDK::PhotonView_RPC(pv_mb, Utils::SysStrToUnityStr("UseNetworked"), SDK::RpcTarget::All, parameters, nullptr);
             }
         }
 
         ImGui::SameLine();
 
-        bool offlineMode = SDK::PhotonNetwork_Get_OfflineMode(0);
+        bool offlineMode = SDK::PhotonNetwork_Get_OfflineMode(nullptr);
         ImGui::BeginDisabled(!offlineMode);
         if (ImGui::Button(LANG("FixMusicBox"))) // Thanks Evelien
         {

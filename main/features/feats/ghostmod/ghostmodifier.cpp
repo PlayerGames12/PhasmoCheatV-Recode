@@ -41,29 +41,61 @@ void GhostModifier::OnMenuRender()
 
         ImGui::Separator();
 
-        if (ImGui::Button((std::string(LANG("ForceAppear")) + "##ghostModifier_forceAppear").c_str()))
-        {
-            if (InGame::ghostAI == nullptr)
-                NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
-            else if (!Utils::IsLocalMasterClient())
-                NOTIFY_ERROR_QUICK(LANG("NeedMustBeHost"));
-            else
-                SET_CONFIG_VALUE(GetConfigManager(), "ShouldForceAppear", bool, true);
-        }
+        BButton(
+            (std::string(LANG("ForceAppear")) + "##ghostModifier_forceAppear").c_str(),
+            "ghostModifier_forceAppear",
+            [this]()
+            {
+                if (InGame::ghostAI == nullptr)
+                {
+                    NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
+                    return;
+                }
+
+                if (!Utils::IsLocalMasterClient())
+                {
+                    NOTIFY_ERROR_QUICK(LANG("NeedMustBeHost"));
+                    return;
+                }
+
+                SET_CONFIG_VALUE(
+                    GetConfigManager(),
+                    "ShouldForceAppear",
+                    bool,
+                    true
+                );
+            }
+        );
 
         int forcedState = CONFIG_INT(GetConfigManager(), "ForceState");
         if (ImGui::Combo((std::string(LANG("ForcedType")) + "##ghostModifier_forceState").c_str(), &forcedState, ghostStateList, IM_ARRAYSIZE(ghostStateList)))
             SET_CONFIG_VALUE(GetConfigManager(), "ForceState", int, forcedState);
 
-        if (ImGui::Button((std::string(LANG("ForceState")) + "##ghostModifier_applyState").c_str()))
-        {
-            if (!InGame::ghostAI)
-                NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
-            else if (!Utils::IsLocalMasterClient())
-                NOTIFY_ERROR_QUICK(LANG("NeedMustBeHost"));
-            else
-                SET_CONFIG_VALUE(GetConfigManager(), "ShouldChangeState", bool, true);
-        }
+        BButton(
+            (std::string(LANG("ForceState")) + "##ghostModifier_applyState").c_str(),
+            "ghostModifier_applyState",
+            [this]()
+            {
+                if (!InGame::ghostAI)
+                {
+                    NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
+                    return;
+                }
+
+                if (!Utils::IsLocalMasterClient())
+                {
+                    NOTIFY_ERROR_QUICK(LANG("NeedMustBeHost"));
+                    return;
+                }
+
+                SET_CONFIG_VALUE(
+                    GetConfigManager(),
+                    "ShouldChangeState",
+                    bool,
+                    true
+                );
+            }
+        );
 
         ImGui::Separator();
 

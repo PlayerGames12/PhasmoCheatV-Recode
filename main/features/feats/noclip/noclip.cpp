@@ -25,24 +25,32 @@ void NoClip::OnMenuRender()
 
 void NoClip::OnDeactivate()
 {
-	auto localPlayer = Utils::GetLocalPlayer();
-	if (localPlayer)
-	{
-		auto firstPersonController = InGame::firstPersonController;
-		if (firstPersonController)
-		{
-			const auto controller = firstPersonController->Fields.PhysicsCharacterController;
-			const auto rigidBody = controller->Fields.Rigidbody;
+    if (!SDK::Behaviour_Set_Enabled ||
+        !SDK::Rigidbody_Set_IsKinematic ||
+        !SDK::Rigidbody_Set_Position)
+        return;
 
-			SDK::Behaviour_Set_Enabled(reinterpret_cast<SDK::Behaviour*>(controller), true, nullptr);
-			SDK::Rigidbody_Set_IsKinematic(rigidBody, false, nullptr);
+    auto localPlayer = Utils::GetLocalPlayer();
+    if (!localPlayer) return;
 
-			SDK::Rigidbody_Set_Position(rigidBody, SDK::Transform_Get_Position(
-				SDK::Component_Get_Transform(reinterpret_cast<SDK::Component*>(controller), nullptr),
-				nullptr
-			), nullptr);
-		}
-	}
+    auto firstPersonController = InGame::firstPersonController;
+    if (!firstPersonController) return;
+
+    auto controller = firstPersonController->Fields.PhysicsCharacterController;
+    if (!controller) return;
+
+    auto rigidBody = controller->Fields.Rigidbody;
+    if (!rigidBody) return;
+
+    auto transform = SDK::Component_Get_Transform(
+        reinterpret_cast<SDK::Component*>(controller), nullptr);
+    if (!transform) return;
+
+    SDK::Behaviour_Set_Enabled(reinterpret_cast<SDK::Behaviour*>(controller), true, nullptr);
+    SDK::Rigidbody_Set_IsKinematic(rigidBody, false, nullptr);
+
+    auto pos = SDK::Transform_Get_Position(transform, nullptr);
+    SDK::Rigidbody_Set_Position(rigidBody, pos, nullptr);
 }
 
 void NoClip::NoClipMain(SDK::FirstPersonController* firstPersonController)
@@ -78,6 +86,7 @@ void NoClip::NoClipMain(SDK::FirstPersonController* firstPersonController)
     const auto transform = SDK::Component_Get_Transform(reinterpret_cast<SDK::Component*>(controller), nullptr);
 
     SDK::Camera* camera = Utils::GetLocalPlayer()->Fields.LocalPlayer->Fields.Camera;
+    if (!camera) return;
     const auto camTransform = SDK::Component_Get_Transform(reinterpret_cast<SDK::Component*>(camera), nullptr);
 
     const auto forward = SDK::Transform_Get_Forward(camTransform, nullptr);

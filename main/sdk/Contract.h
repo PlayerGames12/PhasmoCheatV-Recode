@@ -12,6 +12,7 @@ namespace SDK
 		void* easterSprite;
 		void* halloweenSprite;
 		void* holidaySprite;
+		void* alanWakeSprite;
 		void* voteSpots;
 		Map* info;
 		bool unlocked;

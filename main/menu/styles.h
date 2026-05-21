@@ -6,16 +6,6 @@
 
 using namespace PhasmoCheatV;
 
-inline std::string GetChineseFontPath()
-{
-    std::string path = Utils::GetPhasmoCheatVDirectory() + "\\ChinaLang.ttf";
-
-    if (std::filesystem::exists(path))
-        return path;
-
-    return "C:\\Windows\\Fonts\\msyh.ttc";
-}
-
 inline void SetMenuDefaultStyle()
 {
     ImGuiStyle& style = ImGui::GetStyle();
@@ -161,7 +151,7 @@ inline void InitFonts()
         &fontConfig
     );
     // 10
-    std::string cnPath = GetChineseFontPath();
+    std::string cnPath = "C:\\Windows\\Fonts\\msyh.ttc";
     if (std::filesystem::exists(cnPath))
     {
         g_FontChinese = io.Fonts->AddFontFromFileTTF(

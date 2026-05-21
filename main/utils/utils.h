@@ -59,16 +59,20 @@ namespace Utils {
 	SDK::Transform* GetPotatoe();
 	SDK::Type* GetType(std::string string);
 	std::vector<std::tuple<std::string, SDK::GhostButton*, SDK::GameObject*>> get_AllGhostButtonsWithGO();
-	bool DownloadFile(const std::string& url, const std::string& path);
-	bool ExtractZip(const std::string& zipPath, const std::string& extractPath);
-	bool InstallChineseFont();
 	std::string GetGameVersion();
 	std::string GetUnityVersion();
 	std::string GetPlayerName();
 	bool Checks_IsRealSender(SDK::Player* pn_sender, SDK::PhotonView* view); // Method was lightweight
 	float Distance(const SDK::Vector3& a, const SDK::Vector3& b);
-	
+	bool IsUniquePhoto(SDK::EvidenceType mediaType);
+	bool TakePhoto(SDK::HandCamera* handCamera);
+	SDK::Transform* FindChildByName(SDK::Transform* parent, const char* name);
+	bool IsValidGO(SDK::GameObject* obj);
+	SDK::GameObject* GameObject_Find(std::string name);
+	bool IsInGame();
 
+
+	// Helper functions
 	template<typename T>
 	void* VectorToIl2CppArray(const std::vector<T>& vec, const char* assembly, const char* namespaze, const char* clazzName)
 	{
@@ -86,5 +90,55 @@ namespace Utils {
 			il2cpp_array_set(arrT, i, (void*)vec[i]);
 
 		return arr;
+	}
+
+	template<typename T>
+	T* FindComponentRecursive(
+		SDK::Transform* root,
+		SDK::Type* type)
+	{
+		if (!root || !type)
+			return nullptr;
+
+		auto* go =
+			SDK::Component_Get_GameObject(
+				reinterpret_cast<SDK::Component*>(root),
+				nullptr);
+
+		if (go)
+		{
+			auto* comp =
+				SDK::GameObject_GetComponent(
+					go,
+					type,
+					nullptr);
+
+			if (comp)
+				return reinterpret_cast<T*>(comp);
+		}
+
+		int childCount =
+			SDK::Transform_get_childCount(
+				root,
+				nullptr);
+
+		for (int i = 0; i < childCount; i++)
+		{
+			auto* child =
+				SDK::Transform_GetChild(
+					root,
+					i,
+					nullptr);
+
+			auto* result =
+				FindComponentRecursive<T>(
+					child,
+					type);
+
+			if (result)
+				return result;
+		}
+
+		return nullptr;
 	}
 }

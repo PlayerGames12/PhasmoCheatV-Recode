@@ -7,6 +7,9 @@ void Hooks::hkObjectiveManager_Update(SDK::ObjectiveManager* objectiveManager, S
 {
     LOG_CALL_UPDATE("Called ObjectiveManager_Update");
 
+	if (!InGame::objectiveManager || InGame::objectiveManager != objectiveManager)
+        InGame::objectiveManager = objectiveManager;
+
     CALL_METHOD_IF_ACTIVE_ARGS(Misc, RewardModifier, RewardModifierObjectives, objectiveManager);
 
     SDK::ObjectiveManager_Update(objectiveManager, methodInfo);

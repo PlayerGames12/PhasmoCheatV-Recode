@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "LanguageManager.h" // Thanks @LingQiao1206 for the Chinese translation
+#include "LanguageManager.h" // Thanks @LingQiao1206 and BitterG for the Chinese translation
 
 inline void RegisterAllTranslations()
 {
@@ -47,19 +47,20 @@ inline void RegisterAllTranslations()
     ADD_STR("Menu_SpecialThanks", "Special Thanks", u8"Отдельная благодарность", u8"特别鸣谢");
     ADD_STR("Menu_CheatInjected", "Cheat injected successfully. The menu opens on ", u8"Чит введен успешно. Меню откроется на ", u8"修改器注入成功，打开菜单请按");
     ADD_STR("Menu_ClearCache", "Clear the cache", u8"Очистить кэш", u8"清除缓存");
-	ADD_STR("Menu_IsBlur", "Blur menu", u8"Размывать меню");
-	ADD_STR("Menu_IsRain", "Rain effect", u8"Эффект дождя");
-    ADD_STR("Menu_SettText", "Menu settings", u8"Настройки меню");
-    ADD_STR("Menu_ApplyColors", "Apply colors", u8"Применить цвета");
-	ADD_STR("Menu_ResetColors", "Reset colors", u8"Сбросить цвета");
-    ADD_STR("Menu_SetMenuKey", "Set menu opening key", u8"Задать клавишу открытия меню");
-	ADD_STR("Proxy_Unload", "Proxy don't support \nunloading. Please close \nthe game to exit.", u8"Прокси-режим не поддерживает \nвыгрузку. Пожалуйста, \nзакройте игру, чтобы выйти.");
+    ADD_STR("Menu_IsBlur", "Blur menu", u8"Размывать меню", u8"背景模糊");
+    ADD_STR("Menu_IsRain", "Rain effect", u8"Эффект дождя", u8"雨天特效");
+    ADD_STR("Menu_SettText", "Menu settings", u8"Настройки меню", u8"菜单设置");
+    ADD_STR("Menu_ApplyColors", "Apply colors", u8"Применить цвета", u8"应用颜色");
+    ADD_STR("Menu_ResetColors", "Reset colors", u8"Сбросить цвета", u8"重置颜色");
+    ADD_STR("Menu_SetMenuKey", "Set menu opening key", u8"Задать клавишу открытия меню", u8"设置菜单开启按键");
+    ADD_STR("Proxy_Unload", "Proxy don't support \nunloading. Please close \nthe game to exit.", u8"Прокси-режим не поддерживает \nвыгрузку. Пожалуйста, \nзакройте игру, чтобы выйти.", u8"代理模式下不支持卸载\n请关闭游戏以退出");
     ADD_STR("Menu_Language_EN", "EN", u8"Английский", u8"英文");
     ADD_STR("Menu_Language_RU", "RU", u8"Русский", u8"俄语");
     ADD_STR("Menu_Language_CN", "CN", u8"Китайский", u8"中文");
-	ADD_STR("Menu_DownloadOurChineseFont", "Download Our Chinese Font", u8"Скачать наш китайский шрифт");
-	ADD_STR("Menu_DiscordRPC", "Enable Discord RPC", u8"Включить Discord RPC");
-	ADD_STR("Menu_RPCShowName", "Show player name in RPC", u8"Показывать имя игрока в RPC");
+    ADD_STR("Menu_DownloadOurChineseFont", "Download Our Chinese Font", u8"Скачать наш китайский шрифт", u8"下载由我们提供的中文字体");
+    ADD_STR("Menu_DiscordRPC", "Enable Discord RPC", u8"Включить Discord RPC", u8"启用 Discord RPC");
+    ADD_STR("Menu_RPCShowName", "Show player name in RPC", u8"Показывать имя игрока в RPC", u8"在 RPC 中显示玩家名称");
+	ADD_STR("Menu_KeyReserved", "This key is reserved by cheat. Please choose another one.", u8"Эта клавиша зарезервирована читом. Пожалуйста, выберите другую.");
 
     // Map modifier
     ADD_STR("AutoSelectMap", "Auto Select Map", u8"Автоматический выбор карты", u8"自动选择地图");
@@ -104,8 +105,6 @@ inline void RegisterAllTranslations()
     ADD_STR("StartRitual", "Start ritual of the summoning circle", u8"Начать ритуал круга призыва", u8"开始召唤阵仪式");
     ADD_STR("DisableHeartPin", "Disable heart pin", u8"Отключить пин сердца", u8"禁用会刺入巫毒娃娃心脏的图钉");
     ADD_STR("BeginRitualSummoningCircle", "Begin ritual summoning circle", u8"Начать ритуал круга призыва", u8"开始召唤阵仪式");
-
-
 
     // CustName
     ADD_STR("SetName", "Set name##custname", u8"Установить имя##custname", u8"确认设置名称##custname");
@@ -214,6 +213,8 @@ inline void RegisterAllTranslations()
 
     // Fullbright
     ADD_STR("EnableFullbright", "Enable Fullbright", u8"Включить Fullbright", u8"启用高亮模式");
+    ADD_STR("LightIntensity", "Intensity", u8"Интенсивность", u8"灯光强度");
+    ADD_STR("LightRange", "Range", u8"Дальность", u8"光照范围");
 
     // FuseEsp
     ADD_STR("EnableFuseboxEsp", "Enable fusebox esp", u8"Включить ESP на электрощиток", u8"启用电闸高亮显示");
@@ -229,7 +230,7 @@ inline void RegisterAllTranslations()
     ADD_STR("EvidenceCount", "Evidence Count", u8"Количество улик", u8"证据数量");
     ADD_STR("Evidence", "Evidence", u8"Улика", u8"证据");
     ADD_STR("EvidenceModeRandom", "Random", u8"Случайно", u8"随机");
-    ADD_STR("EvidenceModeSelected", "Selected", u8"Выборочно", u8"手动指定");
+    ADD_STR("EvidenceModeSelected", "Selected", u8"Выборочно", u8"手动指定证据");
 
     // GhostESP
     ADD_STR("EnableGhostESP", "Enable Ghost ESP", u8"Включить ESP призрака", u8"启用鬼魂高亮显示");
@@ -282,15 +283,18 @@ inline void RegisterAllTranslations()
     ADD_STR("HideLocation", "Hide Location", u8"Скрыть текущую локацию", u8"隐藏鬼魂当前位置");
     ADD_STR("HideMimicType", "Hide Mimic Type", u8"Скрыть тип мимика", u8"隐藏拟魂模仿的鬼魂类型");
     ADD_STR("HideBansheeTarget", "Hide Banshee Target", u8"Скрыть цель банши", u8"隐藏女妖锁定的目标");
-	ADD_STR("FavoriteRoom", "Favorite Room", u8"Любимая комната");
-    ADD_STR("Location", "Location", u8"Текущая локация");
-	ADD_STR("MimicType", "Mimic Type", u8"Тип мимика");
-	ADD_STR("BansheeTarget", "Banshee Target", u8"Цель банши");
-	ADD_STR("Evidence", "Evidence", u8"Улики");
-	ADD_STR("GhostName", "Ghost Name", u8"Имя призрака");
-	ADD_STR("GhostType", "Ghost Type", u8"Тип призрака");
-	ADD_STR("GhostAge", "Ghost Age", u8"Возраст призрака");
-	ADD_STR("GhostState", "Ghost State", u8"Состояние призрака");
+    ADD_STR("FavoriteRoom", "Favorite Room", u8"Любимая комната", u8"鬼魂最喜爱的房间");
+    ADD_STR("Location", "Location", u8"Текущая локация", u8"鬼魂位置");
+    ADD_STR("MimicType", "Mimic Type", u8"Тип мимика", u8"拟魂模仿的鬼魂类型");
+    ADD_STR("BansheeTarget", "Banshee Target", u8"Цель банши", u8"女妖锁定的目标");
+    ADD_STR("Evidence", "Evidence", u8"Улики", u8"证据");
+    ADD_STR("GhostName", "Ghost Name", u8"Имя призрака", u8"鬼魂名称");
+    ADD_STR("GhostType", "Ghost Type", u8"Тип призрака", u8"鬼魂类型");
+    ADD_STR("GhostAge", "Ghost Age", u8"Возраст призрака", u8"鬼魂年龄");
+    ADD_STR("GhostState", "Ghost State", u8"Состояние призрака", u8"鬼魂状态");
+
+    // SpiritBox Always Answer
+    ADD_STR("EnableSpiritBoxAlw", "Enable Spirit Box Always Answer", u8"Включить Spirit Box Always Answer", u8"启用灵盒必定回应");
 
     // GodMode
     ADD_STR("GodModeEnable", "Enable GodMode", u8"Включить режим бога", u8"启用上帝模式");
@@ -368,17 +372,17 @@ inline void RegisterAllTranslations()
     ADD_STR("ShowPrestige", "Show Prestige", u8"Показывать престиж", u8"显示声望");
     ADD_STR("ShowHackerFlag", "Show Hacker Flag", u8"Показывать флаг читера", u8"显示作弊者标记");
     ADD_STR("ShowAverageSanity", "Show Average Sanity", u8"Показывать средний рассудок", u8"显示平均理智值");
-    ADD_STR("PlayerSanity", "Sanity", u8"Рассудок");
-    ADD_STR("PlayerRoom", "Current Room", u8"Текущая комната");
-    ADD_STR("PlayerTemperature", "Temperature", u8"Температура");
-    ADD_STR("PlayerLevel", "Level", u8"Уровень");
-    ADD_STR("PlayerExperience", "Experience", u8"Опыт");
-    ADD_STR("PlayerPrestige", "Prestige", u8"Престиж");
-    ADD_STR("PlayerHacker", "Is Hacker", u8"Читер");
-    ADD_STR("AverageSanity", "Average Sanity", u8"Средний рассудок");
-    ADD_STR("Yes", "Yes", u8"Да");
-    ADD_STR("No", "No", u8"Нет");
-	ADD_STR("You", "You", u8"Вы");
+    ADD_STR("PlayerSanity", "Sanity", u8"Рассудок", u8"玩家当前理智");
+    ADD_STR("PlayerRoom", "Current Room", u8"Текущая комната", u8"玩家所在房间");
+    ADD_STR("PlayerTemperature", "Temperature", u8"Температура", u8"温度");
+    ADD_STR("PlayerLevel", "Level", u8"Уровень", u8"等级");
+    ADD_STR("PlayerExperience", "Experience", u8"Опыт", u8"经验");
+    ADD_STR("PlayerPrestige", "Prestige", u8"Престиж", u8"声望");
+    ADD_STR("PlayerHacker", "Is Hacker", u8"Читер", u8"是作弊者");
+    ADD_STR("AverageSanity", "Average Sanity", u8"Средний рассудок", u8"平均理智值");
+    ADD_STR("Yes", "Yes", u8"Да", u8"是");
+    ADD_STR("No", "No", u8"Нет", u8"否");
+    ADD_STR("You", "You", u8"Вы", u8"你");
 
     // RewardMod
     ADD_STR("EnableRewardModifier", "Enable Reward Modifier", u8"Включить модификацию наград", u8"启用奖励修改器");
@@ -392,7 +396,7 @@ inline void RegisterAllTranslations()
     // SaltMod
     ADD_STR("EnableSaltModifier", "Enable Salt Modifier", u8"Включить модификацию соли", u8"启用盐修改器");
     ADD_STR("InfinitySalt", "Infinity Salt", u8"Бесконечная соль", u8"无限盐");
-    ADD_STR("GhostNUseSalt", "Ghost doesn't use salt", u8"Призрак не наступает на соль", u8"幽灵不使用盐");
+    ADD_STR("GhostNUseSalt", "Ghost doesn't use salt", u8"Призрак не наступает на соль", u8"幽灵不踩盐");
     ADD_STR("ResetAllSalt", "Reset all salt", u8"Обновить всю соль", u8"重置所有盐");
     ADD_STR("UseAllSalt", "Use all salt", u8"Использовать всю соль", u8"使用所有盐");
 
@@ -454,10 +458,6 @@ inline void RegisterAllTranslations()
     ADD_STR("Watermark_ShowSanity", "Show average sanity", u8"Показывать среднюю рассудочность", u8"显示平均理智值");
     ADD_STR("Watermark_ShowPing", "Show ping", u8"Показывать пинг", u8"显示延迟");
 
-    // Auto Photo
-    ADD_STR("AutoPhotoEnable", "Enable auto photo", u8"Включить автоматические фотоснимки", u8"启用自动拍照");
-    ADD_STR("WarningAutoPhoto", "Attention! To use this feature, you need to take the camera into your inventory and hold it in your hands.", u8"Внимание! Для использования данной функции необходимо взять камеру в инвентарь и держать её в руках.", u8"注意！要使用此功能，您需要先将相机装入背包并拿在手中");
-
     // Temperature Panel
     ADD_STR("TemperaturePanelEnable", "Enable temperature panel", u8"Включить панель температуры", u8"启用温度面板");
 
@@ -494,13 +494,14 @@ inline void RegisterAllTranslations()
     ADD_STR("AutoPhoto", "Auto photo ghost", u8"Автоматические фотографии призрака", u8"自动拍鬼魂照片");
     ADD_STR("NoDelayPhoto", "No delay between photos", u8"Нет задержки между фотографиями", u8"拍照时无冷却延迟");
     ADD_STR("SkipAnimationPhoto", "Skip photo animation", u8"Пропустить анимацию фотографирования", u8"跳过拍照动画");
+	ADD_STR("GhostPhotoTaken", "Ghost photo taken!", u8"Сделана фотография призрака!");
 
     // Font Changer
 	ADD_STR("EnableFontChanger", "Enable font changer", u8"Включить смену шрифта", u8"启用字体修改器");
 
     // Journal Modifer
     ADD_STR("EnableJournalModifier", "Enable journal modifier", u8"Включить модификацию журнала", u8"启用日志修改器");
-    ADD_STR("OldGhostButtonPosition", "Old ghost button positions", u8"Старые позиции кнопок призраков", u8"使用旧版鬼魂按钮位置");
+    ADD_STR("OldGhostButtonPosition", "Old ghost button positions", u8"Старые позиции кнопок призраков", u8"恢复旧版鬼魂按钮布局"); ADD_STR("OldGhostButtonPosition", "Old ghost button positions", u8"Старые позиции кнопок призраков", u8"恢复旧版鬼魂按钮布局");
     ADD_STR("AutoSelectGhost", "Auto select ghost", u8"Автоматический выбор призрака", u8"自动选择鬼魂");
     ADD_STR("CorrectGhostAlwaysFirst", "Correct ghost always first", u8"Правильный призрак всегда первый", u8"让正确的鬼魂类型始终排在列表第一位");
 
@@ -508,66 +509,84 @@ inline void RegisterAllTranslations()
     ADD_STR("EnableJackalopeESP", "Enable Jackalope ESP", u8"Включить ESP на шакалоп", u8"启用鹿角兔高亮显示");
 
     // AutoGame
-    ADD_STR("EnableAutoGame", "Enable Auto Game", u8"Включить автоматическую игру");
-    ADD_STR("AutoGameDelay", "Auto Game Delay", u8"Задержка автоматической игры");
+    ADD_STR("EnableAutoGame", "Enable Auto Game", u8"Включить автоматическую игру", u8"启用自动游戏");
+    ADD_STR("AutoGameDelay", "Auto Game Delay", u8"Задержка автоматической игры", u8"自动游戏延迟");
+    ADD_STR("AutoGameRunning", "AutoGame is running.\nStopping is temporarily unavailable to ensure safe completion of the current cycle.\nPlease use the \"Stop\" button in the AutoGame panel to request a safe shutdown.", u8"Автоигра запущена.\nОстановка временно недоступна для обеспечения безопасного завершения текущего цикла.\nПожалуйста, используйте кнопку \"Стоп\" на панели автоигры, чтобы запросить безопасное завершение игры.");
     
     // FuseBox Modifier
-    ADD_STR("EnableFuseBoxModifier", "Enable fusebox modifier", u8"Включить модификатор электрощитка");
-    ADD_STR("AutoOnFuse", "Auto On Fuse", u8"Автоматическое включение электрощитка");
-    ADD_STR("FuseBoxOnByCheat", "FuseBox on by cheat.", u8"Электрощиток включён с помощью чита.");
+    ADD_STR("EnableFuseBoxModifier", "Enable fusebox modifier", u8"Включить модификатор электрощитка", u8"启用电闸修改功能");
+    ADD_STR("AutoOnFuse", "Auto On Fuse", u8"Автоматическое включение электрощитка", u8"自动开启电闸");
+    ADD_STR("FuseBoxOnByCheat", "FuseBox on by cheat.", u8"Электрощиток включён с помощью чита.", u8"电闸已由修改器强制开启");
+
+    // Show Micro
+	ADD_STR("ShowMicroEnable", "Show Microphone", u8"Показать микрофон");
+	ADD_STR("MicroScale", "Microphone scale", u8"Размер микрофона");
+    ADD_STR("MicroOnColor", "Microphone On Color", u8"Цвет включенного микрофона");
+
+    // Cosmetics Unlocker
+    ADD_STR("CosmeticUnlockerEnable", "Enable cosmetic unlocker", u8"Включить разблокировку косметики");
+	ADD_STR("CosmeticWarning", "Warning! We are not responsible for the subsequent ban when using this feature.\nUse it at your own risk. Although a ban is unlikely.", u8"Внимание! Мы не несем ответственности за последующий бан при использовании этой функции.\nИспользуйте ее на свой страх и риск. Хотя бан маловероятен.");
+	ADD_STR("CosmeticCredits", "Created by code PhasmoUnlocker", u8"Создано с помощью кода PhasmoUnlocker");
+
+    // Music Panel
+    ADD_STR("MusicPanelEnable", "Enable music panel", u8"Включить музыкальную панель");
+	ADD_STR("ShowOnlyMenu", "Show only in menu", u8"Показывать только в меню");
 
     // Headers
-    ADD_STR("ActivityMonitor_Header", "Activity Monitor", u8"Монитор активности");
-    ADD_STR("AlwaysBloodMoon_Header", "Always BloodMoon", u8"Всегда кровавая луна");
-    ADD_STR("AntiKick_Header", "AntiKick", u8"Антикик");
-    ADD_STR("Autopickupbone_Header", "Auto pickup bone", u8"Автоматический подбор кости");
-    ADD_STR("CrosshairModifier_Header", "Crosshair Modifier", u8"Модификатор прицела");
-    ADD_STR("CursedItemsControll_Header", "CursedItems Controll", u8"Управление проклятыми предметами");
-    ADD_STR("CustomLookLimits_Header", "Custom Look Limits", u8"Пользовательские ограничения обзора");
-    ADD_STR("CustomSpeed_Header", "Custom Speed", u8"Пользовательская скорость");
-    ADD_STR("Customname_Header", "Custom name", u8"Пользовательское имя");
-    ADD_STR("DifficultyModifier_Header", "Difficulty Modifier", u8"Модификатор сложности");
-    ADD_STR("DoorModifier_Header", "Door Modifier", u8"Модификатор дверей");
-    ADD_STR("EvidenceESP_Header", "Evidence ESP", u8"ESP доказательств");
-    ADD_STR("ExitVanSolo(host)_Header", "Exit Van Solo (host)", u8"Выход из фургона в одиночку (хост)");
-    ADD_STR("FastThermometer_Header", "Fast Thermometer", u8"Быстрый термометр");
-    ADD_STR("FlashlightModifier_Header", "Flashlight Modifier", u8"Модификатор фонарика");
-    ADD_STR("FoVEditor_Header", "FoVEditor", u8"Редактор FoV");
-    ADD_STR("FontChanger_Header", "Font Changer", u8"Смена шрифта игры");
-    ADD_STR("ForceStart_Header", "Force Start", u8"Принудительный старт");
-    ADD_STR("Fullbright_Header", "Fullbright", u8"Полная яркость");
-    ADD_STR("FuseBoxESP_Header", "FuseBox ESP", u8"ESP на предохранители");
-    ADD_STR("GhostDesigner(HOST)_Header", "Ghost Designer (HOST)", u8"Дизайнер призраков (ХОСТ)");
-    ADD_STR("GhostESP_Header", "Ghost ESP", u8"ESP на призраков");
-    ADD_STR("GhostInteractionControl_Header", "Ghost Interaction Control", u8"Управление взаимодействиями призрака");
-    ADD_STR("GhostModifier_Header", "Ghost Modifier", u8"Модификатор призрака");
-    ADD_STR("GhostPanel_Header", "Ghost Panel", u8"Панель призрака");
-    ADD_STR("GodMode_Header", "GodMode", u8"Режим бога");
-    ADD_STR("GrabKeys_Header", "Grab Keys", u8"Поднять ключи");
-    ADD_STR("InfinityStamina_Header", "Infinity Stamina", u8"Бесконечная выносливость");
-    ADD_STR("JackalopeESP_Header", "Jackalope ESP", u8"ESP на шакалоп");
-    ADD_STR("JournalModifier_Header", "Journal Modifier", u8"Модификатор журнала");
-    ADD_STR("LevelStatsPanel_Header", "LevelStats Panel", u8"Панель статистики уровня");
-    ADD_STR("MapModifier_Header", "Map Modifier", u8"Модификатор карты");
-    ADD_STR("NoClip_Header", "NoClip", u8"Ноуклип");
-    ADD_STR("NoEndGame_Header", "No End Game", u8"Отсутствие конца игры");
-    ADD_STR("NotifyInfo_Header", "Notify Info", u8"Информация уведомлений");
-    ADD_STR("PhotoModifier_Header", "Photo Modifier", u8"Модификатор фотографий");
-    ADD_STR("Pickup_Header", "Pickup", u8"Поднять предмет");
-    ADD_STR("PlayerESP_Header", "Player ESP", u8"ESP на игроков");
-    ADD_STR("PlayerModifier_Header", "Player Modifier", u8"Модификатор игрока");
-    ADD_STR("PlayersPanel_Header", "Players Panel", u8"Панель игроков");
-    ADD_STR("PotatoeESP_Header", "Potatoe ESP", u8"ESP на картошку");
-    ADD_STR("RewardModifier_Header", "Reward Modifier", u8"Модификатор наград");
-    ADD_STR("SaltModifier(ONLYYOU)_Header", "Salt Modifier (ONLY YOU)", u8"Модификатор соли (ТОЛЬКО ВЫ)");
-    ADD_STR("ShopModifier_Header", "Shop Modifier", u8"Модификатор магазина");
-    ADD_STR("SpiritBoxAlwaysAnswer_Header", "Spirit Box Always Answer", u8"Spirit Box Always Answer");
-    ADD_STR("Teleport_Header", "Teleport", u8"Телепортация");
-    ADD_STR("TemperaturePanel_Header", "Temperature Panel", u8"Панель температуры");
-    ADD_STR("VanButtonModifier_Header", "Van Button Modifier", u8"Модификатор кнопки фургона");
-    ADD_STR("Watermark_Header", "Watermark", u8"Водяной знак");
-    ADD_STR("FuseBoxModifier_Header", "FuseBox Modifier", u8"Модификатор электрощитка");
-    ADD_STR("AutoGame_Header", "Auto Game", u8"Автоматическая игра");
+    ADD_STR("ActivityMonitor_Header", "Activity Monitor", u8"Монитор активности", u8"活动强度监视器");
+    ADD_STR("AlwaysBloodMoon_Header", "Always BloodMoon", u8"Всегда кровавая луна", u8"始终保持血月天气");
+    ADD_STR("AntiKick_Header", "AntiKick", u8"Антикик", u8"反踢出");
+    ADD_STR("Autopickupbone_Header", "Auto pickup bone", u8"Автоматический подбор кости", u8"自动拾取骨头");
+    ADD_STR("CrosshairModifier_Header", "Crosshair Modifier", u8"Модификатор прицела", u8"准星修改器");
+    ADD_STR("CursedItemsControll_Header", "CursedItems Controll", u8"Управление проклятыми предметами", u8"诅咒道具控制");
+    ADD_STR("CustomLookLimits_Header", "Custom Look Limits", u8"Пользовательские ограничения обзора", u8"视角限制修改");
+    ADD_STR("CustomSpeed_Header", "Custom Speed", u8"Пользовательская скорость", u8"自定义速度");
+    ADD_STR("Customname_Header", "Custom name", u8"Пользовательское имя", u8"自定义名称");
+    ADD_STR("DifficultyModifier_Header", "Difficulty Modifier", u8"Модификатор сложности", u8"难度修改器");
+    ADD_STR("DoorModifier_Header", "Door Modifier", u8"Модификатор дверей", u8"门修改器");
+    ADD_STR("EvidenceESP_Header", "Evidence ESP", u8"ESP доказательств", u8"证据高亮显示");
+    ADD_STR("ExitVanSolo(host)_Header", "Exit Van Solo (host)", u8"Выход из фургона в одиночку (хост)", u8"单人上车离开（仅限房主可用）");
+    ADD_STR("FastThermometer_Header", "Fast Thermometer", u8"Быстрый термометр", u8"快速温度计");
+    ADD_STR("FlashlightModifier_Header", "Flashlight Modifier", u8"Модификатор фонарика", u8"手电筒修改器");
+    ADD_STR("FoVEditor_Header", "FoVEditor", u8"Редактор FoV", u8"视野编辑器");
+    ADD_STR("FontChanger_Header", "Font Changer", u8"Смена шрифта игры", u8"字体修改器");
+    ADD_STR("ForceStart_Header", "Force Start", u8"Принудительный старт", u8"强制开始");
+    ADD_STR("Fullbright_Header", "Fullbright", u8"Полная яркость", u8"高亮模式");
+    ADD_STR("FuseBoxESP_Header", "FuseBox ESP", u8"ESP на предохранители", u8"电闸高亮显示");
+    ADD_STR("GhostDesigner(HOST)_Header", "Ghost Designer (HOST)", u8"Дизайнер призраков (ХОСТ)", u8"鬼魂编辑器（仅限房主可用）");
+    ADD_STR("GhostESP_Header", "Ghost ESP", u8"ESP на призраков", u8"鬼魂高亮显示");
+    ADD_STR("GhostInteractionControl_Header", "Ghost Interaction Control", u8"Управление взаимодействиями призрака", u8"鬼魂互动控制");
+    ADD_STR("GhostModifier_Header", "Ghost Modifier", u8"Модификатор призрака", u8"鬼魂修改器");
+    ADD_STR("GhostPanel_Header", "Ghost Panel", u8"Панель призрака", u8"鬼魂信息面板");
+    ADD_STR("GodMode_Header", "GodMode", u8"Режим бога", u8"上帝模式");
+    ADD_STR("GrabKeys_Header", "Grab Keys", u8"Поднять ключи", u8"拾取钥匙");
+    ADD_STR("InfinityStamina_Header", "Infinity Stamina", u8"Бесконечная выносливость", u8"无限体力");
+    ADD_STR("JackalopeESP_Header", "Jackalope ESP", u8"ESP на шакалоп", u8"鹿角兔高亮显示");
+    ADD_STR("JournalModifier_Header", "Journal Modifier", u8"Модификатор журнала", u8"日志修改器");
+    ADD_STR("LevelStatsPanel_Header", "LevelStats Panel", u8"Панель статистики уровня", u8"等级统计面板");
+    ADD_STR("MapModifier_Header", "Map Modifier", u8"Модификатор карты", u8"地图修改器");
+    ADD_STR("NoClip_Header", "NoClip", u8"Ноуклип", u8"穿墙模式（NoClip）");
+    ADD_STR("NoEndGame_Header", "No End Game", u8"Отсутствие конца игры", u8"禁止自动结束游戏");
+    ADD_STR("NotifyInfo_Header", "Notify Info", u8"Информация уведомлений", u8"通知信息");
+    ADD_STR("PhotoModifier_Header", "Photo Modifier", u8"Модификатор фотографий", u8"照片修改器");
+    ADD_STR("Pickup_Header", "Pickup", u8"Поднять предмет", u8"拾取项修改");
+    ADD_STR("PlayerESP_Header", "Player ESP", u8"ESP на игроков", u8"玩家高亮显示");
+    ADD_STR("PlayerModifier_Header", "Player Modifier", u8"Модификатор игрока", u8"玩家修改器");
+    ADD_STR("PlayersPanel_Header", "Players Panel", u8"Панель игроков", u8"玩家信息面板");
+    ADD_STR("PotatoeESP_Header", "Potatoe ESP", u8"ESP на картошку", u8"土豆高亮显示");
+    ADD_STR("RewardModifier_Header", "Reward Modifier", u8"Модификатор наград", u8"奖励修改器");
+    ADD_STR("SaltModifier(ONLYYOU)_Header", "Salt Modifier (ONLY YOU)", u8"Модификатор соли (ТОЛЬКО ВЫ)", u8"盐修改器（仅对本机生效）");
+    ADD_STR("ShopModifier_Header", "Shop Modifier", u8"Модификатор магазина", u8"商店修改器");
+    ADD_STR("SpiritBoxAlwaysAnswer_Header", "Spirit Box Always Answer", u8"Spirit Box Always Answer", u8"通灵盒始终有回应");
+    ADD_STR("Teleport_Header", "Teleport", u8"Телепортация", u8"传送功能");
+    ADD_STR("TemperaturePanel_Header", "Temperature Panel", u8"Панель температуры", u8"温度面板");
+    ADD_STR("VanButtonModifier_Header", "Van Button Modifier", u8"Модификатор кнопки фургона", u8"货车按钮修改器");
+    ADD_STR("Watermark_Header", "Watermark", u8"Водяной знак", u8"水印设置");
+    ADD_STR("FuseBoxModifier_Header", "FuseBox Modifier", u8"Модификатор электрощитка", u8"电闸修改器");
+    ADD_STR("AutoGame_Header", "Auto Game", u8"Автоматическая игра", u8"自动游戏");
+	ADD_STR("ShowMicro_Header", "Show Microphone", u8"Показать микрофон");
+	ADD_STR("CosmeticUnlocker_Header", "Cosmetic Unlocker", u8"Разблокировщик косметики");
+    ADD_STR("MusicPanel_Header", "Music Panel", u8"Музыкальная панель");
 
     // Template
     ADD_STR("", "", u8"");

@@ -31,4 +31,5 @@ namespace SDK
     DEC_MET(Light_type_set, void(*)(Light* light, LightType value, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Light", "set_type", 1);
     DEC_MET(Light_shadows_set, void(*)(Light* light, ShadowsType value, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Light", "set_shadows", 1);
     DEC_MET(Light_renderMode_set, void(*)(Light* light, RenderMode value, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Light", "set_renderMode", 1);
+    DEC_MET(Light_range_set, void(*)(Light* light, float value, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Light", "set_range", 1);
 }

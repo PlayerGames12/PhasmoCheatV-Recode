@@ -72,7 +72,7 @@ SDK::Network* Utils::GetNetwork()
 		return nullptr;
 	
 	auto* network_gobj = FindObjectByName("Network"); if (!network_gobj) return nullptr;
-	auto* network_Comp = SDK::GameObject_GetComponentByName(network_gobj, SysStrToUnityStr("Network"), 0); if (!network_Comp) return nullptr;
+	auto* network_Comp = SDK::GameObject_GetComponentByName(network_gobj, SysStrToUnityStr("Network"), nullptr); if (!network_Comp) return nullptr;
 	InGame::network = reinterpret_cast<SDK::Network*>(network_Comp);
 
 	return InGame::network;
@@ -330,6 +330,12 @@ std::string Utils::GhostEnumToStr(SDK::GhostType ghostType)
 	case SDK::GhostType::Obambo:
 		ghostTypeString = "Obambo";
 		break;
+	case SDK::GhostType::Kormos:
+		ghostTypeString = "Kormos";
+		break;
+	case SDK::GhostType::Aswang:
+		ghostTypeString = "Aswang";
+		break;
 	default:
 		ghostTypeString = "Unknown";
 		break;
@@ -378,6 +384,8 @@ std::string Utils::GhostEnumToStr(const SDK::GhostEvidence ghostEvidence)
 
 std::string Utils::UnityStrToSysStr(const SDK::String& string)
 {
+	if (!string.Clazz) return "UNKOWN";
+
 	int length = string.Fields.StringLength;
 
 	if (length <= 0)
@@ -459,11 +467,24 @@ std::string Utils::GetPlayerName(const SDK::Player* player)
 
 bool Utils::WTS(const SDK::Vector3& worldPos, SDK::Vector3& displayPos)
 {
-	SDK::Camera* playerCamera = GetLocalPlayer()->Fields.LocalPlayer->Fields.Camera; if (!playerCamera) return false;
+	displayPos = SDK::Vector3{};
 
-	SDK::Vector3 projected = SDK::Camera_WorldToScreenPoint(playerCamera, worldPos, nullptr); if (projected.Z <= 0.0f) return false;
+	auto* player = GetLocalPlayer();
+	if (!player || !player->Fields.LocalPlayer)
+		return false;
+
+	SDK::Camera* camera = player->Fields.LocalPlayer->Fields.Camera;
+	if (!camera)
+		return false;
+
+	SDK::Vector3 projected = SDK::Camera_WorldToScreenPoint(camera, worldPos, nullptr);
+
+	if (projected.Z <= 0.0f)
+		return false;
 
 	float screenHeight = SDK::Screen_Get_Height(nullptr);
+	if (screenHeight <= 0.0f)
+		return false;
 
 	displayPos.X = projected.X;
 	displayPos.Y = screenHeight - projected.Y;
@@ -474,11 +495,13 @@ bool Utils::WTS(const SDK::Vector3& worldPos, SDK::Vector3& displayPos)
 
 SDK::Transform* Utils::GetPlayerTransformCamera(const SDK::Player* player)
 {
+	if (!player) return nullptr;
 	return SDK::Component_Get_Transform(reinterpret_cast<SDK::Component*>(player->Fields.LocalPlayer->Fields.Camera), nullptr);
 }
 
 SDK::Vector3 Utils::GetPosVec3(const SDK::Player* player)
 {
+	if (!player) return { 0, 0, 0 };
 	auto pos1 = GetPosVec3(GetPlayerTransformCamera(player));
 	SDK::Vector3 newpos = { pos1.X, pos1.Y - 1.5f, pos1.Z };
 	return newpos;
@@ -486,16 +509,19 @@ SDK::Vector3 Utils::GetPosVec3(const SDK::Player* player)
 
 SDK::Vector3 Utils::GetPosVec3(const SDK::GhostAI* ghostAI)
 {
+	if (!ghostAI) return { 0, 0, 0 };
 	return GetPosVec3(ghostAI->Fields.huntingRaycastPoint);
 }
 
 SDK::Vector3 Utils::GetPosVec3(SDK::Component* component)
 {
+	if (!component) return { 0, 0, 0 };
 	return GetPosVec3(SDK::Component_Get_Transform(component, nullptr));
 }
 
 SDK::Vector3 Utils::GetPosVec3(SDK::Transform* transform)
 {
+	if (!transform) return { 0, 0, 0 };
 	return SDK::Transform_Get_Position(transform, nullptr);
 }
 
@@ -663,7 +689,7 @@ std::string Utils::GetActiveSceneName()
 
 SDK::GameObject* Utils::FindObjectByName(std::string name)
 {
-	return SDK::GameObject_Find(SysStrToUnityStr(name), nullptr);
+	return GameObject_Find(name);
 }
 
 SDK::ObjectArray* Utils::FindObjectsOfType(std::string type)
@@ -682,7 +708,7 @@ SDK::StoreItemInfo* Utils::GetStoreItemInfo()
 	auto* list = FindObjectsOfType("UnityEngine.GameObject");
 	if (!list) return nullptr;
 
-	for (uint32_t i = 0; i < 65535; i++)
+	for (uint32_t i = 0; i < list->MaxLength; i++)
 	{
 		auto raw = list->Vector[i];
 		if (!raw) continue;
@@ -922,90 +948,41 @@ void Utils::DumpAllMethodsByClass(const char* className, const char* namespaze, 
 
 SDK::HandCamera* Utils::get_PlayerHandCamera(SDK::Player* player)
 {
-	//PCPlayer(Player script)
-	//	PCPlayerHead
-	//	   CameraItemSpot
-	//	      Photo Camera TIER.NUMBER
-
-
-	auto* g_object_player = SDK::Component_Get_GameObject(reinterpret_cast<SDK::Component*>(player), nullptr);
-	std::string o_name_player = UnityStrToSysStr(*SDK::Object_Get_Name(reinterpret_cast<SDK::Object*>(g_object_player), nullptr));
-
-	LOG_INFO("[get_PlayerHandCamera] o_name_player = ", o_name_player);
-
-	if (o_name_player.rfind("PCPlayer", 0) != 0)
+	if (!player)
 		return nullptr;
 
+	static SDK::Type* handCameraType = nullptr;
 
-	auto* playerTr = SDK::GameObject_get_transform(g_object_player, nullptr);
-	if (!playerTr)
-		return nullptr;
-
-	SDK::Transform* headTr = nullptr;
-
-	int playerChildCount = SDK::Transform_get_childCount(playerTr, nullptr);
-	for (int i = 0; i < playerChildCount; ++i)
+	if (!handCameraType)
 	{
-		auto* child = SDK::Transform_GetChild(playerTr, i, nullptr);
-
-		auto* childGO = SDK::Component_Get_GameObject(
-			reinterpret_cast<SDK::Component*>(child), nullptr);
-
-		std::string name = UnityStrToSysStr(
-			*SDK::Object_Get_Name(reinterpret_cast<SDK::Object*>(childGO), nullptr));
-
-		if (name == "PCPlayerHead")
-		{
-			headTr = child;
-			break;
-		}
+		handCameraType =
+			SDK::System_Type_GetType(
+				SysStrToUnityStr("HandCamera"),
+				nullptr);
 	}
 
-	if (!headTr)
+	if (!handCameraType)
 		return nullptr;
 
-	SDK::Transform* cameraSpotTr = nullptr;
+	auto* playerGO =
+		SDK::Component_Get_GameObject(
+			reinterpret_cast<SDK::Component*>(player),
+			nullptr);
 
-	int headChildCount = SDK::Transform_get_childCount(headTr, nullptr);
-	for (int i = 0; i < headChildCount; ++i)
-	{
-		auto* child = SDK::Transform_GetChild(headTr, i, nullptr);
-
-		auto* childGO = SDK::Component_Get_GameObject(
-			reinterpret_cast<SDK::Component*>(child), nullptr);
-
-		std::string name = UnityStrToSysStr(
-			*SDK::Object_Get_Name(reinterpret_cast<SDK::Object*>(childGO), nullptr));
-
-		if (name == "CameraItemSpot")
-		{
-			cameraSpotTr = child;
-			break;
-		}
-	}
-
-	if (!cameraSpotTr)
+	if (!playerGO)
 		return nullptr;
 
-	int camChildCount = SDK::Transform_get_childCount(cameraSpotTr, nullptr);
-	for (int i = 0; i < camChildCount; ++i)
-	{
-		auto* child = SDK::Transform_GetChild(cameraSpotTr, i, nullptr);
+	auto* playerTR =
+		SDK::GameObject_get_transform(
+			playerGO,
+			nullptr);
 
-		auto* childGO = SDK::Component_Get_GameObject(
-			reinterpret_cast<SDK::Component*>(child), nullptr);
+	if (!playerTR)
+		return nullptr;
 
-		std::string name = UnityStrToSysStr(*SDK::Object_Get_Name(reinterpret_cast<SDK::Object*>(childGO), nullptr));
-
-		SDK::Type* handCamera_T = SDK::System_Type_GetType(SysStrToUnityStr("HandCamera"), nullptr);
-
-		if (name.rfind("Photo Camera", 0) == 0)
-		{
-			return reinterpret_cast<SDK::HandCamera*>(SDK::GameObject_GetComponent(childGO, handCamera_T, nullptr));
-		}
-	}
-
-	return nullptr;
+	return FindComponentRecursive<SDK::HandCamera>(
+		playerTR,
+		handCameraType);
 }
 
 bool Utils::IsGhostVisible(SDK::GhostAI* ghostAI)
@@ -1140,74 +1117,10 @@ SDK::GameObject* Utils::GetPlayerCrosshairObj(SDK::Player* player)
 	if (!player)
 		return nullptr;
 
-	auto* playerGO = SDK::Component_Get_GameObject(
-		reinterpret_cast<SDK::Component*>(player), nullptr);
+	SDK::GameObject* crosshairObj = FindObjectByName("CrosshairImage");
 
-	if (!playerGO)
-		return nullptr;
-
-	std::string playerName = UnityStrToSysStr(
-		*SDK::Object_Get_Name(reinterpret_cast<SDK::Object*>(playerGO), nullptr));
-
-	// LOG_INFO("[GetPlayerCrosshairObj] playerName = ", playerName);
-
-	if (playerName.rfind("PCPlayer", 0) != 0)
-		return nullptr;
-
-	auto* playerTr = SDK::GameObject_get_transform(playerGO, nullptr);
-	if (!playerTr)
-		return nullptr;
-
-	SDK::Transform* canvasTr = nullptr;
-
-	int childCount = SDK::Transform_get_childCount(playerTr, nullptr);
-	for (int i = 0; i < childCount; ++i)
-	{
-		auto* childTr = SDK::Transform_GetChild(playerTr, i, nullptr);
-		if (!childTr)
-			continue;
-
-		auto* childGO = SDK::Component_Get_GameObject(
-			reinterpret_cast<SDK::Component*>(childTr), nullptr);
-
-		if (!childGO)
-			continue;
-
-		std::string name = UnityStrToSysStr(
-			*SDK::Object_Get_Name(reinterpret_cast<SDK::Object*>(childGO), nullptr));
-
-		if (name == "Canvas")
-		{
-			canvasTr = childTr;
-			break;
-		}
-	}
-
-	if (!canvasTr)
-		return nullptr;
-
-	int canvasChildCount = SDK::Transform_get_childCount(canvasTr, nullptr);
-	for (int i = 0; i < canvasChildCount; ++i)
-	{
-		auto* childTr = SDK::Transform_GetChild(canvasTr, i, nullptr);
-		if (!childTr)
-			continue;
-
-		auto* childGO = SDK::Component_Get_GameObject(
-			reinterpret_cast<SDK::Component*>(childTr), nullptr);
-
-		if (!childGO)
-			continue;
-
-		std::string name = UnityStrToSysStr(
-			*SDK::Object_Get_Name(reinterpret_cast<SDK::Object*>(childGO), nullptr));
-
-		if (name.rfind("CrosshairImage", 0) == 0)
-		{
-			// LOG_INFO("[GetPlayerCrosshairObj] Found CrosshairImage: ", name); 
-			return childGO;
-		}
-	}
+	if (crosshairObj)
+		return crosshairObj;
 
 	return nullptr;
 }
@@ -1228,7 +1141,7 @@ SDK::GhostAI* Utils::GetGhostAI()
 
 SDK::Transform* Utils::GetPotatoe()
 {
-	auto* Potatoe_Obj = SDK::GameObject_Find(SysStrToUnityStr("Potatoe"), nullptr); if (!Potatoe_Obj) return nullptr;
+	auto* Potatoe_Obj = FindObjectByName("Potatoe"); if (!Potatoe_Obj) return nullptr;
 	auto* Potatoe_Trans = SDK::GameObject_get_transform(Potatoe_Obj, nullptr); if (!Potatoe_Trans) return nullptr;
 
 	return Potatoe_Trans;
@@ -1248,7 +1161,7 @@ std::vector<std::tuple<std::string, SDK::GhostButton*, SDK::GameObject*>> Utils:
 
 	std::vector<std::tuple<std::string, SDK::GhostButton*, SDK::GameObject*>> result;
 
-	auto* canvasGO = SDK::GameObject_Find(SysStrToUnityStr("Journal2.0Canvas"), nullptr);
+	auto* canvasGO = FindObjectByName("Journal2.0Canvas");
 	if (!canvasGO)
 		return result;
 
@@ -1340,74 +1253,11 @@ std::vector<std::tuple<std::string, SDK::GhostButton*, SDK::GameObject*>> Utils:
 	return result;
 }
 
-bool Utils::DownloadFile(const std::string& url, const std::string& path)
-{
-	HRESULT hr = URLDownloadToFileA(nullptr, url.c_str(), path.c_str(), 0, nullptr);
-	return SUCCEEDED(hr);
-}
-
-bool Utils::ExtractZip(const std::string& zipPath, const std::string& extractPath)
-{
-	std::string command = "powershell -Command \"Expand-Archive -Path '"
-		+ zipPath + "' -DestinationPath '" + extractPath + "' -Force\"";
-
-	return system(command.c_str()) == 0;
-}
-
-bool Utils::InstallChineseFont()
-{
-	std::string baseDir = GetPhasmoCheatVDirectory();
-	std::string tempDir = baseDir + "\\ph_temp_font";
-	std::string zipPath = tempDir + "\\ph_font.zip";
-	std::string finalFont = baseDir + "\\ChinaLang.ttf";
-
-	try
-	{
-		if (fs::exists(finalFont))
-		{
-			LOG_INFO("Chinese font already exists, skipping installation.");
-			return true;
-		}
-
-		fs::create_directories(tempDir);
-		if (!DownloadFile("https://github.com/MonadABXY/mona-font/releases/download/2026.03.27/MonaS_20260327_0901.zip", zipPath))
-		{
-			LOG_ERROR("Download file was failed!");
-			return false;
-		}
-
-		if (!ExtractZip(zipPath, tempDir))
-		{
-			LOG_ERROR("Extract zip was failed!");
-			fs::remove_all(tempDir);
-			return false; 
-		}
-
-		std::string fontPath = tempDir + "\\ttf\\01_Main\\MonaS12.ttf";
-		if (!fs::exists(fontPath))
-		{
-			LOG_ERROR("Font %s not found!", fontPath);
-			fs::remove_all(tempDir);
-			return false;
-		}
-
-		fs::copy_file(fontPath, finalFont, fs::copy_options::overwrite_existing);
-
-		fs::remove_all(tempDir);
-
-		return true;
-	}
-	catch (...)
-	{
-		return false;
-	}
-}
-
 std::string Utils::GetGameVersion()
 {
 	if (!SDK::Application_get_version)
 		return "UNKNOWN";
-	auto* u_string = SDK::Application_get_version(0);
+	auto* u_string = SDK::Application_get_version(nullptr);
 	auto version = UnityStrToSysStr(*u_string);
 	return version;
 }
@@ -1416,7 +1266,7 @@ std::string Utils::GetUnityVersion()
 {
 	if (!SDK::Application_get_unityVersion)
 		return "UNKNOWN";
-	auto* u_string = SDK::Application_get_unityVersion(0);
+	auto* u_string = SDK::Application_get_unityVersion(nullptr);
 	auto version = UnityStrToSysStr(*u_string);
 	return version;
 }
@@ -1436,13 +1286,13 @@ bool Utils::Checks_IsRealSender(SDK::Player* pn_sender, SDK::PhotonView* view)
 	if (pn_sender == nullptr || view == nullptr)
 		return 0; // In game code return true
 
-	if (pn_sender != SDK::PhotonView_get_Owner(view, 0))
+	if (pn_sender != SDK::PhotonView_get_Owner(view, nullptr))
 		return 0;
 
-	if (!SDK::PhotonNetwork_Get_InRoom(0))
+	if (!SDK::PhotonNetwork_Get_InRoom(nullptr))
 		return 1;
 
-	if (SDK::PhotonNetwork_Get_OfflineMode(0))
+	if (SDK::PhotonNetwork_Get_OfflineMode(nullptr))
 		return 1;
 }
 
@@ -1453,4 +1303,177 @@ float Utils::Distance(const SDK::Vector3& a, const SDK::Vector3& b)
 	float dz = a.Z - b.Z;
 
 	return std::sqrt(dx * dx + dy * dy + dz * dz);
+}
+
+bool Utils::IsUniquePhoto(SDK::EvidenceType mediaType)
+{
+	if (mediaType == SDK::EvidenceType::none) return false;
+
+	auto* go_Journal = FindObjectByName("Journal2.0Canvas");
+	if (!go_Journal) return false;
+
+	auto* c_journal = reinterpret_cast<SDK::Journal_PhotoPage*>(SDK::GameObject_GetComponentByName(go_Journal, SysStrToUnityStr("Journal_PhotoPage"), nullptr));
+	if (!c_journal) return false;
+	auto* c_journalArray = c_journal->Fields.photosArray;
+	if (!c_journalArray) return false;
+
+	for (uint32_t i = 0; i < c_journalArray->max_length; i++)
+	{
+		auto* journalMedia = c_journalArray->vector[i];
+		if (!journalMedia || !journalMedia->Fields.media) continue;
+		auto* media = journalMedia->Fields.media;
+		if (!media) continue;
+		auto* mediaValue = media->Fields.value;
+		if (!mediaValue) continue;
+		auto eva_Type = mediaValue->Fields.EvidenceType;
+
+		if (eva_Type == mediaType) return false;
+	}
+
+	return true;
+}
+
+bool Utils::TakePhoto(SDK::HandCamera* handCamera)
+{
+	if (!handCamera) return false;
+
+	auto* g_obj_camera = SDK::Component_Get_GameObject(reinterpret_cast<SDK::Component*>(handCamera), nullptr);
+	if (!g_obj_camera) return false;
+
+	bool IsActiveCamera = SDK::GameObject_get_activeSelf(g_obj_camera, nullptr);
+	if (!IsActiveCamera) return false;
+
+	auto photonViewType = SDK::System_Type_GetType(
+		SysStrToUnityStr("Photon.Pun.PhotonView"), nullptr);
+	if (!photonViewType) return false;
+
+	auto* photonViewComp = SDK::GameObject_GetComponent(
+		g_obj_camera, photonViewType, nullptr);
+	if (!photonViewComp) return false;
+
+	auto* photonView = reinterpret_cast<SDK::PhotonView*>(photonViewComp);
+	if (!photonView) return false;
+
+	bool state = true;
+	auto boolClass = il2cpp_get_class("mscorlib", "System", "Boolean");
+	if (!boolClass) return false;
+
+	void* boxedBool = il2cpp_value_box(boolClass, &state);
+	if (!boxedBool) return false;
+
+	std::vector<void*> params{ boxedBool };
+
+	auto parameters = VectorToIl2CppArray<void*>(
+		params, "mscorlib", "System", "Object");
+	if (!parameters) return false;
+
+	auto* methodName = SysStrToUnityStr("UseNetworked");
+	if (!methodName) return false;
+
+	SDK::PhotonView_RPC(
+		photonView,
+		methodName,
+		SDK::RpcTarget::All,
+		parameters,
+		nullptr
+	);
+
+	return true;
+}
+
+SDK::Transform* Utils::FindChildByName(SDK::Transform * parent, const char* name)
+{
+	if (!parent) return nullptr;
+
+	int count = SDK::Transform_get_childCount(parent, nullptr);
+
+	for (int i = 0; i < count; i++)
+	{
+		auto* child = SDK::Transform_GetChild(parent, i, nullptr);
+		if (!child) continue;
+
+		auto* go = SDK::Component_Get_GameObject(reinterpret_cast<SDK::Component*>(child), nullptr);
+		if (!go) continue;
+
+		auto* goName = SDK::Object_Get_Name(reinterpret_cast<SDK::Object*>(go), nullptr);
+		if (goName && UnityStrToSysStr(*goName) == name)
+			return child;
+
+		auto* deep = FindChildByName(child, name);
+		if (deep)
+			return deep;
+	}
+
+	return nullptr;
+}
+
+bool Utils::IsValidGO(SDK::GameObject* obj)
+{
+	return obj && SDK::Object_IsNativeAlive(reinterpret_cast<SDK::Object*>(obj), nullptr);
+}
+
+SDK::GameObject* Utils::GameObject_Find(std::string name)
+{
+	{
+		std::lock_guard<std::mutex> lock(InGame::g_GameObjectCacheMutex);
+
+		auto it = InGame::g_GameObjectCache.find(name);
+		if (it != InGame::g_GameObjectCache.end())
+		{
+			if (IsValidGO(it->second))
+				return it->second;
+
+			InGame::g_GameObjectCache.erase(it);
+		}
+	}
+
+	auto objects = SDK::Object_FindObjectsOfType(
+		GetType("UnityEngine.GameObject"), nullptr);
+
+	if (!objects)
+		return nullptr;
+
+	SDK::GameObject* found = nullptr;
+
+	for (uint32_t i = 0; i < objects->MaxLength; i++)
+	{
+		SDK::Object* obj = objects->Vector[i];
+		if (!obj)
+			continue;
+
+		auto go = reinterpret_cast<SDK::GameObject*>(obj);
+
+		if (!IsValidGO(go))
+			continue;
+
+		auto objName =
+			SDK::Object_Get_Name(reinterpret_cast<SDK::Object*>(go), nullptr);
+
+		if (!objName)
+			continue;
+
+		std::string objStr = Utils::UnityStrToSysStr(*objName);
+
+		{
+			std::lock_guard<std::mutex> lock(InGame::g_GameObjectCacheMutex);
+			InGame::g_GameObjectCache[objStr] = go;
+		}
+
+		if (objStr == name)
+			found = go;
+	}
+
+	return found;
+}
+
+bool Utils::IsInGame()
+{
+	bool inGame = 
+		InGame::gameController && 
+		InGame::gameController->Fields.allPlayersAreConnected &&
+		InGame::ghostAI &&
+		InGame::ghostAI->Fields.GhostInfo &&
+		InGame::ghostAI->Fields.GhostInfo->Fields.GhostTraits.Name;
+	
+	return inGame;
 }

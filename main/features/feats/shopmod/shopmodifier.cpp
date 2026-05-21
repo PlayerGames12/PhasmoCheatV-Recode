@@ -157,6 +157,7 @@ void ShopModifier::ShopModifierMain()
         return;
 
     auto* storeInfo = Utils::GetStoreItemInfo();
+
     if (!storeInfo)
         return;
 

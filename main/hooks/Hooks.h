@@ -20,8 +20,8 @@ namespace PhasmoCheatV
 		static void hkGhostAI_Hunting(SDK::GhostAI* ghostAI, bool isHunting, int obakeArrayID, void* photon, SDK::MethodInfo* methodInfo);
 		static void hkEvidenceController_Start(SDK::EvidenceController* evidenceController, SDK::MethodInfo* methodInfo);
 		static void hkEMFData_Start(SDK::EMFData* emfData, SDK::MethodInfo* methodInfo);
-		static void hkPlayer_StartKillingPlayer(SDK::Player* player, SDK::MethodInfo* methodInfo);
-		static std::nullptr_t hkPlayer_StartKillingPlayerNetworked(SDK::Player* player, bool b1, void* photon, SDK::MethodInfo* methodInfo);
+		//static void hkPlayer_StartKillingPlayer(SDK::Player* player, SDK::MethodInfo* methodInfo);
+		//static std::nullptr_t hkPlayer_StartKillingPlayerNetworked(SDK::Player* player, bool b1, void* photon, SDK::MethodInfo* methodInfo);
 		static void hkPlayer_Start(SDK::Player* player, SDK::MethodInfo* methodInfo);
 		static void hkGhostInfo_SyncEvidence(SDK::GhostInfo* instance, int* evidence, void* info, SDK::MethodInfo* methodInfo);
 		static void hkGhostInfo_SyncValuesNetworked(SDK::GhostInfo* instance, int ghostType, int ghostAge, bool isMale, int ghostFirstNameID, int ghostLastNameID, bool isShy, int deathLength, int favouriteRoomID, bool isWhisper, void* photonMessageInfo, SDK::MethodInfo* methodInfo);
@@ -63,5 +63,13 @@ namespace PhasmoCheatV
 		static bool hkEVPRecorder_CanAnswer(SDK::EVPRecorder* recorder, SDK::MethodInfo* methodInfo);
 		static void hkScriptableRenderContext_Submit(SDK::ScriptableRenderContext* context, SDK::MethodInfo* methodInfo);
 		static std::nullptr_t hkPlayer_StartDeathAnimation(SDK::Player* player, int32_t a1, bool a2, void* photon, SDK::MethodInfo* methodInfo);
+		static void hkGameController_Awake(SDK::GameController* gameController, SDK::MethodInfo* methodInfo);
+		static void hkRewardManager_Awake(SDK::RewardManager* rewardManager, SDK::MethodInfo* methodInfo);
+		static void hkSceneManagement_Internal_SceneLoaded(void* scene, int32_t mode, SDK::MethodInfo* method);
+		 
+		// CosmeticsUnlocker hooks
+#if COSMETICSUNLOCKER
+#include "../../unlockcosmetics/CosmeticsHookStatic.txt"
+#endif
 	};
 }

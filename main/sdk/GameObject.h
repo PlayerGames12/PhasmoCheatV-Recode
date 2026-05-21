@@ -11,8 +11,8 @@ namespace SDK
         void* Clazz;
         void* Monitor;
         void* Bounds;
-        void* MaxLength;
-        GameObject* Vector[65535];
+        uint32_t MaxLength;
+        GameObject* Vector[1];
     };
 
     DEC_MET(GameObject_get_transform, Transform* (*)(GameObject* gameObject, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "GameObject", "get_transform", 0);
@@ -27,4 +27,6 @@ namespace SDK
     DEC_MET(GameObject_Find, SDK::GameObject* (*)(SDK::String* name, SDK::MethodInfo* method), "UnityEngine.CoreModule", "UnityEngine", "GameObject", "Find", 1);
     DEC_MET(GameObject_set_tag, void(*)(GameObject* gameObject, String* tag, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "GameObject", "set_tag", 1);
     DEC_MET(GameObject_get_tag, String* (*)(GameObject* gameObject, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "GameObject", "get_tag", 0);
+
+    DECLARE_FUNCTION_POINTER(GameObject_Find_RVA, SDK::GameObject* (*)(SDK::String* name, SDK::MethodInfo* method), 0x5072650);
 }

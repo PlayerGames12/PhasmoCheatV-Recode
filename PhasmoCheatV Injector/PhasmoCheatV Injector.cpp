@@ -13,6 +13,26 @@ constexpr const char* kProcessName = "Phasmophobia.exe";
 constexpr const char* kDllName = "PhasmoCheatV Recode.dll";
 constexpr const char* kRequiredVersion = "14.50.35719.0";
 
+bool IsVersionAtLeast(const char* current, const char* required)
+{
+    int currentMajor, currentMinor, currentBuild, currentRevision;
+    int requiredMajor, requiredMinor, requiredBuild, requiredRevision;
+
+    sscanf_s(current, "%d.%d.%d.%d", &currentMajor, &currentMinor, &currentBuild, &currentRevision);
+    sscanf_s(required, "%d.%d.%d.%d", &requiredMajor, &requiredMinor, &requiredBuild, &requiredRevision);
+
+    if (currentMajor > requiredMajor) return true;
+    if (currentMajor < requiredMajor) return false;
+
+    if (currentMinor > requiredMinor) return true;
+    if (currentMinor < requiredMinor) return false;
+
+    if (currentBuild > requiredBuild) return true;
+    if (currentBuild < requiredBuild) return false;
+
+    return currentRevision >= requiredRevision;
+}
+
 bool IsMsvcVersionCorrect()
 {
     char systemDir[MAX_PATH];
@@ -40,13 +60,13 @@ bool IsMsvcVersionCorrect()
     char currentVersion[32];
     sprintf_s(currentVersion, "%d.%d.%d.%d", major, minor, build, revision);
 
-    return strcmp(currentVersion, kRequiredVersion) == 0;
+    return IsVersionAtLeast(currentVersion, kRequiredVersion);
 }
 
 bool GetUserChoice()
 {
     std::string input;
-    std::cout << "\nVC Redist version mismatch! Required: " << kRequiredVersion << std::endl;
+    std::cout << "\nVC Redist version is below required minimum! Minimum required: " << kRequiredVersion << std::endl;
     std::cout << "Skip check? (1/y/yes or 0/n/no): ";
     std::getline(std::cin, input);
 

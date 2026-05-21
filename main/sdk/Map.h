@@ -16,9 +16,7 @@ namespace SDK
         void* loadingSpriteLarge;
         void* loadingSpriteSmall;
         String* sceneName;
-        String* easterSceneName;
-        String* halloweenSceneName;
-        String* holidaySceneName;
+        String* eventOverrides;
         int32_t uniqueMapID;
         int32_t activityID;
         int32_t unlockAtLevel;

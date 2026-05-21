@@ -137,6 +137,14 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
         AHKA(Jackalope_Awake);
         AHKA(ScriptableRenderContext_Submit);
         AHKA(Player_StartDeathAnimation);
+        AHKA(GameController_Awake);
+        AHKA(RewardManager_Awake);
+        AHKA(SceneManagement_Internal_SceneLoaded);
+
+        // CosmeticsUnlocker hooks
+#if COSMETICSUNLOCKER
+#include "unlockcosmetics/dllmain_hooks.txt"
+#endif
 
         PHK(HandCamera_MoveNext, Hooks::hkHandCamera_MoveNext); // Use PATTERN_HOOK
 
@@ -245,3 +253,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID)
 
     return TRUE;
 }
+
+
+

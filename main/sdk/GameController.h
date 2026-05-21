@@ -28,11 +28,13 @@ namespace SDK
 		void* Field12;
 		LevelController* LevelController;
 		void* Field14;
+		bool allPlayersAreConnected;
 		bool Field15;
 		int Field16;
 		void* Field17;
 		bool Field18;
 		void* Field19;
+		void* Field20;
 	};
 
 	struct GameController
@@ -44,5 +46,6 @@ namespace SDK
 
 	DEC_MET(GameController_Exit, void(*)(GameController* gameController, void* photoMessageInfo, MethodInfo* methodInfo), "Assembly-CSharp", "", "GameController", "Exit", 1);
 	DEC_MET(GameController_GetAveragePlayerInsanity, float(*)(GameController* gameController, MethodInfo* methodInfo), "Assembly-CSharp", "", "GameController", "GetAveragePlayerInsanity", 0);
-	DEC_MET(GameController_PlayerDied, void(*)(GameController* gameController, Player* player ,MethodInfo* methodInfo), "Assembly-CSharp", "", "GameController", "PlayerDied", 1);
+	DEC_MET(GameController_PlayerDied, void(*)(GameController* gameController, Player* player, MethodInfo* methodInfo), "Assembly-CSharp", "", "GameController", "PlayerDied", 1);
+	DEC_MET(GameController_Awake, void(*)(GameController* gameController, MethodInfo* methodInfo), "Assembly-CSharp", "", "GameController", "Awake", 0);
 }

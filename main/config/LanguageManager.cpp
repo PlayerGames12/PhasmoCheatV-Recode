@@ -4,7 +4,7 @@
 #include <algorithm>
 #include "Translations.h"
 #include "../menu/styles.h"
-
+ 
 namespace PhasmoCheatV {
 
     Language LanguageManager::currentLanguage = Language::EN;

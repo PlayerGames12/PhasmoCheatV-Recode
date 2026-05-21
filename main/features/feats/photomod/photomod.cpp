@@ -1,4 +1,7 @@
 #include "photomod.h"
+#include <future>
+#include <chrono>
+#include <thread>
 
 using namespace PhasmoCheatV::Features::Misc;
 
@@ -71,6 +74,9 @@ void PhotoModifier::PhotoModifierAutoPhoto()
 	auto* ghostTransform = ghostAI->Fields.raycastPoint;
 	if (!ghostTransform) return;
 
+	if (!Utils::IsUniquePhoto(SDK::EvidenceType::ghost))
+		return;
+
 	auto* PhotoCamera = Utils::get_PlayerHandCamera(localPlayer);
 	if (!PhotoCamera) return;
 
@@ -80,65 +86,24 @@ void PhotoModifier::PhotoModifierAutoPhoto()
 	if (!Utils::IsGhostVisible(ghostAI))
 		return;
 
-	auto* g_obj_camera = SDK::Component_Get_GameObject(
-		reinterpret_cast<SDK::Component*>(PhotoCamera), nullptr);
-	if (!g_obj_camera) return;
-
-	auto photonViewType = SDK::System_Type_GetType(
-		Utils::SysStrToUnityStr("Photon.Pun.PhotonView"), nullptr);
-	if (!photonViewType) return;
-
-	auto* photonViewComp = SDK::GameObject_GetComponent(
-		g_obj_camera, photonViewType, nullptr);
-	if (!photonViewComp) return;
-
-	auto* photonView = reinterpret_cast<SDK::PhotonView*>(photonViewComp);
-	if (!photonView) return;
-
-	bool state = true;
-
-	auto boolClass = il2cpp_get_class("mscorlib", "System", "Boolean");
-	if (!boolClass) return;
-
-	void* boxedBool = il2cpp_value_box(boolClass, &state);
-	if (!boxedBool) return;
-
-	std::vector<void*> params;
-	params.push_back(boxedBool);
-
-	auto parameters = Utils::VectorToIl2CppArray<void*>(
-		params, "mscorlib", "System", "Object");
-	if (!parameters) return;
-
-	auto* methodName = Utils::SysStrToUnityStr("UseNetworked");
-	if (!methodName) return;
-
-	SDK::PhotonView_RPC(
-		photonView,
-		methodName,
-		SDK::RpcTarget::All,
-		parameters,
-		nullptr
-	);
+	if (Utils::TakePhoto(PhotoCamera)) NOTIFY_SUCCESS_QUICK(LANG("GhostPhotoTaken"));
 }
 
-void PhotoModifier::PhotoModifierX5Photo(SDK::PhotonView* photonView, SDK::String* methodName, SDK::RpcTarget target, void* parameters, SDK::MethodInfo* methodInfo)
+void PhotoModifier::PhotoModifierX5Photo(SDK::PhotonView* photonView, SDK::String* methodName, SDK::RpcTarget target, void* parameters, SDK::MethodInfo* methodInfo) // called crash game
 {
 	if (!IsActive() || !SDK::PhotonView_get_IsMine(photonView, nullptr))
 		return;
 
 	bool x5photo = CONFIG_BOOL(GetConfigManager(), "x5photo");
 
-	if (x5photo)
-	{
-		if (Utils::UnityStrToSysStr(*methodName) == "AddPhotoToJournal")
-		{
-			for (int i = 0; i < 5; i++)
-			{
-				SDK::PhotonView_RPC(photonView, methodName, target, parameters, methodInfo);
-			}
-		}
-	}
+	if (!x5photo)
+		return;
+
+	if (Utils::UnityStrToSysStr(*methodName) != "AddPhotoToJournal")
+		return;
+
+	for (int i = 0; i < 5; i++)
+		SDK::PhotonView_RPC(photonView, methodName, target, parameters, methodInfo);
 }
 
 void PhotoModifier::PhotoModifierMain(SDK::HandCamera* handCamera)

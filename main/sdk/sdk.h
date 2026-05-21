@@ -5,15 +5,92 @@
 
 using namespace PhasmoCheatV;
 
+// old macro, not safe, can cause crashes if the method is called before initialization. Use the new one below instead.
+//#define DEC_MET(NAME, TYPE, ASSEMBLY, NAMESPACE, CLASS, METHOD, ARGCOUNT) \
+//using NAME##_ptr = TYPE; \
+//inline NAME##_ptr NAME = reinterpret_cast<NAME##_ptr>(il2cpp_get_method_pointer(ASSEMBLY, NAMESPACE, CLASS, METHOD, ARGCOUNT));
+
+// Thanks Evelien
+template <typename FuncType>
+struct SafeFuncPtr
+{
+    FuncType raw = nullptr;
+    const char* name = "unknown";
+
+    SafeFuncPtr() = default;
+
+    explicit SafeFuncPtr(const char* n) : name(n) {}
+
+    SafeFuncPtr& operator=(FuncType p)
+    {
+        raw = p;
+        return *this;
+    }
+
+    SafeFuncPtr& operator=(std::nullptr_t)
+    {
+        raw = nullptr;
+        return *this;
+    }
+
+    explicit operator bool() const { return raw != nullptr; }
+
+    template <typename... Args>
+    auto operator()(Args... args) const -> decltype(raw(args...))
+    {
+        using RetType = decltype(raw(args...));
+
+        if (!raw)
+        {
+            LOG_ERROR("Null SDK function call:", name);
+            if constexpr (!std::is_void_v<RetType>)
+                return RetType{};
+            else
+                return;
+        }
+
+        __try
+        {
+            return raw(args...);
+        }
+        __except (EXCEPTION_EXECUTE_HANDLER)
+        {
+            LOG_ERROR("SEH exception in SDK call:", name);
+            if constexpr (!std::is_void_v<RetType>)
+                return RetType{};
+        }
+    }
+};
+
 // EXPAMPLE USE: DEC_MET(Behaviour_Set_Enabled, void(*)(Behaviour* behaviour, bool enabled, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Behaviour", "set_enabled", 1);
 #define DEC_MET(NAME, TYPE, ASSEMBLY, NAMESPACE, CLASS, METHOD, ARGCOUNT) \
 using NAME##_ptr = TYPE; \
-inline NAME##_ptr NAME = reinterpret_cast<NAME##_ptr>(il2cpp_get_method_pointer(ASSEMBLY, NAMESPACE, CLASS, METHOD, ARGCOUNT));
+inline SafeFuncPtr<NAME##_ptr> NAME{#NAME}; \
+inline void Init_##NAME() { \
+    NAME = reinterpret_cast<NAME##_ptr>(il2cpp_get_method_pointer(ASSEMBLY, NAMESPACE, CLASS, METHOD, ARGCOUNT)); \
+} \
+namespace { \
+    struct NAME##_registrar { \
+        NAME##_registrar() { \
+            static bool initialized = false; \
+            if (!initialized) { \
+                initialized = true; \
+                Init_##NAME(); \
+            } \
+        } \
+    }; \
+    static NAME##_registrar NAME##_reg; \
+}
 
 #define DEC_ADDR(NAME, TYPE, MODULE, OFFSET) \
 inline TYPE* NAME##_ptr = reinterpret_cast<TYPE*>(reinterpret_cast<uintptr_t>(GetModuleHandleA(MODULE)) + OFFSET); \
 inline TYPE NAME##_rd() { return Memory::Read<TYPE>(NAME##_ptr); } \
 inline void NAME##_wr(TYPE val) { Memory::Write<TYPE>(NAME##_ptr, val); }
+
+// by asthmaphobia and Evelien
+#define DECLARE_FUNCTION_POINTER(NAME, TYPE, ADDRESS) \
+using NAME = TYPE; \
+inline NAME NAME##_ptr = reinterpret_cast<NAME>(BASE_ADDRESS + ADDRESS);
 
 // Thanks Evelien. Thanks to Maxim for editing the macro. 
 // I'm not going to explain how to search for signatures. Look for Signature maker and use it.
@@ -141,8 +218,47 @@ inline void NAME##_restore() {                                                \
     NAME##_is_replaced = false;                                               \
 }
 
+// created for cosmetics unlocker
+#define DEC_MET_CALL(NAME, TYPE, ASSEMBLY, NAMESPACE, CLASS, METHOD, ARGCOUNT, CALL_OFFSET) \
+using NAME##_ptr = TYPE; \
+inline NAME##_ptr NAME = nullptr; \
+\
+inline uintptr_t NAME##_resolve() { \
+    auto baseFn = reinterpret_cast<uintptr_t>( \
+        il2cpp_get_method_pointer(ASSEMBLY, NAMESPACE, CLASS, METHOD, ARGCOUNT)); \
+    \
+    if (!baseFn) return 0; \
+    \
+    uintptr_t callAddr = baseFn + (CALL_OFFSET); \
+    \
+    /* E8 rel32 */ \
+    int32_t rel = *reinterpret_cast<int32_t*>(callAddr + 1); \
+    uintptr_t nextInst = callAddr + 5; \
+    \
+    return nextInst + rel; \
+} \
+\
+inline void Init_##NAME() { \
+    NAME = reinterpret_cast<NAME##_ptr>(NAME##_resolve()); \
+} \
+\
+namespace { \
+    struct NAME##_registrar { \
+        NAME##_registrar() { \
+            static bool initialized = false; \
+            if (!initialized) { \
+                initialized = true; \
+                Init_##NAME(); \
+            } \
+        } \
+    }; \
+    static NAME##_registrar NAME##_reg; \
+}
+
 namespace SDK
 {
+    const auto BASE_ADDRESS = reinterpret_cast<uintptr_t>(GetModuleHandleW(L"GameAssembly.dll"));
+
     inline bool Initialize()
     {
 		LOG_INFO("Initializing IL2CPP SDK...");
@@ -180,6 +296,7 @@ namespace SDK
 #include "GhostAI.h"
 #include "GhostActivity.h"
 #include "ExitLevel.h"
+#include "Voice.h"
 #include "LocalPlayer.h"
 #include "Player.h"
 #include "Door.h"
@@ -254,3 +371,10 @@ namespace SDK
 #include "EVPRecorder.h"
 #include "SteamFriends.h"
 #include "ScriptableRenderContext.h"
+#include "Media.h"
+#include "JournalMedia.h"
+#include "Journal_PhotoPage.h"
+#include "Button.h"
+#include "RewardManager.h"
+#include "SceneManagement.h"
+#include "CosmeticUnlocker.h"

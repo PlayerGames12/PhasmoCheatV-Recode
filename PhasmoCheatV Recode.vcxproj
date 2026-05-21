@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -137,7 +138,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)libs;$(ProjectDir)res;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -151,6 +152,14 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>$(ProjectDir)libs\detours\lib\syelog.lib;$(ProjectDir)libs\detours\lib\detours.lib;$(ProjectDir)libs\discordrpc\lib\discord-rpc.lib;urlmon.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -177,9 +186,10 @@
     <ClCompile Include="main\features\feats\antikick\antikick.cpp" />
     <ClCompile Include="main\features\feats\autogame\autogame.cpp" />
     <ClCompile Include="main\features\feats\autopickupbone\autopickupbone.cpp" />
+    <ClCompile Include="main\features\feats\cosmeticsunlocker\cosmeticunlocker.cpp" />
     <ClCompile Include="main\features\feats\crosshairmod\crosshairmod.cpp" />
     <ClCompile Include="main\features\feats\customlooklimits\customlooklimits.cpp" />
-    <ClCompile Include="main\features\feats\CursedItemsControll\curseditemscontroll.cpp" />
+    <ClCompile Include="main\features\feats\curseditemscontroll\curseditemscontroll.cpp" />
     <ClCompile Include="main\features\feats\custname\customname.cpp" />
     <ClCompile Include="main\features\feats\custspeed\customspeed.cpp" />
     <ClCompile Include="main\features\feats\diffmod\difficultymodifier.cpp" />
@@ -204,7 +214,9 @@
     <ClCompile Include="main\features\feats\infstamina\infinitystamina.cpp" />
     <ClCompile Include="main\features\feats\jackalopeesp\jackalopeesp.cpp" />
     <ClCompile Include="main\features\feats\journalmod\journalmod.cpp" />
+    <ClCompile Include="main\features\feats\musicpanel\musicpanel.cpp" />
     <ClCompile Include="main\features\feats\photomod\photomod.cpp" />
+    <ClCompile Include="main\features\feats\showmic\showmic.cpp" />
     <ClCompile Include="main\features\feats\spiritboxalw\spiritboxalw.cpp" />
     <ClCompile Include="main\features\feats\vanbuttonmod\vanbuttonmod.cpp" />
     <ClCompile Include="main\features\feats\mapmod\mapmodifier.cpp" />
@@ -226,6 +238,7 @@
     <ClCompile Include="main\features\feats\waterka\watermark.cpp" />
     <ClCompile Include="main\features\feature.cpp" />
     <ClCompile Include="main\hooks\Application_CallLogCallback.cpp" />
+    <ClCompile Include="main\hooks\CosmeticsUnlocker.cpp" />
     <ClCompile Include="main\hooks\CursedItemsController_Awake.cpp" />
     <ClCompile Include="main\hooks\DNAEvidence_GrabbedNetworked.cpp" />
     <ClCompile Include="main\hooks\DNAEvidence_Start.cpp" />
@@ -237,6 +250,7 @@
     <ClCompile Include="main\hooks\ExitLevel_ThereAreAlivePlayersOutsideTheTruck.cpp" />
     <ClCompile Include="main\hooks\FallTeleportBox_OnTriggerEnter.cpp" />
     <ClCompile Include="main\hooks\FirstPersonController_Update.cpp" />
+    <ClCompile Include="main\hooks\GameController_Awake.cpp" />
     <ClCompile Include="main\hooks\GameController_Exit.cpp" />
     <ClCompile Include="main\hooks\GameController_PlayerDied.cpp" />
     <ClCompile Include="main\hooks\GhostAI_Hunting.cpp" />
@@ -259,6 +273,8 @@
     <ClCompile Include="main\hooks\Player_Start.cpp" />
     <ClCompile Include="main\hooks\Player_StartDeathAnimation.cpp" />
     <ClCompile Include="main\hooks\RandomWeather_Start.cpp" />
+    <ClCompile Include="main\hooks\RewardManager_Awake.cpp" />
+    <ClCompile Include="main\hooks\SceneManagement_Internal_SceneLoaded.cpp" />
     <ClCompile Include="main\hooks\ScriptableRenderContext_Submit.cpp" />
     <ClCompile Include="main\hooks\ServerManager_LoadScene.cpp" />
     <ClCompile Include="main\hooks\TarotCards_BreakItem.cpp" />
@@ -286,6 +302,7 @@
     <ClCompile Include="main\utils\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="C:\Users\Xdsat\Downloads\Telegram Desktop\Translations_upd.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Includes.h" />
     <ClInclude Include="inGame.h" />
@@ -319,9 +336,10 @@
     <ClInclude Include="main\features\feats\antikick\antikick.h" />
     <ClInclude Include="main\features\feats\autogame\autogame.h" />
     <ClInclude Include="main\features\feats\autopickupbone\autopickupbone.h" />
+    <ClInclude Include="main\features\feats\cosmeticsunlocker\cosmeticunlocker.h" />
     <ClInclude Include="main\features\feats\crosshairmod\crosshairmod.h" />
     <ClInclude Include="main\features\feats\customlooklimits\customlooklimits.h" />
-    <ClInclude Include="main\features\feats\CursedItemsControll\curseditemscontroll.h" />
+    <ClInclude Include="main\features\feats\curseditemscontroll\curseditemscontroll.h" />
     <ClInclude Include="main\features\feats\custname\customname.h" />
     <ClInclude Include="main\features\feats\custspeed\customspeed.h" />
     <ClInclude Include="main\features\feats\diffmod\difficultymodifier.h" />
@@ -346,7 +364,9 @@
     <ClInclude Include="main\features\feats\infstamina\infinitystamina.h" />
     <ClInclude Include="main\features\feats\jackalopeesp\jackalopeesp.h" />
     <ClInclude Include="main\features\feats\journalmod\journalmod.h" />
+    <ClInclude Include="main\features\feats\musicpanel\musicpanel.h" />
     <ClInclude Include="main\features\feats\photomod\photomod.h" />
+    <ClInclude Include="main\features\feats\showmic\showmic.h" />
     <ClInclude Include="main\features\feats\spiritboxalw\spiritboxalw.h" />
     <ClInclude Include="main\features\feats\vanbuttonmod\vanbuttonmod.h" />
     <ClInclude Include="main\features\feats\mapmod\mapmodifier.h" />
@@ -381,12 +401,14 @@
     <ClInclude Include="main\menu\styles.h" />
     <ClInclude Include="main\sdk\Animator.h" />
     <ClInclude Include="main\sdk\Application.h" />
+    <ClInclude Include="main\sdk\Button.h" />
     <ClInclude Include="main\sdk\Camera.h" />
     <ClInclude Include="main\sdk\Candle.h" />
     <ClInclude Include="main\sdk\Collider.h" />
     <ClInclude Include="main\sdk\Color.h" />
     <ClInclude Include="main\sdk\Component.h" />
     <ClInclude Include="main\sdk\Contract.h" />
+    <ClInclude Include="main\sdk\CosmeticUnlocker.h" />
     <ClInclude Include="main\sdk\CursedItem.h" />
     <ClInclude Include="main\sdk\CursedItemsController.h" />
     <ClInclude Include="main\sdk\Cursor.h" />
@@ -417,6 +439,8 @@
     <ClInclude Include="main\sdk\ItemInfo.h" />
     <ClInclude Include="main\sdk\Jackalope.h" />
     <ClInclude Include="main\sdk\JournalController.h" />
+    <ClInclude Include="main\sdk\JournalMedia.h" />
+    <ClInclude Include="main\sdk\Journal_PhotoPage.h" />
     <ClInclude Include="main\sdk\Key.h" />
     <ClInclude Include="main\sdk\LayerMask.h" />
     <ClInclude Include="main\sdk\LevelController.h" />
@@ -433,6 +457,7 @@
     <ClInclude Include="main\sdk\LocalPlayer.h" />
     <ClInclude Include="main\sdk\Map.h" />
     <ClInclude Include="main\sdk\MapController.h" />
+    <ClInclude Include="main\sdk\Media.h" />
     <ClInclude Include="main\sdk\MethodInfo.h" />
     <ClInclude Include="main\sdk\MonoBehaviour.h" />
     <ClInclude Include="main\sdk\MouseLook.h" />
@@ -456,9 +481,11 @@
     <ClInclude Include="main\sdk\RectTransform.h" />
     <ClInclude Include="main\sdk\Render.h" />
     <ClInclude Include="main\sdk\Resources.h" />
+    <ClInclude Include="main\sdk\RewardManager.h" />
     <ClInclude Include="main\sdk\Rigidbody.h" />
     <ClInclude Include="main\sdk\SaltShaker.h" />
     <ClInclude Include="main\sdk\SaltSpot.h" />
+    <ClInclude Include="main\sdk\SceneManagement.h" />
     <ClInclude Include="main\sdk\SceneManager.h" />
     <ClInclude Include="main\sdk\Screen.h" />
     <ClInclude Include="main\sdk\ScriptableRenderContext.h" />
@@ -481,6 +508,7 @@
     <ClInclude Include="main\sdk\Transform.h" />
     <ClInclude Include="main\sdk\Vector2.h" />
     <ClInclude Include="main\sdk\Vector3.h" />
+    <ClInclude Include="main\sdk\Voice.h" />
     <ClInclude Include="main\sdk\VoodooDollPin.h" />
     <ClInclude Include="main\sdk\WeatherProfile.h" />
     <ClInclude Include="main\utils\notification.h" />
@@ -489,8 +517,21 @@
     <ClInclude Include="res\fonts\HeadFont.hpp" />
     <ClInclude Include="res\fonts\MenuNewFont.h" />
     <ClInclude Include="res\fonts\VCustomFont.hpp" />
+    <ClInclude Include="res\images\mic_off.h" />
+    <ClInclude Include="res\images\mic_on.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.targets'))" />
+  </Target>
 </Project>
