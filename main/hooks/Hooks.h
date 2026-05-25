@@ -62,10 +62,12 @@ namespace PhasmoCheatV
 		static void hkJackalope_Awake(SDK::Jackalope* jackalope, SDK::MethodInfo* methodInfo);
 		static bool hkEVPRecorder_CanAnswer(SDK::EVPRecorder* recorder, SDK::MethodInfo* methodInfo);
 		static void hkScriptableRenderContext_Submit(SDK::ScriptableRenderContext* context, SDK::MethodInfo* methodInfo);
-		static std::nullptr_t hkPlayer_StartDeathAnimation(SDK::Player* player, int32_t a1, bool a2, void* photon, SDK::MethodInfo* methodInfo);
+		static void hkPlayer_BeginDeathSequence(SDK::Player* player, SDK::deathType deadType, SDK::MethodInfo* methodInfo);
 		static void hkGameController_Awake(SDK::GameController* gameController, SDK::MethodInfo* methodInfo);
 		static void hkRewardManager_Awake(SDK::RewardManager* rewardManager, SDK::MethodInfo* methodInfo);
 		static void hkSceneManagement_Internal_SceneLoaded(void* scene, int32_t mode, SDK::MethodInfo* method);
+		static void hkAWDoll_Awake(SDK::AWDoll* awDoll, SDK::MethodInfo* methodInfo);
+		static void hkKey_GrabbedKey(SDK::Key* key, SDK::MethodInfo* methodInfo);
 		 
 		// CosmeticsUnlocker hooks
 #if COSMETICSUNLOCKER

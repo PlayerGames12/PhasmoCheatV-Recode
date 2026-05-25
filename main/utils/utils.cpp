@@ -1477,3 +1477,45 @@ bool Utils::IsInGame()
 	
 	return inGame;
 }
+
+SDK::Component* Utils::FindComponentByType(std::string type, bool retFirstComponent)
+{
+	SDK::Component* retComponent = nullptr;
+
+	auto* SDK_type = GetType(type);
+
+	auto* list = SDK::Object_FindObjectsOfType(SDK_type, nullptr);
+	if (!list) return retComponent;
+
+	for (int i = 0; i < list->MaxLength; i++)
+	{
+		auto* tmp = reinterpret_cast<SDK::Component*>(list->Vector[i]);
+		if (!tmp) continue;
+
+		retComponent = tmp;
+		if (retFirstComponent)
+			break;
+	}
+
+	return retComponent;
+}
+
+bool Utils::IsObjectInFront(const SDK::Vector3& targetPos, 
+	const SDK::Vector3& referencePos, 
+	const SDK::Vector3& referenceForward)
+{
+	SDK::Vector3 dir = targetPos - referencePos;
+
+	float len = SDK::Vector3_get_magnitude(&dir, nullptr);
+	if (len <= 0.0001f)
+		return false;
+
+	dir = SDK::Vector3_get_normalized(&dir, nullptr);
+
+	float dot =
+		dir.X * referenceForward.X +
+		dir.Y * referenceForward.Y +
+		dir.Z * referenceForward.Z;
+
+	return dot > 0.0f;
+}

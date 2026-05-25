@@ -88,7 +88,7 @@ inline void RegisterAllTranslations()
 
     // CursedItemsControll
     ADD_STR("BreakCursed", "Break cursed items##cursed", u8"Сломать проклятые предметы##cursed", u8"破坏诅咒道具##cursed");
-    ADD_STR("UseCursed", "Use cursed items##cursed", u8"Использовать проклятые предметы##cursed", u8"使用诅咒物品##cursed");
+    ADD_STR("UseCursed", "Use cursed items##cursed", u8"Использовать проклятые предметы##cursed", u8"使用诅咒道具##cursed");
     ADD_STR("TarotCardsModEnable", "Active tarot cards modifier##cursed", u8"Активировать модификации таро карт##cursed", u8"启用塔罗牌修改器##cursed");
     ADD_STR("ForceTarotCards", "Force Card Type##cursed", u8"Подменить тип карты##cursed", u8"强制设置塔罗牌的类型##cursed");
     ADD_STR("CardType", "Card Type##cursed", u8"Тип карты##cursed", u8"请选择塔罗牌的类型##cursed");
@@ -147,7 +147,7 @@ inline void RegisterAllTranslations()
     ADD_STR("SanityMonitor", "SanityMonitor", u8"Монитор рассудка", u8"理智显示屏");
     ADD_STR("ActivityMonitor", "ActivityMonitor", u8"Монитор активности", u8"活动强度显示屏");
     ADD_STR("FuseBoxVisible", "FuseBoxVisible", u8"Щиток виден", u8"显示电闸位置");
-    ADD_STR("FuseBoxStartPower", "FuseBoxStartPower", u8"Начальное состояние щитка", u8"开局打开电闸");
+    ADD_STR("FuseBoxStartPower", "FuseBoxStartPower", u8"Начальное состояние щитка", u8"电闸初始状态");
     ADD_STR("EnableDifficultyModifier", "Enable Difficulty Modifier", u8"Включить модификатор сложности", u8"启用难度修改器");
     ADD_STR("AddSettingToModify", "Add setting to modify", u8"Добавить параметр для изменения", u8"添加要修改的设置");
     ADD_STR("AddSetting", "Add", u8"Добавить", u8"添加");
@@ -189,6 +189,9 @@ inline void RegisterAllTranslations()
     ADD_STR("DoorsTeleported", "Doors teleported to player.", u8"Двери были телепортированы к игроку.", u8"所有门已传送到玩家位置");
     ADD_STR("AllDoorsDisabled", "All doors disabled.", u8"Все двери отключены.", u8"所有的门已禁用");
     ADD_STR("AllDoorsEnabled", "All doors enabled.", u8"Все двери включены.", u8"所有的门已启用");
+    ADD_STR("RagdollDoors", "Ragdoll doors", u8"Двери как тряпичные куклы"); // dont use
+    ADD_STR("AutoOpenDoors_Done", "All doors opened by modification.", u8"Все двери были открыты модификацией.", u8"所有的门已通过修改器打开");
+    ADD_STR("OpenAllDoors", "Auto open all doors", u8"Автоматически открыть все двери", u8"自动打开所有门");
 
     // Evidence ESP
     ADD_STR("EnableEvidenceESP", "Enable Evidence ESP", u8"Включить ESP улик", u8"启用证据高亮显示");
@@ -224,7 +227,7 @@ inline void RegisterAllTranslations()
     ADD_STR("EnableGhostDesigner", "Enable Ghost Designer", u8"Включить редактор призрака", u8"启用鬼魂信息编辑器");
     ADD_STR("GhostAge", "Ghost Age", u8"Возраст призрака", u8"鬼魂年龄");
     ADD_STR("GhostType", "Ghost Type", u8"Тип призрака", u8"鬼魂类型");
-    ADD_STR("IsShy", "Is Shy", u8"Застенчивый призрак", u8"是否害羞");
+    ADD_STR("IsShy", "Is Shy", u8"Застенчивый призрак", u8"鬼魂是否害羞");
     ADD_STR("EvidenceSettings", "Evidence Settings", u8"Настройки улик", u8"证据设置");
     ADD_STR("EvidenceMode", "Mode", u8"Режим", u8"模式");
     ADD_STR("EvidenceCount", "Evidence Count", u8"Количество улик", u8"证据数量");
@@ -265,7 +268,7 @@ inline void RegisterAllTranslations()
     ADD_STR("EnableCustomGhostSpeed", "Enable custom ghost speed", u8"Включить кастомную скорость призрака", u8"启用自定义鬼魂速度");
     ADD_STR("GhostSpeedMod", "Ghost Speed", u8"Скорость призрака", u8"鬼魂速度");
     ADD_STR("ForceAppear", "Force appear", u8"Принудительное появление", u8"强制鬼魂显形");
-    ADD_STR("ForcedType", "Forced type", u8"Принудительный тип", u8"请设置需要的鬼魂状态");
+    ADD_STR("ForcedType", "Forced type", u8"Принудительный тип", u8"请指定鬼魂类型");
     ADD_STR("ForceState", "Force State", u8"Принудительное состояние", u8"强制修改鬼魂状态");
     ADD_STR("FreezeState", "Freeze State", u8"Заморозить состояние", u8"锁定鬼魂状态");
     ADD_STR("SetGhostVisible", "Set ghost visible (only local)", u8"Установить видимость призрака (только локально)", u8"设置鬼魂可见（仅限本机）");
@@ -322,7 +325,7 @@ inline void RegisterAllTranslations()
     ADD_STR("EnableNotifyInfo", "Enable Notify Info", u8"Включить уведомления о действиях в игре", u8"启用游戏内通知");
     ADD_STR("GhostTriedHunt", "Ghost tried to hunt.", u8"Призрак попытался начать охоту.", u8"鬼魂试图开启猎杀");
     ADD_STR("GhostStartHunting", "Ghost started hunting!", u8"Призрак начал охоту!", u8"鬼魂开始猎杀！");
-    ADD_STR("GhostStopHunting", "Ghost stopped hunting.", u8"Призрак остановил охоту.", u8"幽灵停止猎杀");
+    ADD_STR("GhostStopHunting", "Ghost stopped hunting.", u8"Призрак остановил охоту.", u8"鬼魂停止猎杀");
     ADD_STR("BoneCollected", "Bone has been collected.", u8"Косточка была подобрана.", u8"骨头已收集");
 
     // Pickup
@@ -453,7 +456,7 @@ inline void RegisterAllTranslations()
     ADD_STR("TP_TruckNotFound", "Truck not found.", u8"Фургон не найден.", u8"未找到货车");
 
     // Watermark
-    ADD_STR("EnableWatermark", "Enable Watermark", u8"Включить водяной знак", u8"显示水印");
+    ADD_STR("EnableWatermark", "Enable Watermark", u8"Включить водяной знак", u8"启用水印");
     ADD_STR("Watermark_ShowFPS", "Show FPS", u8"Показывать FPS", u8"显示帧率");
     ADD_STR("Watermark_ShowSanity", "Show average sanity", u8"Показывать среднюю рассудочность", u8"显示平均理智值");
     ADD_STR("Watermark_ShowPing", "Show ping", u8"Показывать пинг", u8"显示延迟");
@@ -494,14 +497,14 @@ inline void RegisterAllTranslations()
     ADD_STR("AutoPhoto", "Auto photo ghost", u8"Автоматические фотографии призрака", u8"自动拍鬼魂照片");
     ADD_STR("NoDelayPhoto", "No delay between photos", u8"Нет задержки между фотографиями", u8"拍照时无冷却延迟");
     ADD_STR("SkipAnimationPhoto", "Skip photo animation", u8"Пропустить анимацию фотографирования", u8"跳过拍照动画");
-	ADD_STR("GhostPhotoTaken", "Ghost photo taken!", u8"Сделана фотография призрака!");
+	ADD_STR("GhostPhotoTaken", "Ghost photo taken!", u8"Сделана фотография призрака!", u8"已成功拍摄鬼魂照片！");
 
     // Font Changer
 	ADD_STR("EnableFontChanger", "Enable font changer", u8"Включить смену шрифта", u8"启用字体修改器");
 
     // Journal Modifer
     ADD_STR("EnableJournalModifier", "Enable journal modifier", u8"Включить модификацию журнала", u8"启用日志修改器");
-    ADD_STR("OldGhostButtonPosition", "Old ghost button positions", u8"Старые позиции кнопок призраков", u8"恢复旧版鬼魂按钮布局"); ADD_STR("OldGhostButtonPosition", "Old ghost button positions", u8"Старые позиции кнопок призраков", u8"恢复旧版鬼魂按钮布局");
+    ADD_STR("OldGhostButtonPosition", "Old ghost button positions", u8"Старые позиции кнопок призраков", u8"恢复旧版鬼魂按钮布局");
     ADD_STR("AutoSelectGhost", "Auto select ghost", u8"Автоматический выбор призрака", u8"自动选择鬼魂");
     ADD_STR("CorrectGhostAlwaysFirst", "Correct ghost always first", u8"Правильный призрак всегда первый", u8"让正确的鬼魂类型始终排在列表第一位");
 
@@ -511,7 +514,7 @@ inline void RegisterAllTranslations()
     // AutoGame
     ADD_STR("EnableAutoGame", "Enable Auto Game", u8"Включить автоматическую игру", u8"启用自动游戏");
     ADD_STR("AutoGameDelay", "Auto Game Delay", u8"Задержка автоматической игры", u8"自动游戏延迟");
-    ADD_STR("AutoGameRunning", "AutoGame is running.\nStopping is temporarily unavailable to ensure safe completion of the current cycle.\nPlease use the \"Stop\" button in the AutoGame panel to request a safe shutdown.", u8"Автоигра запущена.\nОстановка временно недоступна для обеспечения безопасного завершения текущего цикла.\nПожалуйста, используйте кнопку \"Стоп\" на панели автоигры, чтобы запросить безопасное завершение игры.");
+    ADD_STR("AutoGameRunning", "AutoGame is running.\nStopping is temporarily unavailable to ensure safe completion of the current cycle.\nPlease use the \"Stop\" button in the AutoGame panel to request a safe shutdown.", u8"Автоигра запущена.\nОстановка временно недоступна для обеспечения безопасного завершения текущего цикла.\nПожалуйста, используйте кнопку \"Стоп\" на панели автоигры, чтобы запросить безопасное завершение игры.", u8"自动游戏功能正在运行\n为确保当前循环安全结束，此功能暂时无法停止\n请使用自动游戏面板中的“停止”按钮来安全关闭");
     
     // FuseBox Modifier
     ADD_STR("EnableFuseBoxModifier", "Enable fusebox modifier", u8"Включить модификатор электрощитка", u8"启用电闸修改功能");
@@ -519,18 +522,25 @@ inline void RegisterAllTranslations()
     ADD_STR("FuseBoxOnByCheat", "FuseBox on by cheat.", u8"Электрощиток включён с помощью чита.", u8"电闸已由修改器强制开启");
 
     // Show Micro
-	ADD_STR("ShowMicroEnable", "Show Microphone", u8"Показать микрофон");
-	ADD_STR("MicroScale", "Microphone scale", u8"Размер микрофона");
-    ADD_STR("MicroOnColor", "Microphone On Color", u8"Цвет включенного микрофона");
+    ADD_STR("ShowMicroEnable", "Show Microphone", u8"Показать микрофон", u8"显示麦克风");
+    ADD_STR("MicroScale", "Microphone scale", u8"Размер микрофона", u8"麦克风大小");
+    ADD_STR("MicroOnColor", "Microphone On Color", u8"Цвет включенного микрофона", u8"麦克风开启时的颜色");
 
     // Cosmetics Unlocker
-    ADD_STR("CosmeticUnlockerEnable", "Enable cosmetic unlocker", u8"Включить разблокировку косметики");
-	ADD_STR("CosmeticWarning", "Warning! We are not responsible for the subsequent ban when using this feature.\nUse it at your own risk. Although a ban is unlikely.", u8"Внимание! Мы не несем ответственности за последующий бан при использовании этой функции.\nИспользуйте ее на свой страх и риск. Хотя бан маловероятен.");
-	ADD_STR("CosmeticCredits", "Created by code PhasmoUnlocker", u8"Создано с помощью кода PhasmoUnlocker");
+    ADD_STR("CosmeticUnlockerEnable", "Enable cosmetic unlocker", u8"Включить разблокировку косметики", u8"启用外观解锁功能");
+    ADD_STR("CosmeticWarning", "Warning! We are not responsible for the subsequent ban when using this feature.\nUse it at your own risk. Although a ban is unlikely.", u8"Внимание! Мы не несем ответственности за последующий бан при использовании этой функции.\nИспользуйте ее на свой страх и риск. Хотя бан маловероятен.", u8"警告！我们不对使用此功能可能导致的封号负责\n请自行承担使用风险，尽管被封号的可能性极低");
+    ADD_STR("CosmeticCredits", "Created by code PhasmoUnlocker", u8"Создано с помощью кода PhasmoUnlocker", u8"基于 PhasmoUnlocker 代码制作");
 
     // Music Panel
-    ADD_STR("MusicPanelEnable", "Enable music panel", u8"Включить музыкальную панель");
-	ADD_STR("ShowOnlyMenu", "Show only in menu", u8"Показывать только в меню");
+    ADD_STR("MusicPanelEnable", "Enable music panel", u8"Включить музыкальную панель", u8"启用音乐面板");
+    ADD_STR("ShowOnlyMenu", "Show only in menu", u8"Показывать только в меню", u8"仅在菜单中显示");
+
+    // Audio Modifier
+    ADD_STR("AudioModifierEnable", "Enable audio modifier", u8"Включить модификатор аудио", u8"启用音频修改功能");
+    ADD_STR("DisableWeatherAudio", "Disable weather audio", u8"Выключить аудио погоды", u8"禁用天气音效");
+
+    // Skip player animation
+	ADD_STR("SkipPlayerAnimEnable", "Enable skip player animation", u8"Включить пропуск анимации игрока", u8"启用跳过玩家动画");
 
     // Headers
     ADD_STR("ActivityMonitor_Header", "Activity Monitor", u8"Монитор активности", u8"活动强度监视器");
@@ -584,9 +594,12 @@ inline void RegisterAllTranslations()
     ADD_STR("Watermark_Header", "Watermark", u8"Водяной знак", u8"水印设置");
     ADD_STR("FuseBoxModifier_Header", "FuseBox Modifier", u8"Модификатор электрощитка", u8"电闸修改器");
     ADD_STR("AutoGame_Header", "Auto Game", u8"Автоматическая игра", u8"自动游戏");
-	ADD_STR("ShowMicro_Header", "Show Microphone", u8"Показать микрофон");
-	ADD_STR("CosmeticUnlocker_Header", "Cosmetic Unlocker", u8"Разблокировщик косметики");
-    ADD_STR("MusicPanel_Header", "Music Panel", u8"Музыкальная панель");
+    ADD_STR("ShowMicro_Header", "Show Microphone", u8"Показать микрофон", u8"显示麦克风");
+    ADD_STR("CosmeticUnlocker_Header", "Cosmetic Unlocker", u8"Разблокировщик косметики", u8"外观解锁器");
+    ADD_STR("MusicPanel_Header", "Music Panel", u8"Музыкальная панель", u8"音乐面板");
+    ADD_STR("PlayerDeath_GodModePrevented", "Player death prevented by GodMode. Reason death: ", u8"Смерть игрока предотвращена режимом бога. Причина смерти: ", u8"上帝模式已阻止玩家死亡，致死原因：");
+    ADD_STR("AudioModifier_Header", "Audio Modifier", u8"Модификатор аудио", u8"音频修改器");
+    ADD_STR("SkipLayerAnimation", "Skip player animations", u8"Пропустить анимации игрока", u8"跳过玩家动画");
 
     // Template
     ADD_STR("", "", u8"");

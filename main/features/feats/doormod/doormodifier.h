@@ -14,6 +14,7 @@ namespace PhasmoCheatV::Features::Map
         void OnRender() override {}
         void OnMenuRender() override;
         void DoorModifierMain();
+        void AutoOpenDoors();
 
     private:
         enum class DoorAction
@@ -24,6 +25,8 @@ namespace PhasmoCheatV::Features::Map
             DisableAll,
             EnableAll
         };
+
+        SDK::Door* lastOpenedDoor = nullptr;
 
         void ProcessDoorAction(DoorAction action, bool enable = false);
         void ProcessDoorArray(SDK::DoorArray* doorArray, DoorAction action, bool enable);

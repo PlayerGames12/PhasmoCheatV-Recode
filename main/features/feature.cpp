@@ -71,6 +71,8 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
 	ADD_FEATURE(this, MusicPanel);
     ADD_FEATURE(this, PlayerESP);
     ADD_FEATURE(this, ActivityMonitor);
+    ADD_FEATURE(this, AWEsp);
+    ADD_FEATURE(this, WorldModulation);
     //ADD_FEATURE(this, JackalopeESP);
 
     // Players
@@ -81,6 +83,7 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, CustomLookLimits);
     ADD_FEATURE(this, CustomName);
     ADD_FEATURE(this, PlayerModifier);
+    ADD_FEATURE(this, SkipLayerAnim);
 
     // Ghost
     ADD_FEATURE(this, GhostModifier);
@@ -110,6 +113,7 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, ShopModifier);
 	ADD_FEATURE(this, SpiritBoxAlwaysAnswer);
 	ADD_FEATURE(this, AutoGame);
+    ADD_FEATURE(this, AudioModifier);
 
     // Difficulty
     ADD_FEATURE(this, DifficultyModifier);

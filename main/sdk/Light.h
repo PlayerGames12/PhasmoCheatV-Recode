@@ -3,7 +3,7 @@
 
 namespace SDK
 {
-    enum class LightType : int 
+    enum class LightType : int
     {
         Spot,
         Directional,
@@ -11,7 +11,7 @@ namespace SDK
         Area
     };
 
-    enum class ShadowsType : int 
+    enum class ShadowsType : int
     {
         None,
         Hard,
@@ -28,6 +28,9 @@ namespace SDK
     struct Light;
 
     DEC_MET(Light_intensity_set, void(*)(Light* light, float value, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Light", "set_intensity", 1);
+    DEC_MET(Light_intensity_get, float(*)(Light* light, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Light", "get_intensity", 0);
+    DEC_MET(Light_color_set, void(*)(Light* light, Color value, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Light", "set_color", 1);
+    DEC_MET(Light_color_get, Color(*)(Light* light, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Light", "get_color", 0);
     DEC_MET(Light_type_set, void(*)(Light* light, LightType value, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Light", "set_type", 1);
     DEC_MET(Light_shadows_set, void(*)(Light* light, ShadowsType value, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Light", "set_shadows", 1);
     DEC_MET(Light_renderMode_set, void(*)(Light* light, RenderMode value, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Light", "set_renderMode", 1);

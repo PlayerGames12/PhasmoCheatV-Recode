@@ -565,6 +565,57 @@ void Menu::Render()
                     }
                 }
 
+                if (ImGui::Button("test forward door"))
+                {
+                    if (!InGame::levelController || !InGame::levelController->Fields.exitDoors)
+                    {
+                        LOG_INFO("levelController or exitDoors is nullptr");
+                        return;
+                    }
+
+                    auto* doorArray = InGame::levelController->Fields.exitDoors;
+                    SDK::Door* targetDoor = nullptr;
+
+                    for (uint32_t i = 0; i < doorArray->MaxLength; i++)
+                    {
+                        auto* door = doorArray->Vector[i];
+                        if (!door)
+                            continue;
+
+                        targetDoor = door;
+                        break;
+                    }
+
+                    if (!targetDoor)
+                    {
+                        LOG_INFO("targetDoor is nullptr - no valid door found");
+                        return;
+                    }
+
+                    auto* player = Utils::GetLocalPlayer();
+                    if (!player)
+                    {
+                        LOG_INFO("player is nullptr");
+                        return;
+                    }
+
+                    SDK::Vector3 playerPosition = Utils::GetPosVec3(player);
+
+                    auto* door_tr = SDK::Component_Get_Transform(reinterpret_cast<SDK::Component*>(targetDoor), nullptr);
+                    if (!door_tr)
+                    {
+                        LOG_INFO("door_tr (Transform) is nullptr");
+                        return;
+                    }
+
+                    SDK::Vector3 doorPosition = Utils::GetPosVec3(door_tr);
+                    SDK::Vector3 doorForw = SDK::Transform_Get_Forward(door_tr, nullptr);
+
+                    LOG_INFO(Utils::IsObjectInFront(playerPosition, doorPosition, doorForw) ? "Player is in front of the door" : "Player is behind the door");
+
+                    SDK::Door_OpenDoor(reinterpret_cast<SDK::HingeDoor*>(targetDoor), false, 0.17021155f, false, nullptr);
+                }
+
                 if (ImGui::Button("Call test"))
                 {
                     ForTestsFlag = true;

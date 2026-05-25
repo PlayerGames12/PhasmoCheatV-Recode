@@ -57,3 +57,7 @@
 #include "feats/showmic/showmic.h"
 #include "feats/musicpanel/musicpanel.h"
 #include "feats/cosmeticsunlocker/cosmeticunlocker.h"
+#include "feats/awesp/awesp.h"
+#include "feats/audiomod/audiomod.h"
+#include "feats/skiplayeranim/skiplayeranim.h"
+#include "feats/worldmodulation/worldmodulation.h"

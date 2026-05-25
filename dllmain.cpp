@@ -33,15 +33,34 @@ void WaitForGameReady()
     Sleep(2000);
 }
 
+LONG CALLBACK VehHandler(EXCEPTION_POINTERS* ep)
+{
+    if (ep->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION)
+    {
+        auto rip = ep->ContextRecord->Rip;
+        auto addr = ep->ExceptionRecord->ExceptionInformation[1];
+
+        char buf[128];
+        wsprintfA(buf, "AV RIP=%p ADDR=%p\n", (void*)rip, (void*)addr);
+        LOG_INFO(buf);
+        OutputDebugStringA(buf);
+    }
+
+    return EXCEPTION_CONTINUE_SEARCH; // fall next
+}
+
 // Global module handle
 static std::unique_ptr<Logger> loggerInstance;
 static std::unique_ptr<Renderer> rendererInstance;
 static std::unique_ptr<Hooking> hookingInstance;
 static std::unique_ptr<FeatureHandler> featureInstance;
+static PVOID g_VehHandle = nullptr;
 
 // Main cheat thread
 extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
 {
+    g_VehHandle = AddVectoredExceptionHandler(1, VehHandler);
+
     WaitForGameReady();
     bool hooksApplied = false;
 
@@ -136,10 +155,12 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
         AHKA(VoodooDollPin_Use);
         AHKA(Jackalope_Awake);
         AHKA(ScriptableRenderContext_Submit);
-        AHKA(Player_StartDeathAnimation);
+        AHKA(Player_BeginDeathSequence);
         AHKA(GameController_Awake);
         AHKA(RewardManager_Awake);
         AHKA(SceneManagement_Internal_SceneLoaded);
+        AHKA(AWDoll_Awake);
+        AHKA(Key_GrabbedKey);
 
         // CosmeticsUnlocker hooks
 #if COSMETICSUNLOCKER
@@ -221,6 +242,12 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
 
 finalize:
     loggerInstance.reset();
+
+    if (g_VehHandle)
+    {
+        RemoveVectoredExceptionHandler(g_VehHandle);
+        g_VehHandle = nullptr;
+    }
 
     FreeLibraryAndExitThread(globalModule, NULL);
     return 0;

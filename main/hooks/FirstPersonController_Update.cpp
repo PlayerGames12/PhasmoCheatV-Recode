@@ -19,6 +19,7 @@ void Hooks::hkFirstPersonController_Update(SDK::FirstPersonController* firstPers
 	CALL_METHOD_ARGS(Movement, CustomSpeed, CustomSpeedMain, firstPersonController);
 	CALL_METHOD_IF_ACTIVE(Players, CrosshairModifier, CrosshairModifierMain);
 	CALL_METHOD(Cursed, CursedItemsControll, CursedItemsControllMain);
+	CALL_METHOD(Misc, AudioModifier, AudioModifierHandler);
 
-	CALL_METHOD_IF_ACTIVE(Visuals, Fullbright, FullbrightMain);
+	CALL_METHOD(Visuals, Fullbright, FullbrightMain);
 }

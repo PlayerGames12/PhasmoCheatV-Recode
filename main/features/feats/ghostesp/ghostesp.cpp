@@ -81,7 +81,6 @@ void GhostESP::OnRender()
 {
     if (!IsActive()) return;
     if (!InGame::ghostAI) return;
-	if (!Utils::IsInGame()) return;
 
     const auto ghostInfo = InGame::ghostAI->Fields.GhostInfo;
     if (!ghostInfo) return;

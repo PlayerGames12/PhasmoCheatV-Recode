@@ -8,6 +8,7 @@ DoorModifier::DoorModifier() : FeatureCore(LANG("DoorModifier_Header"), TYPE_MAP
     DECLARE_CONFIG(GetConfigManager(), "LockDoors", bool, false);
     DECLARE_CONFIG(GetConfigManager(), "TeleportToPlayer", bool, false);
     DECLARE_CONFIG(GetConfigManager(), "DisableAllDoors", bool, false);
+    DECLARE_CONFIG(GetConfigManager(), "OpenAllDoors", bool, false);
 }
 
 void DoorModifier::OnMenuRender()
@@ -40,6 +41,10 @@ void DoorModifier::OnMenuRender()
         ImGui::SameLine();
         if (ImGui::Button(LANG("EnableAllDoors")))
             ProcessDoorAction(DoorAction::EnableAll);
+
+		bool allDoorsOpen = CONFIG_BOOL(GetConfigManager(), "OpenAllDoors");
+		if (ImGui::Checkbox(LANG("OpenAllDoors"), &allDoorsOpen))
+			SET_CONFIG_VALUE(GetConfigManager(), "OpenAllDoors", bool, allDoorsOpen);
     }
 
     ImGui::PopStyleVar();
@@ -167,4 +172,38 @@ void DoorModifier::ProcessDoorArray(SDK::DoorArray* doorArray, DoorAction action
         {
         }
     }
+}
+
+void DoorModifier::DoorModifierMain()
+{
+    // called in GhostAI_Update
+}
+
+void DoorModifier::AutoOpenDoors()
+{
+	if (!IsActive() || !CONFIG_BOOL(GetConfigManager(), "OpenAllDoors"))
+		return;
+
+    if (!InGame::levelController)
+        return;
+
+    auto* doors = InGame::levelController->Fields.doors;
+
+    auto ProcessArray = [&](auto* doorArray)
+        {
+            if (!doorArray)
+                return;
+
+            for (uint32_t i = 0; i < doorArray->MaxLength; i++)
+            {
+                auto* door = doorArray->Vector[i];
+                if (!door)
+                    continue;
+
+                auto* thdoor = reinterpret_cast<SDK::HingeDoor*>(door);
+                SDK::Door_OpenDoor(thdoor, false, 0.17021155f, false, nullptr);
+            }
+        };
+
+    ProcessArray(doors);
 }

@@ -11,10 +11,7 @@ void TemperaturePanel::OnRender()
 
     const auto localPlayer = Utils::GetLocalPlayer();
     if (!localPlayer || !localPlayer->Fields.LevelRoom)
-    {
-        LOG_INFO(localPlayer ? "LevelRoom is null" : "Local player is null");
         return;
-    }
 
     const float temperature = localPlayer->Fields.LevelRoom->Fields.temperature;
 

@@ -70,6 +70,8 @@ namespace Utils {
 	bool IsValidGO(SDK::GameObject* obj);
 	SDK::GameObject* GameObject_Find(std::string name);
 	bool IsInGame();
+	SDK::Component* FindComponentByType(std::string type, bool retFirstComponent = false);
+	bool IsObjectInFront(const SDK::Vector3& targetPos, const SDK::Vector3& referencePos, const SDK::Vector3& referenceForward);
 
 
 	// Helper functions

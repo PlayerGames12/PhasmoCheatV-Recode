@@ -212,6 +212,9 @@ void MapModifier::MapModifierMain()
 
         auto* methodLightning = SDK::Get_LightningController_PlayLightning();
 
+        if (!methodLightning)
+            NOTIFY_ERROR_QUICK(LANG("WarnNeedReportDev"));
+
         methodLightning(lightningController, nullptr);
 
         NOTIFY_SUCCESS_QUICK(LANG("LightningTriggered"));

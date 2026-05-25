@@ -9,6 +9,12 @@ namespace SDK
 	struct FirstPersonController;
     struct Animator;
 
+    enum deathType : int32_t
+    {
+        HangedMan,
+        SnappedNeck
+    };
+
     struct PlayerFields
     {
         MonoBehaviourPunFields MonoBehaviourPunFields;
@@ -94,7 +100,7 @@ namespace SDK
 	};
 
     DEC_MET(Player_Start, void(*)(Player* player, MethodInfo* methodInfo), "Assembly-CSharp", "", "Player", "Start", 0);
-    DEC_MET(Player_StartDeathAnimation, std::nullptr_t(*)(Player* player, int32_t a1, bool a2, void* message, MethodInfo* methodInfo), "Assembly-CSharp", "", "Player", "StartDeathAnimation", 3);
+    DEC_MET(Player_BeginDeathSequence, void(*)(Player* player, deathType deadType, MethodInfo* methodInfo), "Assembly-CSharp", "", "Player", "BeginDeathSequence", 1);
     DEC_MET(Player_SetHeadTransform, void(*)(Player* player, Vector3 position, Quaternion rotation, MethodInfo* methodInfo), "Assembly-CSharp", "", "Player", "SetHeadTransform", 2);
 	DEC_MET(Player_SetRotation, void(*)(Player* player, Quaternion rotation, MethodInfo* methodInfo), "Assembly-CSharp", "", "Player", "SetRotation", 1);
 }

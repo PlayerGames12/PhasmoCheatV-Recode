@@ -32,6 +32,7 @@ namespace PhasmoCheatV::InGame
 	inline SDK::ObjectiveManager* objectiveManager = nullptr;
     inline SDK::RewardManager* rewardManager = nullptr;
     inline std::unordered_map<std::string, SDK::GameObject*> g_GameObjectCache;
+    inline std::vector<SDK::AWDoll*> awDolls;
 
     // Reset in-game pointers
     inline void Reset() {
@@ -63,5 +64,6 @@ namespace PhasmoCheatV::InGame
 		objectiveManager = nullptr;
         rewardManager = nullptr;
 		g_GameObjectCache.clear();
+        awDolls.clear();
     }
 }
