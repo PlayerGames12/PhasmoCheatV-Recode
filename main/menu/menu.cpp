@@ -479,14 +479,25 @@ void Menu::Render()
                         (ImGui::GetWindowWidth() - ImGui::CalcTextSize("No binds").x) * 0.5f,
                         (ImGui::GetWindowHeight() - ImGui::GetTextLineHeight()) * 0.5f
                     ));
-                    ImGui::TextColored(ImVec4(1.f, 0.4f, 0.4f, 1.f), "No binds");
+                    ImGui::TextColored(ImVec4(1.f, 0.4f, 0.4f, 1.f), LANG("NoBinds"));
                 }
                 else
                 {
                     for (auto& [uniqueKey, bind] : BindSystem::Binds)
                     {
                         std::string featureName = uniqueKey.substr(0, uniqueKey.find("##"));
-                        std::string displayName = BindSystem::ExtractFeatureName(featureName);
+                        std::string displayName;
+
+                        // BCheckBox: try _Header lookup from class name
+                        std::string headerKey = featureName + "_Header";
+                        const char* translated = LANG(headerKey.c_str());
+                        if (strcmp(translated, headerKey.c_str()) != 0)
+                            displayName = translated;
+                        // BButton: featureName IS the LANG key, translate directly
+                        else {
+                            const char* btnTranslated = LANG(featureName.c_str());
+                            displayName = (strcmp(btnTranslated, featureName.c_str()) != 0) ? btnTranslated : featureName;
+                        }
 
                         bool isWaiting = (BindSystem::WaitingBind.has_value() && BindSystem::WaitingBind.value() == uniqueKey);
 

@@ -6,6 +6,7 @@
 #include "../libs/imgui/imgui.h"
 #include "../features/feature.h"
 #include <functional>
+#include "LanguageManager.h"
 
 namespace BindSystem
 {
@@ -21,14 +22,14 @@ namespace BindSystem
     inline const char* KeyToString(int key)
     {
         static char buffer[32];
-        if (key == 0) return "[ None ]";
+        if (key == 0) return LANG("NotAssigned");
 
         UINT scanCode = MapVirtualKeyA(key, MAPVK_VK_TO_VSC);
         LONG lParam = (scanCode << 16);
         if (GetKeyNameTextA(lParam, buffer, 32) > 0)
             return buffer;
 
-        return "Unknown";
+        return LANG("UnknownKey");
     }
 
     inline std::string ExtractFeatureName(const std::string& fullName)
@@ -168,19 +169,21 @@ namespace BindSystem
     }
 
     inline bool BButtonImpl(
-        const char* label,
+        const char* labelKey,
         const std::string& bindId,
         const std::function<void()>& callback)
     {
         std::string uniqueKey =
-            std::string(label) + "##" + bindId;
+            std::string(labelKey) + "##" + bindId;
 
         if (Binds.find(uniqueKey) == Binds.end())
             Binds[uniqueKey] = KeyBind{ 0 };
 
         ButtonCallbacks[uniqueKey] = callback;
 
-        bool pressed = ImGui::Button(label);
+        std::string displayLabel =
+            std::string(LANG(labelKey)) + "##" + bindId;
+        bool pressed = ImGui::Button(displayLabel.c_str());
 
         if (pressed && callback)
             callback();
@@ -209,5 +212,5 @@ namespace BindSystem
 
 #define BCheckBox(label, v, bindId) \
     BindSystem::BCheckBoxImpl(label, v, typeid(*this).name(), bindId)
-#define BButton(label, bindId, callback) \
-    BindSystem::BButtonImpl(label, bindId, callback)
+#define BButton(labelKey, bindId, callback) \
+    BindSystem::BButtonImpl(labelKey, bindId, callback)

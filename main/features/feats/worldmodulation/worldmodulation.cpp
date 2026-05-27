@@ -43,12 +43,12 @@ void WorldModulation::OnMenuRender()
 
     if (enabled)
     {
-        if (ImGui::ColorEdit4("Color", (float*)&Cache.color))
+        if (ImGui::ColorEdit4((std::string(LANG("Color")) + "##WorldMod").c_str(), (float*)&Cache.color))
         {
             SET_CONFIG_VALUE(GetConfigManager(), "Color", ImColor, ImColor(Cache.color.R, Cache.color.G, Cache.color.B, Cache.color.A));
         }
 
-        if (ImGui::Checkbox("Affect Materials", &Cache.affectMaterials))
+        if (ImGui::Checkbox(LANG("AffectMaterials"), &Cache.affectMaterials))
         {
             SET_CONFIG_VALUE(GetConfigManager(), "AffectMaterials", bool, Cache.affectMaterials);
         }

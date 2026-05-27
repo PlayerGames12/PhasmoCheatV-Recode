@@ -31,7 +31,7 @@ void TemperaturePanel::OnRender()
     ImGui::Begin("###TemperatureWindow", nullptr, Globals::WINDOW_FLAGS_GLOBALS);
 
     ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
-    ImGui::TextColored(ImVec4(0.7f, 0.85f, 1.0f, 1.0f), "ROOM TEMPERATURE");
+    ImGui::TextColored(ImVec4(0.7f, 0.85f, 1.0f, 1.0f), LANG("RoomTemperature"));
     ImGui::PopFont();
 
     ImGui::Separator();

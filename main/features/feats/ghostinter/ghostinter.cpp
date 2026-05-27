@@ -41,13 +41,8 @@ void GhostInteractor::OnMenuRender()
 
     for (size_t i = 0; i < std::size(buttons); i++)
     {
-        std::string label =
-            std::string(LANG(buttons[i].code)) +
-            "##ghostInteractor_" +
-            std::to_string(i);
-
         BButton(
-            label.c_str(),
+            buttons[i].code,
             "ghostInteractor_" + std::to_string(i),
             ([buttons, i]()
                 {
