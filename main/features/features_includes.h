@@ -24,6 +24,7 @@
 #include "feats/noclip/noclip.h"
 #include "feats/infstamina/infinitystamina.h"
 #include "feats/custspeed/customspeed.h"
+#include "feats/spinbot/spinbot.h"
 #include "feats/teleport/teleport.h"
 #include "feats/exitvanone/exitvanone.h"
 #include "feats/antikick/antikick.h"

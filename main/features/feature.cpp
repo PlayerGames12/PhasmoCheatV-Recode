@@ -100,6 +100,7 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, Teleport);
 
     // Misc
+    ADD_FEATURE(this, Spinbot);
     ADD_FEATURE(this, AntiKick);
     ADD_FEATURE(this, ExitVanOne);
     ADD_FEATURE(this, VanButtonModifier);
