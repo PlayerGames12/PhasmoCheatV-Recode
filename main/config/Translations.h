@@ -28,6 +28,9 @@ inline void RegisterAllTranslations()
     ADD_STR("Menu_Settings", "SETTINGS", u8"НАСТРОЙКИ", u8"设置");
     ADD_STR("Menu_About", "ABOUT", u8"О МОДИФИКАЦИИ", u8"关于");
     ADD_STR("Menu_Hotkeys", "Hotkeys", u8"Бинды", u8"快捷键");
+    ADD_STR("NoBinds", "No binds", u8"Нет биндов", u8"暂未绑定快捷键");
+    ADD_STR("NotAssigned", "[ None ]", u8"[ Нет ]", u8"[ 未设置 ]");
+    ADD_STR("UnknownKey", "Unknown", u8"Неизвестно", u8"未知按键");
     ADD_STR("Menu_Unload", "UNLOAD CHEAT", u8"ВЫГРУЗИТЬ ЧИТ", u8"关闭作弊功能");
     ADD_STR("Menu_General", "General Settings", u8"Общие настройки", u8"常规设置");
     ADD_STR("Menu_ToggleKey", "Menu Toggle Key:", u8"Клавиша меню:", u8"菜单快捷键：");
@@ -60,7 +63,7 @@ inline void RegisterAllTranslations()
     ADD_STR("Menu_DownloadOurChineseFont", "Download Our Chinese Font", u8"Скачать наш китайский шрифт", u8"下载由我们提供的中文字体");
     ADD_STR("Menu_DiscordRPC", "Enable Discord RPC", u8"Включить Discord RPC", u8"启用 Discord RPC");
     ADD_STR("Menu_RPCShowName", "Show player name in RPC", u8"Показывать имя игрока в RPC", u8"在 RPC 中显示玩家名称");
-	ADD_STR("Menu_KeyReserved", "This key is reserved by cheat. Please choose another one.", u8"Эта клавиша зарезервирована читом. Пожалуйста, выберите другую.");
+	ADD_STR("Menu_KeyReserved", "This key is reserved by cheat. Please choose another one.", u8"Эта клавиша зарезервирована читом. Пожалуйста, выберите другую.", u8"该按键已被修改器占用，请选择其他按键");
 
     // Map modifier
     ADD_STR("AutoSelectMap", "Auto Select Map", u8"Автоматический выбор карты", u8"自动选择地图");
@@ -235,9 +238,45 @@ inline void RegisterAllTranslations()
     ADD_STR("EvidenceModeRandom", "Random", u8"Случайно", u8"随机");
     ADD_STR("EvidenceModeSelected", "Selected", u8"Выборочно", u8"手动指定证据");
 
+    // Ghost Types
+    ADD_STR("GhostType_Spirit",   "Spirit",    u8"Дух",         u8"魂魄");
+    ADD_STR("GhostType_Wraith",   "Wraith",    u8"Мираж",       u8"魅影");
+    ADD_STR("GhostType_Phantom",  "Phantom",   u8"Фантом",      u8"幻影");
+    ADD_STR("GhostType_Poltergeist","Poltergeist", u8"Полтергейст", u8"骚灵/捣蛋鬼");
+    ADD_STR("GhostType_Banshee",  "Banshee",   u8"Банши",       u8"女妖");
+    ADD_STR("GhostType_Jinn",     "Jinn",      u8"Джинн",       u8"巨灵");
+    ADD_STR("GhostType_Mare",     "Mare",      u8"Мара",        u8"梦魇");
+    ADD_STR("GhostType_Revenant", "Revenant",  u8"Ревенант",    u8"亡魂");
+    ADD_STR("GhostType_Shade",    "Shade",     u8"Тень",        u8"暗影");
+    ADD_STR("GhostType_Demon",    "Demon",     u8"Демон",       u8"恶魔");
+    ADD_STR("GhostType_Yurei",    "Yurei",     u8"Юрэй",        u8"幽灵");
+    ADD_STR("GhostType_Oni",      "Oni",       u8"Они",         u8"赤鬼");
+    ADD_STR("GhostType_Hantu",    "Hantu",     u8"Ханту",       u8"寒魔");
+    ADD_STR("GhostType_Yokai",    "Yokai",     u8"Ёкай",        u8"妖怪");
+    ADD_STR("GhostType_Goryo",    "Goryo",     u8"Горё",        u8"御灵");
+    ADD_STR("GhostType_Myling",   "Myling",    u8"Мюлинг",      u8"鬼婴");
+    ADD_STR("GhostType_Onryo",    "Onryo",     u8"Онрё",        u8"怨灵");
+    ADD_STR("GhostType_TheTwins", "The Twins", u8"Близнецы",    u8"孪魂");
+    ADD_STR("GhostType_Raiju",    "Raiju",     u8"Райдзю",      u8"雷魂/曾");
+    ADD_STR("GhostType_Obake",    "Obake",     u8"Обакэ",       u8"幻妖");
+    ADD_STR("GhostType_Mimic",    "Mimic",     u8"Мимик",       u8"拟魂");
+    ADD_STR("GhostType_Moroi",    "Moroi",     u8"Морой",       u8"魔洛伊");
+    ADD_STR("GhostType_Deogen",   "Deogen",    u8"Деоген",      u8"雾影");
+    ADD_STR("GhostType_Thaye",    "Thaye",     u8"Тайэ",        u8"刹耶");
+    ADD_STR("GhostType_Default",  "Default",   u8"По умолчанию",u8"默认");
+    ADD_STR("GhostType_Gallu",    "Gallu",     u8"Галлу",       u8"加鲁");
+    ADD_STR("GhostType_Dayan",    "Dayan",     u8"Дайян",       u8"达彦");
+    ADD_STR("GhostType_Obambo",   "Obambo",    u8"Обамбо",      u8"奥班博");
+    ADD_STR("GhostType_Kormos",   "Kormos",    u8"Кормос",      u8"盲灵");
+    ADD_STR("GhostType_Aswang",   "Aswang",    u8"Асванг",      u8"阿斯旺");
+
     // GhostESP
     ADD_STR("EnableGhostESP", "Enable Ghost ESP", u8"Включить ESP призрака", u8"启用鬼魂高亮显示");
     ADD_STR("BoxType", "Box Type", u8"Тип рамки", u8"框体类型");
+    ADD_STR("BoxType2D", "2D Box", u8"2D коробка", u8"2D 方框");
+    ADD_STR("BoxTypeCorner", "Corner Box", u8"Угловая коробка", u8"角框");
+    ADD_STR("BoxTypeFilled", "Filled Box", u8"Заполненная коробка", u8"填充框");
+    ADD_STR("RoomTemperature", "ROOM TEMPERATURE", u8"ТЕМПЕРАТУРА КОМНАТЫ", u8"房间温度");
     ADD_STR("BoxThickness", "Box Thickness", u8"Толщина рамки", u8"框体厚度");
     ADD_STR("ShowSkeleton", "Show Skeleton", u8"Показать скелет", u8"显示骨架模型");
     ADD_STR("SkeletonColor", "Skeleton Color", u8"Цвет скелета", u8"骨架颜色");
@@ -544,6 +583,8 @@ inline void RegisterAllTranslations()
 
     // Headers
     ADD_STR("ActivityMonitor_Header", "Activity Monitor", u8"Монитор активности", u8"活动强度监视器");
+    ADD_STR("AWESP_Header", "AW ESP", u8"AW ESP", u8"AW 玩偶高亮");
+    ADD_STR("EnableAWESP", "Enable AW ESP", u8"Включить AW ESP", u8"启用 AW 玩偶高亮");
     ADD_STR("AlwaysBloodMoon_Header", "Always BloodMoon", u8"Всегда кровавая луна", u8"始终保持血月天气");
     ADD_STR("AntiKick_Header", "AntiKick", u8"Антикик", u8"反踢出");
     ADD_STR("Autopickupbone_Header", "Auto pickup bone", u8"Автоматический подбор кости", u8"自动拾取骨头");
@@ -592,6 +633,9 @@ inline void RegisterAllTranslations()
     ADD_STR("TemperaturePanel_Header", "Temperature Panel", u8"Панель температуры", u8"温度面板");
     ADD_STR("VanButtonModifier_Header", "Van Button Modifier", u8"Модификатор кнопки фургона", u8"货车按钮修改器");
     ADD_STR("Watermark_Header", "Watermark", u8"Водяной знак", u8"水印设置");
+    ADD_STR("WorldModulation_Header", "World Modulation", u8"Модуляция мира", u8"环境光色调");
+    ADD_STR("EnableWorldModulation", "Enable World Modulation", u8"Включить модуляцию мира", u8"启用环境光色调");
+    ADD_STR("AffectMaterials", "Affect Materials", u8"Влиять на материалы", u8"应用到材质");
     ADD_STR("FuseBoxModifier_Header", "FuseBox Modifier", u8"Модификатор электрощитка", u8"电闸修改器");
     ADD_STR("AutoGame_Header", "Auto Game", u8"Автоматическая игра", u8"自动游戏");
     ADD_STR("ShowMicro_Header", "Show Microphone", u8"Показать микрофон", u8"显示麦克风");
@@ -599,7 +643,20 @@ inline void RegisterAllTranslations()
     ADD_STR("MusicPanel_Header", "Music Panel", u8"Музыкальная панель", u8"音乐面板");
     ADD_STR("PlayerDeath_GodModePrevented", "Player death prevented by GodMode. Reason death: ", u8"Смерть игрока предотвращена режимом бога. Причина смерти: ", u8"上帝模式已阻止玩家死亡，致死原因：");
     ADD_STR("AudioModifier_Header", "Audio Modifier", u8"Модификатор аудио", u8"音频修改器");
+    ADD_STR("SkipLayerAnim_Header", "Skip Player Anim", u8"Пропуск анимаций игрока", u8"跳过玩家动画");
     ADD_STR("SkipLayerAnimation", "Skip player animations", u8"Пропустить анимации игрока", u8"跳过玩家动画");
+
+    // Hotkey aliases (class name -> _Header key mapping)
+    ADD_STR("AWEsp_Header",            "AW ESP",              u8"AW ESP",            u8"AW 玩偶高亮");
+    ADD_STR("AutoPickupBone_Header",   "Auto Pickup Bone",    u8"Автоподбор кости",  u8"自动拾取骨头");
+    ADD_STR("CustomName_Header",       "Custom Name",         u8"Пользовательское имя", u8"自定义名称");
+    ADD_STR("ExitVanOne_Header",       "Exit Van Solo",       u8"Выход из фургона в одиночку", u8"单人上车离开");
+    ADD_STR("GhostDesigner_Header",    "Ghost Designer",      u8"Дизайнер призраков", u8"鬼魂编辑器");
+    ADD_STR("GhostInteractor_Header",  "Ghost Interaction",   u8"Управление взаимодействиями", u8"鬼魂互动控制");
+    ADD_STR("SaltModifier_Header",     "Salt Modifier",       u8"Модификатор соли",  u8"盐修改器");
+    ADD_STR("FlashLightModifier_Header", "Flashlight Modifier", u8"Модификатор фонарика", u8"手电筒修改器");
+    ADD_STR("PotatoeEsp_Header",       "Potatoe ESP",         u8"ESP на картошку",  u8"土豆高亮");
+    ADD_STR("StatsPanel_Header",       "Level Stats",         u8"Статистика уровня", u8"等级统计");
 
     // Template
     ADD_STR("", "", u8"");

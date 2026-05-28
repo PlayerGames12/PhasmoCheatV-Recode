@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Visuals;
 
-AWEsp::AWEsp() : FeatureCore("AW ESP", TYPE_VISUALS) {}
+AWEsp::AWEsp() : FeatureCore(LANG("AWESP_Header"), TYPE_VISUALS) {}
 
 void AWEsp::OnRender()
 {
@@ -46,7 +46,7 @@ void AWEsp::OnMenuRender()
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 6));
 
 	bool enabled = IsActive();
-	if (ImGui::Checkbox("Enable AW ESP", &enabled))
+	if (ImGui::Checkbox(LANG("EnableAWESP"), &enabled))
 	{
 		SET_CONFIG_VALUE(GetConfigManager(), "Enabled", bool, enabled);
 		if (enabled) OnActivate();
