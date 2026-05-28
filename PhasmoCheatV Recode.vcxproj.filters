@@ -228,6 +228,9 @@
     <ClCompile Include="main\features\feats\custspeed\customspeed.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="main\features\feats\gamespeed\gamespeed.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
     <ClCompile Include="main\features\feats\teleport\teleport.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -804,6 +807,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="main\features\feats\custspeed\customspeed.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\gamespeed\gamespeed.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="main\features\feats\teleport\teleport.h">
