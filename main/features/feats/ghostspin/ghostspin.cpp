@@ -25,14 +25,10 @@ void GhostSpin::OnMenuRender()
 void GhostSpin::GhostSpinMain(SDK::GhostAI* ghostAI)
 {
 	if (!IsActive()) return;
-	if (!ghostAI || !ghostAI->Fields.currentModel) return;
+	if (!ghostAI || !ghostAI->Fields.raycastPoint) return;
 
-	auto* animator = ghostAI->Fields.currentModel->Fields.anim;
-	if (!animator) return;
-
-	auto* modelTransform = SDK::Component_Get_Transform(
-		reinterpret_cast<SDK::Component*>(animator), nullptr);
-	if (!modelTransform) return;
+	auto* bodyTransform = SDK::Transform_Get_Parent(ghostAI->Fields.raycastPoint, nullptr);
+	if (!bodyTransform) return;
 
 	float speed = CONFIG_FLOAT(GetConfigManager(), "Speed");
 	float dt = SDK::Time_Get_DeltaTime(nullptr);
@@ -42,5 +38,5 @@ void GhostSpin::GhostSpinMain(SDK::GhostAI* ghostAI)
 	float halfAngle = m_spinAngle * 0.5f;
 	SDK::Quaternion yRot = { 0.0f, sinf(halfAngle), 0.0f, cosf(halfAngle) };
 
-	SDK::Transform_Set_Rotation(modelTransform, yRot, nullptr);
+	SDK::Transform_Set_Rotation(bodyTransform, yRot, nullptr);
 }
