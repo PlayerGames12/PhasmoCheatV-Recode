@@ -194,6 +194,7 @@
     <ClCompile Include="main\features\feats\curseditemscontroll\curseditemscontroll.cpp" />
     <ClCompile Include="main\features\feats\custname\customname.cpp" />
     <ClCompile Include="main\features\feats\custspeed\customspeed.cpp" />
+    <ClCompile Include="main\features\feats\ghostspin\ghostspin.cpp" />
     <ClCompile Include="main\features\feats\diffmod\difficultymodifier.cpp" />
     <ClCompile Include="main\features\feats\doormod\doormodifier.cpp" />
     <ClCompile Include="main\features\feats\edvesp\edvesp.cpp" />
@@ -350,6 +351,7 @@
     <ClInclude Include="main\features\feats\curseditemscontroll\curseditemscontroll.h" />
     <ClInclude Include="main\features\feats\custname\customname.h" />
     <ClInclude Include="main\features\feats\custspeed\customspeed.h" />
+    <ClInclude Include="main\features\feats\ghostspin\ghostspin.h" />
     <ClInclude Include="main\features\feats\diffmod\difficultymodifier.h" />
     <ClInclude Include="main\features\feats\doormod\doormodifier.h" />
     <ClInclude Include="main\features\feats\edvesp\edvesp.h" />

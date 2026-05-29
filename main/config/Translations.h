@@ -119,6 +119,11 @@ inline void RegisterAllTranslations()
     ADD_STR("CustomSpeedEnabled", "Enable custom speed##custSpeed", u8"Включить пользовательскую скорость##custSpeed", u8"启用自定义速度##custSpeed");
     ADD_STR("CustomSpeedSlider", "Custom speed##custSpeed", u8"Пользовательская скорость##custSpeed", u8"请设置速度##custSpeed");
 
+    // Ghost spin
+    ADD_STR("GhostSpin_Header", "Ghost Spin", u8"Вращение призрака", u8"旋转鬼魂");
+    ADD_STR("GhostSpinEnabled", "Enable ghost spin##ghostSpin", u8"Включить вращение призрака##ghostSpin", u8"启用旋转鬼魂##ghostSpin");
+    ADD_STR("GhostSpinSpeed", "Spin speed##ghostSpin", u8"Скорость вращения##ghostSpin", u8"旋转速度##ghostSpin");
+
     // Difficulty 
     ADD_STR("RequiredLevel", "RequiredLevel", u8"Требуемый уровень", u8"所需等级");
     ADD_STR("SanityPillRestoration", "SanityPillRestoration", u8"Восстановление санпайлов", u8"醒脑丸恢复理智量");

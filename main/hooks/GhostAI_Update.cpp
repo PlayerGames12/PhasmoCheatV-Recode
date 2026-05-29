@@ -13,6 +13,7 @@ void Hooks::hkGhostAI_Update(SDK::GhostAI* ghostAI, SDK::MethodInfo* methodInfo)
 
 	CALL_METHOD(Ghost, GhostModifier, GhostModifierMain);
 	CALL_METHOD(Ghost, GhostInteractor, GhostInteractorMain);
+	CALL_METHOD_IF_ACTIVE_ARGS(Misc, GhostSpin, GhostSpinMain, ghostAI);
 	CALL_METHOD(Players, Pickup, PickupMain);
 	CALL_METHOD(Map, GrabKeys, GrabKeysMain);
 	CALL_METHOD(Map, MapModifier, MapModifierMain);
