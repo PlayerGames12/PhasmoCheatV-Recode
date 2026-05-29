@@ -23,14 +23,10 @@ void GhostHandstand::OnMenuRender()
 
 void GhostHandstand::GhostHandstandMain(SDK::GhostAI* ghostAI)
 {
-	if (!ghostAI || !ghostAI->Fields.currentModel) return;
+	if (!ghostAI || !ghostAI->Fields.raycastPoint) return;
 
-	auto* animator = ghostAI->Fields.currentModel->Fields.anim;
-	if (!animator) return;
-
-	auto* modelTransform = SDK::Component_Get_Transform(
-		reinterpret_cast<SDK::Component*>(animator), nullptr);
-	if (!modelTransform) return;
+	auto* bodyTransform = SDK::Transform_Get_Parent(ghostAI->Fields.raycastPoint, nullptr);
+	if (!bodyTransform) return;
 
 	if (IsActive())
 	{
@@ -43,22 +39,22 @@ void GhostHandstand::GhostHandstandMain(SDK::GhostAI* ghostAI)
 		}
 		if (ghostHeight <= 0.0f) ghostHeight = 1.8f;
 
-		SDK::Transform_Set_Rotation(modelTransform, handstandQuat, nullptr);
+		SDK::Transform_Set_Rotation(bodyTransform, handstandQuat, nullptr);
 
-		auto pos = SDK::Transform_Get_Position(modelTransform, nullptr);
+		auto pos = SDK::Transform_Get_Position(bodyTransform, nullptr);
 		pos.Y += ghostHeight;
-		SDK::Transform_Set_Position(modelTransform, pos, nullptr);
+		SDK::Transform_Set_Position(bodyTransform, pos, nullptr);
 
 		m_applied = true;
 		m_offsetY = ghostHeight;
 	}
 	else if (m_applied)
 	{
-		SDK::Transform_Set_Rotation(modelTransform, identityQuat, nullptr);
+		SDK::Transform_Set_Rotation(bodyTransform, identityQuat, nullptr);
 
-		auto pos = SDK::Transform_Get_Position(modelTransform, nullptr);
+		auto pos = SDK::Transform_Get_Position(bodyTransform, nullptr);
 		pos.Y -= m_offsetY;
-		SDK::Transform_Set_Position(modelTransform, pos, nullptr);
+		SDK::Transform_Set_Position(bodyTransform, pos, nullptr);
 
 		m_applied = false;
 	}
