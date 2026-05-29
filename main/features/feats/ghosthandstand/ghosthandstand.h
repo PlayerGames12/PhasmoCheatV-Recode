@@ -16,8 +16,7 @@ namespace PhasmoCheatV::Features::Misc
 
 		void GhostHandstandMain(SDK::GhostAI* ghostAI);
 	private:
-		SDK::Vector3 m_baseBodyPos = { 0, 0, 0 };
-		float m_modelHeight = 0.0f;
-		bool m_basePosSet = false;
+		bool  m_applied = false;
+		float m_height = 1.8f;
 	};
 }

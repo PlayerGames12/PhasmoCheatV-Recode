@@ -9,7 +9,7 @@ namespace PhasmoCheatV::Features::Misc
 		explicit GhostSpin();
 		~GhostSpin() override = default;
 
-		void OnActivate() override { m_basePosSet = false; }
+		void OnActivate() override {}
 		void OnDeactivate() override {}
 		void OnRender() override {}
 		void OnMenuRender() override;
@@ -17,8 +17,5 @@ namespace PhasmoCheatV::Features::Misc
 		void GhostSpinMain(SDK::GhostAI* ghostAI);
 	private:
 		float m_spinAngle = 0.0f;
-		SDK::Vector3 m_baseBodyPos = { 0, 0, 0 };
-		float m_modelHeight = 0.0f;
-		bool m_basePosSet = false;
 	};
 }
