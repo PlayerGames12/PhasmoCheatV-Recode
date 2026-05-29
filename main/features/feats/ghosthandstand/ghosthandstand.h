@@ -9,14 +9,15 @@ namespace PhasmoCheatV::Features::Misc
 		explicit GhostHandstand();
 		~GhostHandstand() override = default;
 
-		void OnActivate() override {}
+		void OnActivate() override { m_basePosSet = false; }
 		void OnDeactivate() override {}
 		void OnRender() override {}
 		void OnMenuRender() override;
 
 		void GhostHandstandMain(SDK::GhostAI* ghostAI);
 	private:
-		bool  m_applied = false;
-		float m_offsetY = 0.0f;
+		SDK::Vector3 m_baseBodyPos = { 0, 0, 0 };
+		float m_modelHeight = 0.0f;
+		bool m_basePosSet = false;
 	};
 }

@@ -27,34 +27,34 @@ void GhostHandstand::GhostHandstandMain(SDK::GhostAI* ghostAI)
 	auto* bodyTransform = SDK::Transform_Get_Parent(ghostAI->Fields.raycastPoint, nullptr);
 	if (!bodyTransform) return;
 
-	if (IsActive())
+	if (!IsActive())
 	{
-		float ghostHeight = 0.0f;
-		if (ghostAI->Fields.raycastPoint && ghostAI->Fields.feetRaycastPoint)
+		if (m_basePosSet)
+		{
+			SDK::Transform_Set_localScale(bodyTransform, normalScale, nullptr);
+			SDK::Transform_Set_Position(bodyTransform, m_baseBodyPos, nullptr);
+			m_basePosSet = false;
+		}
+		return;
+	}
+
+	// Capture base position and model height on first active frame
+	if (!m_basePosSet)
+	{
+		m_baseBodyPos = SDK::Transform_Get_Position(bodyTransform, nullptr);
+		if (ghostAI->Fields.feetRaycastPoint)
 		{
 			auto top = SDK::Transform_Get_Position(ghostAI->Fields.raycastPoint, nullptr);
 			auto bottom = SDK::Transform_Get_Position(ghostAI->Fields.feetRaycastPoint, nullptr);
-			ghostHeight = top.Y - bottom.Y;
+			m_modelHeight = top.Y - bottom.Y;
 		}
-		if (ghostHeight <= 0.0f) ghostHeight = 1.8f;
-
-		SDK::Transform_Set_localScale(bodyTransform, flippedScale, nullptr);
-
-		auto pos = SDK::Transform_Get_Position(bodyTransform, nullptr);
-		pos.Y += ghostHeight;
-		SDK::Transform_Set_Position(bodyTransform, pos, nullptr);
-
-		m_applied = true;
-		m_offsetY = ghostHeight;
+		if (m_modelHeight <= 0.0f) m_modelHeight = 1.8f;
+		m_basePosSet = true;
 	}
-	else if (m_applied)
-	{
-		SDK::Transform_Set_localScale(bodyTransform, normalScale, nullptr);
 
-		auto pos = SDK::Transform_Get_Position(bodyTransform, nullptr);
-		pos.Y -= m_offsetY;
-		SDK::Transform_Set_Position(bodyTransform, pos, nullptr);
+	SDK::Transform_Set_localScale(bodyTransform, flippedScale, nullptr);
 
-		m_applied = false;
-	}
+	auto pos = m_baseBodyPos;
+	pos.Y += m_modelHeight;
+	SDK::Transform_Set_Position(bodyTransform, pos, nullptr);
 }
