@@ -2,9 +2,8 @@
 
 using namespace PhasmoCheatV::Features::Misc;
 
-// 180 degrees around X axis: (sin(pi/2), 0, 0, cos(pi/2)) = (1, 0, 0, 0)
-static const SDK::Quaternion handstandQuat = { 1.0f, 0.0f, 0.0f, 0.0f };
-static const SDK::Quaternion identityQuat   = { 0.0f, 0.0f, 0.0f, 1.0f };
+static const SDK::Vector3 flippedScale  = { 1.0f, -1.0f, 1.0f };
+static const SDK::Vector3 normalScale   = { 1.0f,  1.0f, 1.0f };
 
 GhostHandstand::GhostHandstand() : FeatureCore(LANG("GhostHandstand_Header"), TYPE_MISC)
 {
@@ -39,7 +38,7 @@ void GhostHandstand::GhostHandstandMain(SDK::GhostAI* ghostAI)
 		}
 		if (ghostHeight <= 0.0f) ghostHeight = 1.8f;
 
-		SDK::Transform_Set_Rotation(bodyTransform, handstandQuat, nullptr);
+		SDK::Transform_Set_localScale(bodyTransform, flippedScale, nullptr);
 
 		auto pos = SDK::Transform_Get_Position(bodyTransform, nullptr);
 		pos.Y += ghostHeight;
@@ -50,7 +49,7 @@ void GhostHandstand::GhostHandstandMain(SDK::GhostAI* ghostAI)
 	}
 	else if (m_applied)
 	{
-		SDK::Transform_Set_Rotation(bodyTransform, identityQuat, nullptr);
+		SDK::Transform_Set_localScale(bodyTransform, normalScale, nullptr);
 
 		auto pos = SDK::Transform_Get_Position(bodyTransform, nullptr);
 		pos.Y -= m_offsetY;
