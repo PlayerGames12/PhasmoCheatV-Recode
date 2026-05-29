@@ -15,5 +15,8 @@ namespace PhasmoCheatV::Features::Misc
 		void OnMenuRender() override;
 
 		void GhostHandstandMain(SDK::GhostAI* ghostAI);
+	private:
+		bool  m_applied = false;
+		float m_offsetY = 0.0f;
 	};
 }

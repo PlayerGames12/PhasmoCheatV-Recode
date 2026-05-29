@@ -32,6 +32,34 @@ void GhostHandstand::GhostHandstandMain(SDK::GhostAI* ghostAI)
 		reinterpret_cast<SDK::Component*>(animator), nullptr);
 	if (!modelTransform) return;
 
-	SDK::Transform_Set_Rotation(modelTransform,
-		IsActive() ? handstandQuat : identityQuat, nullptr);
+	if (IsActive())
+	{
+		float ghostHeight = 0.0f;
+		if (ghostAI->Fields.raycastPoint && ghostAI->Fields.feetRaycastPoint)
+		{
+			auto top = SDK::Transform_Get_Position(ghostAI->Fields.raycastPoint, nullptr);
+			auto bottom = SDK::Transform_Get_Position(ghostAI->Fields.feetRaycastPoint, nullptr);
+			ghostHeight = top.Y - bottom.Y;
+		}
+		if (ghostHeight <= 0.0f) ghostHeight = 1.8f;
+
+		SDK::Transform_Set_Rotation(modelTransform, handstandQuat, nullptr);
+
+		auto pos = SDK::Transform_Get_Position(modelTransform, nullptr);
+		pos.Y += ghostHeight;
+		SDK::Transform_Set_Position(modelTransform, pos, nullptr);
+
+		m_applied = true;
+		m_offsetY = ghostHeight;
+	}
+	else if (m_applied)
+	{
+		SDK::Transform_Set_Rotation(modelTransform, identityQuat, nullptr);
+
+		auto pos = SDK::Transform_Get_Position(modelTransform, nullptr);
+		pos.Y -= m_offsetY;
+		SDK::Transform_Set_Position(modelTransform, pos, nullptr);
+
+		m_applied = false;
+	}
 }
