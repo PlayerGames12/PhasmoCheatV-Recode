@@ -9,7 +9,7 @@ namespace PhasmoCheatV::Features::Misc
 		explicit GhostHandstand();
 		~GhostHandstand() override = default;
 
-		void OnActivate() override { m_basePosSet = false; }
+		void OnActivate() override { m_applied = false; }
 		void OnDeactivate() override {}
 		void OnRender() override {}
 		void OnMenuRender() override;
