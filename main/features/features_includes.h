@@ -25,6 +25,7 @@
 #include "feats/infstamina/infinitystamina.h"
 #include "feats/custspeed/customspeed.h"
 #include "feats/ghostspin/ghostspin.h"
+#include "feats/ghosthandstand/ghosthandstand.h"
 #include "feats/teleport/teleport.h"
 #include "feats/exitvanone/exitvanone.h"
 #include "feats/antikick/antikick.h"

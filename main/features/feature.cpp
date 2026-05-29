@@ -101,6 +101,7 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
 
     // Misc
     ADD_FEATURE(this, GhostSpin);
+    ADD_FEATURE(this, GhostHandstand);
     ADD_FEATURE(this, AntiKick);
     ADD_FEATURE(this, ExitVanOne);
     ADD_FEATURE(this, VanButtonModifier);

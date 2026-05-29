@@ -124,6 +124,10 @@ inline void RegisterAllTranslations()
     ADD_STR("GhostSpinEnabled", "Enable ghost spin##ghostSpin", u8"Включить вращение призрака##ghostSpin", u8"启用旋转鬼魂##ghostSpin");
     ADD_STR("GhostSpinSpeed", "Spin speed##ghostSpin", u8"Скорость вращения##ghostSpin", u8"旋转速度##ghostSpin");
 
+    // Ghost handstand
+    ADD_STR("GhostHandstand_Header", "Ghost Handstand", u8"Призрак вверх ногами", u8"鬼魂倒立");
+    ADD_STR("GhostHandstandEnabled", "Enable ghost handstand##ghostHandstand", u8"Включить призрак вверх ногами##ghostHandstand", u8"启用鬼魂倒立##ghostHandstand");
+
     // Difficulty 
     ADD_STR("RequiredLevel", "RequiredLevel", u8"Требуемый уровень", u8"所需等级");
     ADD_STR("SanityPillRestoration", "SanityPillRestoration", u8"Восстановление санпайлов", u8"醒脑丸恢复理智量");
