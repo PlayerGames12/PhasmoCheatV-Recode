@@ -46,12 +46,12 @@ void GhostDesigner::OnMenuRender()
     }
 
     const char* ghostTypes[] = {
-        "Spirit","Wraith","Phantom","Poltergeist","Banshee",
-        "Jinn","Mare","Revenant","Shade","Demon",
-        "Yurei","Oni","Hantu","Yokai","Goryo",
-        "Myling","Onryo","The Twins","Raiju","Obake",
-        "Mimic","Moroi","Deogen","Thaye","None",
-        "Gallu","Dayan","Obambo"
+        LANG("GhostType_Spirit"), LANG("GhostType_Wraith"), LANG("GhostType_Phantom"), LANG("GhostType_Poltergeist"), LANG("GhostType_Banshee"),
+        LANG("GhostType_Jinn"), LANG("GhostType_Mare"), LANG("GhostType_Revenant"), LANG("GhostType_Shade"), LANG("GhostType_Demon"),
+        LANG("GhostType_Yurei"), LANG("GhostType_Oni"), LANG("GhostType_Hantu"), LANG("GhostType_Yokai"), LANG("GhostType_Goryo"),
+        LANG("GhostType_Myling"), LANG("GhostType_Onryo"), LANG("GhostType_TheTwins"), LANG("GhostType_Raiju"), LANG("GhostType_Obake"),
+        LANG("GhostType_Mimic"), LANG("GhostType_Moroi"), LANG("GhostType_Deogen"), LANG("GhostType_Thaye"), LANG("GhostType_Default"),
+        LANG("GhostType_Gallu"), LANG("GhostType_Dayan"), LANG("GhostType_Obambo"), LANG("GhostType_Kormos"), LANG("GhostType_Aswang")
     };
 
     int ghostType = CONFIG_INT(GetConfigManager(), "GhostType");

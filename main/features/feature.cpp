@@ -101,6 +101,8 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
 
     // Misc
     ADD_FEATURE(this, Spinbot);
+    ADD_FEATURE(this, GhostSpin);
+    ADD_FEATURE(this, GhostHandstand);
     ADD_FEATURE(this, AntiKick);
     ADD_FEATURE(this, ExitVanOne);
     ADD_FEATURE(this, VanButtonModifier);
@@ -112,8 +114,8 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, JournalModifier);
     ADD_FEATURE(this, ForceStart);
     ADD_FEATURE(this, ShopModifier);
-	ADD_FEATURE(this, SpiritBoxAlwaysAnswer);
-	ADD_FEATURE(this, AutoGame);
+	  ADD_FEATURE(this, SpiritBoxAlwaysAnswer);
+	  ADD_FEATURE(this, AutoGame);
     ADD_FEATURE(this, AudioModifier);
 
     // Difficulty

@@ -588,7 +588,7 @@ void GhostESP::OnMenuRender()
 
     if (showBoxESP)
     {
-        const char* boxTypes[] = { "2D Box", "Corner Box", "Filled Box" };
+        const char* boxTypes[] = { LANG("BoxType2D"), LANG("BoxTypeCorner"), LANG("BoxTypeFilled") };
         int boxType = CONFIG_INT(GetConfigManager(), "BoxType");
 
         if (ImGui::Combo(MakeLabel("BoxType", "ghostESP").c_str(),

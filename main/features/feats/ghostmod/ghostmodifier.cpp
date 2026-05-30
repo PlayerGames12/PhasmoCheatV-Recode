@@ -42,7 +42,7 @@ void GhostModifier::OnMenuRender()
         ImGui::Separator();
 
         BButton(
-            (std::string(LANG("ForceAppear")) + "##ghostModifier_forceAppear").c_str(),
+            "ForceAppear",
             "ghostModifier_forceAppear",
             [this]()
             {
@@ -72,7 +72,7 @@ void GhostModifier::OnMenuRender()
             SET_CONFIG_VALUE(GetConfigManager(), "ForceState", int, forcedState);
 
         BButton(
-            (std::string(LANG("ForceState")) + "##ghostModifier_applyState").c_str(),
+            "ForceState",
             "ghostModifier_applyState",
             [this]()
             {
