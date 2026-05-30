@@ -14,6 +14,7 @@ namespace SDK
     DEC_MET(Transform_Get_Up, Vector3(*)(Transform* transform, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Transform", "get_up", 0);
     DEC_MET(Transform_Get_Forward, Vector3(*)(Transform* transform, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Transform", "get_forward", 0);
     DEC_MET(Transform_Get_localScale, Vector3(*)(Transform* transform, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Transform", "get_localScale", 0);
+    DEC_MET(Transform_Set_localScale, void(*)(Transform* transform, Vector3 scale, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Transform", "set_localScale", 1);
 
     DEC_MET(Transform_Get_Rotation, Quaternion(*)(Transform* transform, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Transform", "get_rotation", 0);
     DEC_MET(Transform_Set_Rotation, void(*)(Transform* transform, Quaternion rotation, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Transform", "set_rotation", 1);

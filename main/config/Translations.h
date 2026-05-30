@@ -126,6 +126,19 @@ inline void RegisterAllTranslations()
     ADD_STR("GameSpeed_Header", "Game Speed", u8"Скорость игры", u8"游戏加速");
     ADD_STR("GameSpeedEnabled", "Enable game speed##gameSpeed", u8"Включить скорость игры##gameSpeed", u8"启用游戏加速##gameSpeed");
     ADD_STR("GameSpeedSlider", "Game speed##gameSpeed", u8"Скорость игры##gameSpeed", u8"游戏速度##gameSpeed");
+  
+    // Spinbot
+    ADD_STR("Spinbot_Header", "Spinbot", u8"Спинбот", u8"旋转陀螺");
+    ADD_STR("SpinbotEnabled", "Enable spinbot##spinbot", u8"Включить спинбот##spinbot", u8"启用旋转陀螺##spinbot");
+    ADD_STR("SpinbotSpeed", "Spin speed##spinbot", u8"Скорость вращения##spinbot", u8"旋转速度##spinbot");
+    // Ghost spin
+    ADD_STR("GhostSpin_Header", "Ghost Spin", u8"Вращение призрака", u8"旋转鬼魂");
+    ADD_STR("GhostSpinEnabled", "Enable ghost spin##ghostSpin", u8"Включить вращение призрака##ghostSpin", u8"启用旋转鬼魂##ghostSpin");
+    ADD_STR("GhostSpinSpeed", "Spin speed##ghostSpin", u8"Скорость вращения##ghostSpin", u8"旋转速度##ghostSpin");
+
+    // Ghost handstand
+    ADD_STR("GhostHandstand_Header", "Ghost Handstand", u8"Призрак вверх ногами", u8"鬼魂倒立");
+    ADD_STR("GhostHandstandEnabled", "Enable ghost handstand##ghostHandstand", u8"Включить призрак вверх ногами##ghostHandstand", u8"启用鬼魂倒立##ghostHandstand");
 
     // Difficulty 
     ADD_STR("RequiredLevel", "RequiredLevel", u8"Требуемый уровень", u8"所需等级");

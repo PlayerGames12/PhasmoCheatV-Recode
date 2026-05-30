@@ -21,6 +21,7 @@ void Hooks::hkFirstPersonController_Update(SDK::FirstPersonController* firstPers
 	CALL_METHOD(Cursed, CursedItemsControll, CursedItemsControllMain);
 	CALL_METHOD(Misc, AudioModifier, AudioModifierHandler);
 	CALL_METHOD_ARGS(Misc, GameSpeed, GameSpeedMain);
+	CALL_METHOD_IF_ACTIVE_ARGS(Misc, Spinbot, SpinbotMain, firstPersonController);
 
 	CALL_METHOD(Visuals, Fullbright, FullbrightMain);
 }

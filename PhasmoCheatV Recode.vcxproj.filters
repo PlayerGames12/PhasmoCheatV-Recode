@@ -229,6 +229,11 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="main\features\feats\gamespeed\gamespeed.cpp">
+    <ClCompile Include="main\features\feats\spinbot\spinbot.cpp">
+    <ClCompile Include="main\features\feats\ghostspin\ghostspin.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main\features\feats\ghosthandstand\ghosthandstand.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="main\features\feats\teleport\teleport.cpp">
@@ -810,6 +815,11 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="main\features\feats\gamespeed\gamespeed.h">
+    <ClInclude Include="main\features\feats\spinbot\spinbot.h">
+    <ClInclude Include="main\features\feats\ghostspin\ghostspin.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main\features\feats\ghosthandstand\ghosthandstand.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="main\features\feats\teleport\teleport.h">
