@@ -100,6 +100,7 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, Teleport);
 
     // Misc
+    ADD_FEATURE(this, Spinbot);
     ADD_FEATURE(this, GhostSpin);
     ADD_FEATURE(this, GhostHandstand);
     ADD_FEATURE(this, AntiKick);
@@ -113,8 +114,8 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, JournalModifier);
     ADD_FEATURE(this, ForceStart);
     ADD_FEATURE(this, ShopModifier);
-	ADD_FEATURE(this, SpiritBoxAlwaysAnswer);
-	ADD_FEATURE(this, AutoGame);
+	  ADD_FEATURE(this, SpiritBoxAlwaysAnswer);
+	  ADD_FEATURE(this, AutoGame);
     ADD_FEATURE(this, AudioModifier);
 
     // Difficulty

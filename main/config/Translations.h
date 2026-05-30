@@ -122,6 +122,10 @@ inline void RegisterAllTranslations()
     ADD_STR("CustomSpeedEnabled", "Enable custom speed##custSpeed", u8"Включить пользовательскую скорость##custSpeed", u8"启用自定义速度##custSpeed");
     ADD_STR("CustomSpeedSlider", "Custom speed##custSpeed", u8"Пользовательская скорость##custSpeed", u8"请设置速度##custSpeed");
 
+    // Spinbot
+    ADD_STR("Spinbot_Header", "Spinbot", u8"Спинбот", u8"旋转陀螺");
+    ADD_STR("SpinbotEnabled", "Enable spinbot##spinbot", u8"Включить спинбот##spinbot", u8"启用旋转陀螺##spinbot");
+    ADD_STR("SpinbotSpeed", "Spin speed##spinbot", u8"Скорость вращения##spinbot", u8"旋转速度##spinbot");
     // Ghost spin
     ADD_STR("GhostSpin_Header", "Ghost Spin", u8"Вращение призрака", u8"旋转鬼魂");
     ADD_STR("GhostSpinEnabled", "Enable ghost spin##ghostSpin", u8"Включить вращение призрака##ghostSpin", u8"启用旋转鬼魂##ghostSpin");
