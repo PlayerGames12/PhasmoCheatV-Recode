@@ -122,6 +122,11 @@ inline void RegisterAllTranslations()
     ADD_STR("CustomSpeedEnabled", "Enable custom speed##custSpeed", u8"Включить пользовательскую скорость##custSpeed", u8"启用自定义速度##custSpeed");
     ADD_STR("CustomSpeedSlider", "Custom speed##custSpeed", u8"Пользовательская скорость##custSpeed", u8"请设置速度##custSpeed");
 
+    // Game speed
+    ADD_STR("GameSpeed_Header", "Game Speed", u8"Скорость игры", u8"游戏加速");
+    ADD_STR("GameSpeedEnabled", "Enable game speed##gameSpeed", u8"Включить скорость игры##gameSpeed", u8"启用游戏加速##gameSpeed");
+    ADD_STR("GameSpeedSlider", "Game speed##gameSpeed", u8"Скорость игры##gameSpeed", u8"游戏速度##gameSpeed");
+  
     // Spinbot
     ADD_STR("Spinbot_Header", "Spinbot", u8"Спинбот", u8"旋转陀螺");
     ADD_STR("SpinbotEnabled", "Enable spinbot##spinbot", u8"Включить спинбот##spinbot", u8"启用旋转陀螺##spinbot");

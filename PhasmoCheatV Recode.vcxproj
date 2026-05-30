@@ -194,6 +194,7 @@
     <ClCompile Include="main\features\feats\curseditemscontroll\curseditemscontroll.cpp" />
     <ClCompile Include="main\features\feats\custname\customname.cpp" />
     <ClCompile Include="main\features\feats\custspeed\customspeed.cpp" />
+    <ClCompile Include="main\features\feats\gamespeed\gamespeed.cpp" />
     <ClCompile Include="main\features\feats\spinbot\spinbot.cpp" />
     <ClCompile Include="main\features\feats\ghostspin\ghostspin.cpp" />
     <ClCompile Include="main\features\feats\ghosthandstand\ghosthandstand.cpp" />
@@ -353,6 +354,7 @@
     <ClInclude Include="main\features\feats\curseditemscontroll\curseditemscontroll.h" />
     <ClInclude Include="main\features\feats\custname\customname.h" />
     <ClInclude Include="main\features\feats\custspeed\customspeed.h" />
+    <ClInclude Include="main\features\feats\gamespeed\gamespeed.h" />
     <ClInclude Include="main\features\feats\spinbot\spinbot.h" />
     <ClInclude Include="main\features\feats\ghostspin\ghostspin.h" />
     <ClInclude Include="main\features\feats\ghosthandstand\ghosthandstand.h" />

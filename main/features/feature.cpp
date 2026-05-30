@@ -100,6 +100,7 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, Teleport);
 
     // Misc
+    ADD_FEATURE(this, GameSpeed);
     ADD_FEATURE(this, Spinbot);
     ADD_FEATURE(this, GhostSpin);
     ADD_FEATURE(this, GhostHandstand);

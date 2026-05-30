@@ -228,6 +228,7 @@
     <ClCompile Include="main\features\feats\custspeed\customspeed.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="main\features\feats\gamespeed\gamespeed.cpp">
     <ClCompile Include="main\features\feats\spinbot\spinbot.cpp">
     <ClCompile Include="main\features\feats\ghostspin\ghostspin.cpp">
       <Filter>Исходные файлы</Filter>
@@ -813,6 +814,7 @@
     <ClInclude Include="main\features\feats\custspeed\customspeed.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="main\features\feats\gamespeed\gamespeed.h">
     <ClInclude Include="main\features\feats\spinbot\spinbot.h">
     <ClInclude Include="main\features\feats\ghostspin\ghostspin.h">
       <Filter>Файлы заголовков</Filter>
