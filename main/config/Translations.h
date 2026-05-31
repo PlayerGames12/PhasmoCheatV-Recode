@@ -307,7 +307,7 @@ inline void RegisterAllTranslations()
     ADD_STR("EnableCustomGhostSpeed", "Enable custom ghost speed", u8"Включить кастомную скорость призрака", u8"启用自定义鬼魂速度");
     ADD_STR("GhostSpeedMod", "Ghost Speed", u8"Скорость призрака", u8"鬼魂速度");
     ADD_STR("ForceAppear", "Force appear", u8"Принудительное появление", u8"强制鬼魂显形");
-    ADD_STR("ForcedType", "Forced type", u8"Принудительный тип", u8"请指定鬼魂类型");
+    ADD_STR("ForcedState", "Forced state", u8"Выберите состояние", u8"请指定鬼魂状态");
     ADD_STR("ForceState", "Force State", u8"Принудительное состояние", u8"强制修改鬼魂状态");
     ADD_STR("FreezeState", "Freeze State", u8"Заморозить состояние", u8"锁定鬼魂状态");
     ADD_STR("SetGhostVisible", "Set ghost visible (only local)", u8"Установить видимость призрака (только локально)", u8"设置鬼魂可见（仅限本机）");
@@ -455,7 +455,7 @@ inline void RegisterAllTranslations()
     ADD_STR("CustomRequiredLevelValue", "Custom Required Level Value", u8"Значение требуемого уровня", u8"请设置所需等级");
 
     // StatsPanel
-    ADD_STR("EnableLevelStatsPanel", "Enable Level Stats Panel", u8"Включить панель статистики об контракте", u8"启用等级统计面板");
+    ADD_STR("EnableLevelStatsPanel", "Enable Level Stats Panel", u8"Включить панель статистики об контракте", u8"启用地图统计面板");
     ADD_STR("BoneNotFound", "Bone not found.", u8"Кость не найдена.", u8"未找到骨头");
     ADD_STR("BoneCollected", "Bone collected.", u8"Кость была подобрана.", u8"骨头已收集");
 
@@ -614,7 +614,7 @@ inline void RegisterAllTranslations()
     ADD_STR("InfinityStamina_Header", "Infinity Stamina", u8"Бесконечная выносливость", u8"无限体力");
     ADD_STR("JackalopeESP_Header", "Jackalope ESP", u8"ESP на шакалоп", u8"鹿角兔高亮显示");
     ADD_STR("JournalModifier_Header", "Journal Modifier", u8"Модификатор журнала", u8"日志修改器");
-    ADD_STR("LevelStatsPanel_Header", "LevelStats Panel", u8"Панель статистики уровня", u8"等级统计面板");
+    ADD_STR("LevelStatsPanel_Header", "LevelStats Panel", u8"Панель статистики уровня", u8"地图统计面板");
     ADD_STR("MapModifier_Header", "Map Modifier", u8"Модификатор карты", u8"地图修改器");
     ADD_STR("NoClip_Header", "NoClip", u8"Ноуклип", u8"穿墙模式（NoClip）");
     ADD_STR("NoEndGame_Header", "No End Game", u8"Отсутствие конца игры", u8"禁止自动结束游戏");
