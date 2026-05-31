@@ -68,7 +68,7 @@ void GhostModifier::OnMenuRender()
         );
 
         int forcedState = CONFIG_INT(GetConfigManager(), "ForceState");
-        if (ImGui::Combo((std::string(LANG("ForcedType")) + "##ghostModifier_forceState").c_str(), &forcedState, ghostStateList, IM_ARRAYSIZE(ghostStateList)))
+        if (ImGui::Combo((std::string(LANG("ForcedState")) + "##ghostModifier_forceState").c_str(), &forcedState, ghostStateList, IM_ARRAYSIZE(ghostStateList)))
             SET_CONFIG_VALUE(GetConfigManager(), "ForceState", int, forcedState);
 
         BButton(
