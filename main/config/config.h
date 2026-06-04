@@ -8,6 +8,7 @@ namespace PhasmoCheatV::Config
     void LoadConfigFromFile(const std::string& filePath);
     void SaveConfigToFile(const std::string& filePath);
     void MergeConfigWithDefaults(nlohmann::json& existingConfig);
+    void ResetConfig();
 
     struct BindConfig
     {

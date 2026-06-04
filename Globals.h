@@ -23,8 +23,8 @@ namespace PhasmoCheatV::Globals
 	inline bool isHunting = false;
 	inline int MenuToggleKey = VK_RETURN;
 	inline bool IsBeta = false;
-	inline std::string Version = "2.8";
-	inline std::string betaVersion = "2.8.1";
+	inline std::string Version = "2.9";
+	inline std::string betaVersion = "2.9.1";
 	inline char statusRPC[128] = "Waiting...";
 
 	// IMGUI

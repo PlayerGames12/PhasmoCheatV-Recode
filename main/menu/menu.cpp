@@ -389,6 +389,11 @@ void Menu::Render()
                         catch (...) {}
                     }
 
+                    ImGui::SameLine();
+
+                    if (ImGui::Button(LANG("Menu_ResetConfig")))
+                        Config::ResetConfig();
+
                     ImGui::Spacing();
                     if (ImGui::Checkbox(LANG("Menu_DiscordRPC"), &Globals::DiscordRPC))
                     {

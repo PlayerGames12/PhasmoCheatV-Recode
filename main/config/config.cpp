@@ -474,6 +474,17 @@ namespace PhasmoCheatV::Config
         const auto configPath = Utils::GetPhasmoCheatVDirectory() + "\\config.json";
         SaveConfigToFile(configPath);
     }
+
+    void ResetConfig()
+    {
+        nlohmann::json emptyConfig;
+        MergeConfigWithDefaults(emptyConfig);
+        const auto configPath = Utils::GetPhasmoCheatVDirectory() + "\\config.json";
+        std::ofstream f(configPath);
+        f << emptyConfig.dump(4);
+        f.close();
+        LoadConfigFromFile(configPath);
+    }
 }
 
 namespace PhasmoCheatV::ConfigsM
