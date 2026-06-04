@@ -3,13 +3,39 @@
 
 namespace SDK
 {
+	struct EMF;
+
+	struct EMFSpotsArray
+	{
+		void* Clazz;
+		void* Monitor;
+		void* Bounds;
+		uint32_t MaxLength;
+		EMF* Vector[1];
+	};
+
+	struct __declspec(align(8)) EMFSpotsListFields
+	{
+		EMFSpotsArray* Items;
+		int32_t Size;
+		int32_t Version;
+		void* SyncRoot;
+	};
+
+	struct ListEMFSpots
+	{
+		void* Clazz;
+		void* Monitor;
+		EMFSpotsListFields Fields;
+	};
+
 	struct EMFDataFields
 	{
 		MonoBehaviourFields MonoBehaviourFields;
 		LineRenderer* Rend;
 		void* Screen;
 		void* GlitchText;
-		void* EMFSpots;
+		ListEMFSpots* EMFSpots;
 		Transform* StartingPos;
 	};
 

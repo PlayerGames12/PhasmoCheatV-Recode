@@ -33,6 +33,7 @@ namespace PhasmoCheatV::InGame
     inline SDK::RewardManager* rewardManager = nullptr;
     inline std::unordered_map<std::string, SDK::GameObject*> g_GameObjectCache;
     inline std::vector<SDK::AWDoll*> awDolls;
+	inline SDK::PlayerStamina* playerStamina = nullptr;
 
     // Reset in-game pointers
     inline void Reset() {
@@ -65,5 +66,6 @@ namespace PhasmoCheatV::InGame
         rewardManager = nullptr;
 		g_GameObjectCache.clear();
         awDolls.clear();
+		playerStamina = nullptr;
     }
 }

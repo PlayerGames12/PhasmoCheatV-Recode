@@ -1,6 +1,6 @@
 #include "autogame.h"
 
-using namespace PhasmoCheatV::Features::Misc;
+using namespace PhasmoCheatV::Features::Auto;
 
 const std::vector<SDK::ObjectivesType> allObjectives = {
 	SDK::ObjectivesType::BlowoutCandle,
@@ -23,7 +23,7 @@ const std::vector<SDK::ObjectivesType> allObjectives = {
 	SDK::ObjectivesType::UniqueSounds
 };
 
-AutoGame::AutoGame() : FeatureCore(LANG("AutoGame_Header"), TYPE_MISC)
+AutoGame::AutoGame() : FeatureCore(LANG("AutoGame_Header"), TYPE_AUTO)
 {
 	DECLARE_CONFIG(GetConfigManager(), "AutoGameDelay", int, 5);
 	DECLARE_CONFIG(GetConfigManager(), "mapId", int, 4);

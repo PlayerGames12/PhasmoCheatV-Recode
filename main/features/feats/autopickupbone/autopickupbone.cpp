@@ -1,8 +1,8 @@
 #include "autopickupbone.h"
 
-using namespace PhasmoCheatV::Features::Map;
+using namespace PhasmoCheatV::Features::Auto;
 
-AutoPickupBone::AutoPickupBone() : FeatureCore(LANG("Autopickupbone_Header"), TYPE_MAP) {}
+AutoPickupBone::AutoPickupBone() : FeatureCore(LANG("Autopickupbone_Header"), TYPE_AUTO) {}
 
 void AutoPickupBone::OnMenuRender()
 {

@@ -65,3 +65,4 @@
 #include "feats/audiomod/audiomod.h"
 #include "feats/skiplayeranim/skiplayeranim.h"
 #include "feats/worldmodulation/worldmodulation.h"
+#include "feats/staminapanel/staminapanel.h"

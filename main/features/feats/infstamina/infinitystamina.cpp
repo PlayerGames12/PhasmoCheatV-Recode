@@ -17,6 +17,6 @@ void InfinityStamina::OnMenuRender()
 
 void InfinityStamina::InfinityStaminaMain(SDK::PlayerStamina* playerStamina)
 {
-	if (IsActive() && playerStamina->Fields.CurrentStamina != 3.f)
+	if (IsActive() && playerStamina->Fields.CurrentStamina <= 1.f)
 		playerStamina->Fields.CurrentStamina = 3.f;
 }

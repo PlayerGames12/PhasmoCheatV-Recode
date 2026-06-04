@@ -3,8 +3,12 @@
 #include <random>
 #include <chrono>
 #include "../features/features_includes.h"
-#include "effects/rain.h"
 #include "effects/directx_blur.h"
+#include "effects/custom_background.h"
+#include "effects/rain.h"
+#include "effects/stars.h"
+#include "effects/fireflies.h"
+#include "effects/petals.h"
 #include <filesystem>
 #include "../discordrpc/discordrpc.h"
 
@@ -19,6 +23,7 @@ void Menu::Initialize() {
     SetMenuDefaultStyle();
     InitFonts();
     dx_blur_init(renderer->Swapchain, renderer->Device, renderer->Context);
+    CustomBackground::RefreshFileList();
     Initialized = true;
 }
 
@@ -64,18 +69,140 @@ void Menu::Render()
     ImGui::SetNextWindowSize(ImVec2(menuWidth * dpiScale, menuHeight * dpiScale), ImGuiCond_Once);
     ImGui::SetNextWindowBgAlpha(1.0f);
 
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+
     ImGui::Begin("Developed with love by VComDev / VCom Team##MainMenu", nullptr, windowFlags);
 
-    ImDrawList* dl = ImGui::GetWindowDrawList();
+    ImGui::PopStyleVar();
 
+    // mirg
+    {
+        static bool s_migrationChecked = false;
+        static bool s_needsMigration = false;
+        static bool s_migrationFailed = false;
+
+        if (!s_migrationChecked)
+        {
+            s_migrationChecked = true;
+            s_needsMigration = Utils::NeedsMigration();
+            if (s_needsMigration)
+                ImGui::OpenPopup("##MigrationModal");
+        }
+
+        ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+        ImGui::SetNextWindowPos(center, ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+        ImGui::SetNextWindowSize(ImVec2(480 * dpiScale, 0), ImGuiCond_Always);
+
+        constexpr ImGuiWindowFlags modalFlags =
+            ImGuiWindowFlags_NoMove |
+            ImGuiWindowFlags_NoCollapse |
+            ImGuiWindowFlags_NoResize |
+            ImGuiWindowFlags_NoTitleBar |
+            ImGuiWindowFlags_AlwaysAutoResize;
+
+        if (ImGui::BeginPopupModal("##MigrationModal", nullptr, modalFlags))
+        {
+            ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
+            ImGui::TextColored(accentPurple, "Configuration Migration");
+            ImGui::PopFont();
+
+            ImGui::Separator();
+            ImGui::Dummy(ImVec2(0, 8));
+
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 6));
+
+            ImGui::TextColored(ImVec4(0.9f, 0.9f, 1.0f, 1.0f),
+                "PhasmoCheatV has moved its storage folder.");
+
+            ImGui::Dummy(ImVec2(0, 6));
+
+            ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.7f, 1.0f), "Old path:");
+            ImGui::SameLine();
+            ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.4f, 1.0f), "C:\\PhasmoCheatV");
+
+            ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.7f, 1.0f), "New path:");
+            ImGui::SameLine();
+            ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.5f, 1.0f), "C:\\VComDev\\PhasmoCheatV");
+
+            ImGui::Dummy(ImVec2(0, 6));
+
+            ImGui::TextWrapped(
+                "Your configs, images and fonts will be automatically copied "
+                "to the new location. The old folder will be removed."
+            );
+
+            ImGui::Dummy(ImVec2(0, 4));
+
+            if (s_migrationFailed)
+            {
+                ImGui::TextColored(ImVec4(1.f, 0.3f, 0.3f, 1.f),
+                    "Migration failed! Check logs for details.");
+                ImGui::Dummy(ImVec2(0, 4));
+            }
+
+            ImGui::TextColored(ImVec4(1.0f, 0.85f, 0.2f, 1.0f),
+                "Press OK to proceed. This step cannot be skipped.");
+
+            ImGui::Dummy(ImVec2(0, 10));
+            ImGui::Separator();
+            ImGui::Dummy(ImVec2(0, 6));
+
+            float btnW = 120 * dpiScale;
+            ImGui::SetCursorPosX((ImGui::GetWindowWidth() - btnW) * 0.5f);
+
+            ImGui::PushStyleColor(ImGuiCol_Button, accentPurpleDark);
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, accentPurple);
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, accentPurpleLight);
+
+            if (ImGui::Button("Okay", ImVec2(btnW, 32 * dpiScale)))
+            {
+                s_migrationFailed = !Utils::MigrateDirectory();
+
+                if (!s_migrationFailed)
+                {
+                    Utils::CreatePhasmoCheatVDirectory();
+                    s_needsMigration = false;
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+
+            ImGui::PopStyleVar();
+            ImGui::PopStyleColor(3);
+
+            ImGui::EndPopup();
+        }
+    }
+
+    ImDrawList* dl = ImGui::GetWindowDrawList();
     ImVec2 pos = ImGui::GetWindowPos();
     ImVec2 size = ImGui::GetWindowSize();
+    float  rounding = ImGui::GetStyle().WindowRounding;
 
     if (Globals::IsMenuBlur)
         dx_blur_draw(dl, pos, pos + size, 15.f);
 
+    bool customBgActive = CustomBackground::Enabled
+        && !CustomBackground::SelectedFile.empty();
+
+    bool customReplaces = customBgActive
+        && CustomBackground::Mode == CustomBackground::DrawMode::Replace;
+
+    if (!Globals::IsMenuBlur && !customReplaces)
+    {
+        dl->AddRectFilled(pos, pos + size,
+            ImGui::GetColorU32(Globals::darkBg), rounding);
+    }
+
+    CustomBackground::Draw(dl, pos, size, rounding);
+
     if (Globals::IsMenuRain)
         Rain();
+    if (Globals::IsMenuFireflies)
+        Fireflies();
+    if (Globals::IsMenuStars)
+        StarrySky();
+    if (Globals::IsMenuPetals)
+        Petals();
 
     ImVec2 contentSize = ImGui::GetContentRegionAvail();
     ImGui::BeginChild("MainLayout", contentSize, false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
@@ -154,7 +281,7 @@ void Menu::Render()
         }
         else
         {
-			ImGui::Text(LANG("Proxy_Unload"));
+            ImGui::Text(LANG("Proxy_Unload"));
         }
 
         ImGui::PopStyleColor(4);
@@ -245,7 +372,7 @@ void Menu::Render()
                     ImGui::TextColored(accentPurpleLight, Utils::getKeyName(MenuToggleKey).c_str());
 
                     ImGui::Spacing();
-                    if (ImGui::Button(LANG("Menu_ClearCache"), ImVec2(160 * dpiScale, 30 * dpiScale)))
+                    if (ImGui::Button(LANG("Menu_ClearLogs"), ImVec2(160 * dpiScale, 30 * dpiScale)))
                     {
                         std::string logsPath = Utils::GetPhasmoCheatVDirectory() + "\\logs";
 
@@ -266,9 +393,9 @@ void Menu::Render()
                     if (ImGui::Checkbox(LANG("Menu_DiscordRPC"), &Globals::DiscordRPC))
                     {
                         Config::SaveConfig();
-						Globals::DiscordRPC ? Discord::Initialize() : Discord::Shutdown();
+                        Globals::DiscordRPC ? Discord::Initialize() : Discord::Shutdown();
                     }
-					if (Globals::DiscordRPC)
+                    if (Globals::DiscordRPC)
                         if (ImGui::Checkbox(LANG("Menu_RPCShowName"), &Globals::RPCShowName)) Config::SaveConfig();
 
                     ImGui::Spacing();
@@ -276,7 +403,7 @@ void Menu::Render()
 
                     ImGui::SetNextItemWidth(120 * dpiScale);
 
-                    static const char* langItems[] = { LANG("Menu_Language_EN"), LANG("Menu_Language_RU"),LANG("Menu_Language_CN") };
+                    static const char* langItems[] = { LANG("Menu_Language_EN"), LANG("Menu_Language_RU"), LANG("Menu_Language_CN") };
                     static int currentLang = (int)LanguageManager::GetCurrentLanguage();
                     if (ImGui::Combo("##lang", &currentLang, langItems, 3))
                     {
@@ -294,6 +421,9 @@ void Menu::Render()
 
                         io.FontDefault = g_FontActive;
                     }
+
+                    ImGui::Spacing();
+                    CustomBackground::DrawSettingsUI(dpiScale);
                 }
 
                 ImGui::NextColumn();
@@ -319,16 +449,23 @@ void Menu::Render()
 
                     if (ImGui::Checkbox(LANG("Menu_IsBlur"), &Globals::IsMenuBlur))
                         Config::SaveConfig();
+                    ImGui::SameLine();
                     if (ImGui::Checkbox(LANG("Menu_IsRain"), &Globals::IsMenuRain))
                         Config::SaveConfig();
-
+                    if (ImGui::Checkbox(LANG("Menu_IsFireflies"), &Globals::IsMenuFireflies))
+                        Config::SaveConfig();
+                    ImGui::SameLine();
+                    if (ImGui::Checkbox(LANG("Menu_IsPetals"), &Globals::IsMenuPetals))
+                        Config::SaveConfig();
+                    if (ImGui::Checkbox(LANG("Menu_IsStars"), &Globals::IsMenuStars))
+                        Config::SaveConfig();
 
                     ImGui::Spacing();
 
                     if (ImGui::Button(LANG("Menu_ApplyColors"), ImVec2(160 * dpiScale, 30 * dpiScale)))
                     {
                         Config::SaveConfig();
-						SetMenuDefaultStyle();
+                        SetMenuDefaultStyle();
                     }
 
                     ImGui::SameLine();
@@ -358,12 +495,12 @@ void Menu::Render()
                     {
                         if (GetAsyncKeyState(key) & 0x8000)
                         {
-							// reserved by cheat, not allowed to bind
+                            // reserved by cheat, not allowed to bind
                             if (key == VK_DELETE ||
                                 key == VK_HOME ||
                                 key == VK_END)
                             {
-								NOTIFY_ERROR_QUICK(LANG("Menu_KeyReserved"));
+                                NOTIFY_ERROR_QUICK(LANG("Menu_KeyReserved"));
                                 break;
                             }
 
@@ -432,10 +569,10 @@ void Menu::Render()
                 ImGui::Columns(2, "TeamColumns", false);
                 ImGui::SetColumnWidth(0, 250 * dpiScale);
 
-                ImGui::BulletText("Artur - Lead");
+                ImGui::BulletText("ViniLog - Lead Coder");
                 ImGui::BulletText("Nastya - Designer");
                 ImGui::BulletText("Anna - Designer");
-                ImGui::BulletText("ViniLog - Lead Coder");
+                ImGui::BulletText("Artur - Lead Coder");
 
                 ImGui::NextColumn();
 
@@ -488,12 +625,10 @@ void Menu::Render()
                         std::string featureName = uniqueKey.substr(0, uniqueKey.find("##"));
                         std::string displayName;
 
-                        // BCheckBox: try _Header lookup from class name
                         std::string headerKey = featureName + "_Header";
                         const char* translated = LANG(headerKey.c_str());
                         if (strcmp(translated, headerKey.c_str()) != 0)
                             displayName = translated;
-                        // BButton: featureName IS the LANG key, translate directly
                         else {
                             const char* btnTranslated = LANG(featureName.c_str());
                             displayName = (strcmp(btnTranslated, featureName.c_str()) != 0) ? btnTranslated : featureName;
@@ -630,6 +765,11 @@ void Menu::Render()
                 if (ImGui::Button("Call test"))
                 {
                     ForTestsFlag = true;
+                }
+
+                if (ImGui::Button("Test stamina"))
+                {
+					LOG_INFO(InGame::playerStamina->Fields.CurrentStamina);
                 }
 
                 if (ImGui::Button("Crash game"))

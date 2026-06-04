@@ -230,4 +230,37 @@ namespace PhasmoCheatV
                 FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
         }
     }
+
+    void Logger::ShutdownConsole()
+    {
+        std::lock_guard lock(LogMutex);
+
+        if (StdoutFile)
+        {
+            fflush(stdout);
+            fclose(StdoutFile);
+            StdoutFile = nullptr;
+        }
+
+        if (StderrFile)
+        {
+            fflush(stderr);
+            fclose(StderrFile);
+            StderrFile = nullptr;
+        }
+
+        if (HConsole && HConsole != INVALID_HANDLE_VALUE)
+        {
+            SetConsoleTextAttribute(HConsole,
+                FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+        }
+
+        if (ConsoleExists)
+        {
+            FreeConsole();
+            ConsoleExists = false;
+        }
+
+        HConsole = nullptr;
+    }
 }

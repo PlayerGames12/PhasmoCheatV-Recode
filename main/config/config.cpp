@@ -2,6 +2,7 @@
 #include <sstream>
 #include <iomanip>
 #include "config.h"
+#include "../menu/effects/custom_background.h"
 
 namespace PhasmoCheatV::Config
 {
@@ -13,6 +14,9 @@ namespace PhasmoCheatV::Config
             {"toggle_key", Globals::MenuToggleKey},
             {"menu_blur", Globals::IsMenuBlur},
             {"menu_rain", Globals::IsMenuRain},
+            {"menu_petals", Globals::IsMenuPetals},
+            {"menu_stars", Globals::IsMenuStars},
+            {"menu_firefiles", Globals::IsMenuFireflies},
             {"discord_rpc", Globals::DiscordRPC},
 			{"rpc_show_name", Globals::RPCShowName}
         };
@@ -60,6 +64,18 @@ namespace PhasmoCheatV::Config
                 {"b", Globals::headerBg.z},
                 {"a", Globals::headerBg.w}
             }}
+        };
+
+        defaultConfig["custom_background"] =
+        {
+            {"enabled", CustomBackground::Enabled},
+            {"selected_file", CustomBackground::SelectedFile},
+            {"mode", (int)CustomBackground::Mode},
+            {"scale", (int)CustomBackground::Scale},
+            {"opacity", CustomBackground::Opacity},
+            {"user_scale", CustomBackground::UserScale},
+            {"offset_x", CustomBackground::Offset.x},
+            {"offset_y", CustomBackground::Offset.y}
         };
 
         nlohmann::json bindsJson;
@@ -195,6 +211,15 @@ namespace PhasmoCheatV::Config
                 if (m.contains("menu_rain"))
                     Globals::IsMenuRain = m["menu_rain"].get<bool>();
 
+                if (m.contains("menu_petals"))
+                    Globals::IsMenuPetals = m["menu_petals"].get<bool>();
+
+                if (m.contains("menu_stars"))
+                    Globals::IsMenuStars = m["menu_stars"].get<bool>();
+
+                if (m.contains("menu_firefiles"))
+                    Globals::IsMenuFireflies = m["menu_firefiles"].get<bool>();
+
 				if (m.contains("discord_rpc"))
                     Globals::DiscordRPC = m["discord_rpc"].get<bool>();
 
@@ -226,6 +251,37 @@ namespace PhasmoCheatV::Config
                 if (g.contains("darkBg")) loadColor(g["darkBg"], Globals::darkBg);
                 if (g.contains("cardBg")) loadColor(g["cardBg"], Globals::cardBg);
                 if (g.contains("headerBg")) loadColor(g["headerBg"], Globals::headerBg);
+            }
+
+            if (data.contains("custom_background"))
+            {
+                auto& bg = data["custom_background"];
+
+                if (bg.contains("enabled"))
+                    CustomBackground::Enabled = bg["enabled"].get<bool>();
+
+                if (bg.contains("selected_file"))
+                    CustomBackground::SelectedFile = bg["selected_file"].get<std::string>();
+
+                if (bg.contains("mode"))
+                    CustomBackground::Mode =
+                    (CustomBackground::DrawMode)bg["mode"].get<int>();
+
+                if (bg.contains("scale"))
+                    CustomBackground::Scale =
+                    (CustomBackground::ScaleMode)bg["scale"].get<int>();
+
+                if (bg.contains("opacity"))
+                    CustomBackground::Opacity = bg["opacity"].get<float>();
+
+                if (bg.contains("user_scale"))
+                    CustomBackground::UserScale = bg["user_scale"].get<float>();
+
+                if (bg.contains("offset_x"))
+                    CustomBackground::Offset.x = bg["offset_x"].get<float>();
+
+                if (bg.contains("offset_y"))
+                    CustomBackground::Offset.y = bg["offset_y"].get<float>();
             }
 
             if (data.contains("binds"))
@@ -311,6 +367,9 @@ namespace PhasmoCheatV::Config
         menuSettings["toggle_key"] = Globals::MenuToggleKey;
         menuSettings["menu_blur"] = Globals::IsMenuBlur;
         menuSettings["menu_rain"] = Globals::IsMenuRain;
+        menuSettings["menu_petals"] = Globals::IsMenuPetals;
+        menuSettings["menu_stars"] = Globals::IsMenuStars;
+        menuSettings["menu_firefiles"] = Globals::IsMenuFireflies;
 		menuSettings["discord_rpc"] = Globals::DiscordRPC;  
         menuSettings["rpc_show_name"] = Globals::RPCShowName;
         data["menu_settings"] = menuSettings;
@@ -333,6 +392,17 @@ namespace PhasmoCheatV::Config
         globalsColors["cardBg"] = saveColor(Globals::cardBg);
         globalsColors["headerBg"] = saveColor(Globals::headerBg);
         data["globals_colors"] = globalsColors;
+
+        Json customBackground;
+        customBackground["enabled"] = CustomBackground::Enabled;
+        customBackground["selected_file"] = CustomBackground::SelectedFile;
+        customBackground["mode"] = (int)CustomBackground::Mode;
+        customBackground["scale"] = (int)CustomBackground::Scale;
+        customBackground["opacity"] = CustomBackground::Opacity;
+        customBackground["user_scale"] = CustomBackground::UserScale;
+        customBackground["offset_x"] = CustomBackground::Offset.x;
+        customBackground["offset_y"] = CustomBackground::Offset.y;
+        data["custom_background"] = customBackground;
 
         Json bindsJson;
         for (const auto& [featureName, bind] : BindSystem::Binds)

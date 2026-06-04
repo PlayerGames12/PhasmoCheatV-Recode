@@ -159,7 +159,6 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
         AHKA(GameController_Awake);
         AHKA(RewardManager_Awake);
         AHKA(SceneManagement_Internal_SceneLoaded);
-        AHKA(AWDoll_Awake);
         AHKA(Key_GrabbedKey);
 
         // CosmeticsUnlocker hooks
@@ -241,6 +240,9 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
     LOG_INFO("Cleanup completed");
 
 finalize:
+    if (loggerInstance)
+        loggerInstance->ShutdownConsole();
+
     loggerInstance.reset();
 
     if (g_VehHandle)
@@ -280,6 +282,3 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID)
 
     return TRUE;
 }
-
-
-

@@ -133,7 +133,7 @@ namespace BindSystem
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.3f, 0.3f, 1.0f));
         }
 
-        if (ImGui::Button(buttonId, ImVec2(80, 22)))
+        if (ImGui::Button(buttonId, ImVec2(80, 0)))
         {
             if (!WaitingBind.has_value())
                 WaitingBind = uniqueKey;

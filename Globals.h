@@ -4,7 +4,7 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
-#define COSMETICSUNLOCKER 0 // DON'T CHANGE THIS IF YOU NOT HAVE NEED FILES
+#define COSMETICSUNLOCKER 1 // DON'T CHANGE THIS IF YOU NOT HAVE NEED FILES
 
 namespace PhasmoCheatV::Globals
 {
@@ -43,6 +43,9 @@ namespace PhasmoCheatV::Globals
 	inline ImVec4 headerBg = ImVec4(0.10f, 0.10f, 0.12f, 1.00f);
 	inline bool IsMenuBlur = false;
 	inline bool IsMenuRain = true;
+	inline bool IsMenuFireflies = false;
+	inline bool IsMenuStars = true;
+	inline bool IsMenuPetals = false;
 	inline bool DiscordRPC = false;
 	inline bool RPCShowName = false;
 	inline ImFont* g_FontMain = nullptr;

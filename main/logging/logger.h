@@ -32,6 +32,7 @@ namespace PhasmoCheatV
         };
         explicit Logger(Level minLevel = Level::Call);
         ~Logger();
+        void ShutdownConsole();
 
         template<typename... Args>
         void Log(const Level level, Args&&... args)

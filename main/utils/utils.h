@@ -8,6 +8,8 @@ using namespace PhasmoCheatV;
 namespace Utils {
 	std::string GetPhasmoCheatVDirectory();
 	void CreatePhasmoCheatVDirectory();
+	bool NeedsMigration();
+	bool MigrateDirectory();
 	ImVec4 HSV2RGB(float h, float s, float v);
 	SDK::NetworkPlayerSpot* GetNetworkPlayerSpot(const SDK::Player* player);
 	SDK::Network* GetNetwork();
@@ -16,6 +18,8 @@ namespace Utils {
 	std::string GhostEnumToStr(SDK::GhostState ghostState);
 	std::string GhostEnumToStr(SDK::GhostType ghostType);
 	std::string GhostEnumToStr(const SDK::GhostEvidence ghostEvidence);
+	std::string GhostEnumToStrLocalized(SDK::GhostType type);
+	std::string GhostEnumToStrLocalized(SDK::GhostEvidence GhostEved);
 	std::string UnityStrToSysStr(const SDK::String& string);
 	SDK::String* SysStrToUnityStr(const std::string& string);
 	std::string GetPlayerName(const SDK::Player* player);

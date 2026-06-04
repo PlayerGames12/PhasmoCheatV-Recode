@@ -5,11 +5,18 @@ namespace fs = std::filesystem;
 
 std::string Utils::GetPhasmoCheatVDirectory()
 {
-	return "C:\\PhasmoCheatV";
+	return "C:\\VComDev\\PhasmoCheatV";
 }
 
 void Utils::CreatePhasmoCheatVDirectory()
 {
+	const std::string basePath = "C:\\VComDev";
+	if (!std::filesystem::exists(basePath))
+	{
+		LOG_INFO("Creating VComDev base directory.");
+		std::filesystem::create_directory(basePath);
+	}
+
 	const std::string configDirectoryPath = GetPhasmoCheatVDirectory();
 	if (!std::filesystem::exists(configDirectoryPath))
 	{
@@ -37,6 +44,41 @@ void Utils::CreatePhasmoCheatVDirectory()
 	{
 		LOG_INFO("Creating fonts folder.");
 		std::filesystem::create_directory(fontsPath);
+	}
+}
+
+bool Utils::NeedsMigration()
+{
+	return std::filesystem::exists("C:\\PhasmoCheatV");
+}
+
+bool Utils::MigrateDirectory()
+{
+	const std::string oldPath = "C:\\PhasmoCheatV";
+	const std::string basePath = "C:\\VComDev";
+	const std::string newPath = "C:\\VComDev\\PhasmoCheatV";
+
+	try
+	{
+		if (!std::filesystem::exists(basePath))
+			std::filesystem::create_directory(basePath);
+
+		std::filesystem::copy(
+			oldPath, newPath,
+			std::filesystem::copy_options::recursive |
+			std::filesystem::copy_options::overwrite_existing
+		);
+
+		std::filesystem::remove_all(oldPath);
+
+		LOG_INFO("Migration completed: ", oldPath, " -> ", newPath);
+		Config::LoadConfig();
+		return true;
+	}
+	catch (const std::exception& e)
+	{
+		LOG_ERROR("Migration failed: ", e.what());
+		return false;
 	}
 }
 
@@ -380,6 +422,132 @@ std::string Utils::GhostEnumToStr(const SDK::GhostEvidence ghostEvidence)
 	}
 
 	return evidenceTypeString;
+}
+
+std::string Utils::GhostEnumToStrLocalized(SDK::GhostType type)
+{
+	switch (type)
+	{
+	case SDK::GhostType::Spirit:
+		return LANG("GhostType_Spirit");
+
+	case SDK::GhostType::Wraith:
+		return LANG("GhostType_Wraith");
+
+	case SDK::GhostType::Phantom:
+		return LANG("GhostType_Phantom");
+
+	case SDK::GhostType::Poltergeist:
+		return LANG("GhostType_Poltergeist");
+
+	case SDK::GhostType::Banshee:
+		return LANG("GhostType_Banshee");
+
+	case SDK::GhostType::Jinn:
+		return LANG("GhostType_Jinn");
+
+	case SDK::GhostType::Mare:
+		return LANG("GhostType_Mare");
+
+	case SDK::GhostType::Revenant:
+		return LANG("GhostType_Revenant");
+
+	case SDK::GhostType::Shade:
+		return LANG("GhostType_Shade");
+
+	case SDK::GhostType::Demon:
+		return LANG("GhostType_Demon");
+
+	case SDK::GhostType::Yurei:
+		return LANG("GhostType_Yurei");
+
+	case SDK::GhostType::Oni:
+		return LANG("GhostType_Oni");
+
+	case SDK::GhostType::Hantu:
+		return LANG("GhostType_Hantu");
+
+	case SDK::GhostType::Yokai:
+		return LANG("GhostType_Yokai");
+
+	case SDK::GhostType::Goryo:
+		return LANG("GhostType_Goryo");
+
+	case SDK::GhostType::Myling:
+		return LANG("GhostType_Myling");
+
+	case SDK::GhostType::Onryo:
+		return LANG("GhostType_Onryo");
+
+	case SDK::GhostType::TheTwins:
+		return LANG("GhostType_TheTwins");
+
+	case SDK::GhostType::Raiju:
+		return LANG("GhostType_Raiju");
+
+	case SDK::GhostType::Obake:
+		return LANG("GhostType_Obake");
+
+	case SDK::GhostType::Mimic:
+		return LANG("GhostType_Mimic");
+
+	case SDK::GhostType::Moroi:
+		return LANG("GhostType_Moroi");
+
+	case SDK::GhostType::Deogen:
+		return LANG("GhostType_Deogen");
+
+	case SDK::GhostType::Thaye:
+		return LANG("GhostType_Thaye");
+
+	case SDK::GhostType::Gallu:
+		return LANG("GhostType_Gallu");
+
+	case SDK::GhostType::Dayan:
+		return LANG("GhostType_Dayan");
+
+	case SDK::GhostType::Obambo:
+		return LANG("GhostType_Obambo");
+
+	case SDK::GhostType::Kormos:
+		return LANG("GhostType_Kormos");
+
+	case SDK::GhostType::Aswang:
+		return LANG("GhostType_Aswang");
+
+	default:
+		return LANG("GhostType_Default");
+	}
+}
+
+std::string Utils::GhostEnumToStrLocalized(SDK::GhostEvidence GhostEved)
+{
+	switch (GhostEved)
+	{
+	case SDK::GhostEvidence::EMF:
+		return LANG("Evidence_EMF5");
+
+	case SDK::GhostEvidence::DotsProjector:
+		return LANG("Evidence_DOTS");
+
+	case SDK::GhostEvidence::Ultraviolet:
+		return LANG("Evidence_Ultraviolet");
+
+	case SDK::GhostEvidence::GhostWritingBook:
+		return LANG("Evidence_Writing");
+
+	case SDK::GhostEvidence::Temperature:
+		return LANG("Evidence_Freezing");
+
+	case SDK::GhostEvidence::SpiritBox:
+		return LANG("Evidence_SpiritBox");
+
+	case SDK::GhostEvidence::GhostOrb:
+		return LANG("Evidence_Orbs");
+
+	default:
+		return "Unknown";
+	}
 }
 
 std::string Utils::UnityStrToSysStr(const SDK::String& string)

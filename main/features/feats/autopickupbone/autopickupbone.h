@@ -1,7 +1,7 @@
 #pragma once
 #include "../Includes.h"
 
-namespace PhasmoCheatV::Features::Map
+namespace PhasmoCheatV::Features::Auto
 {
     class AutoPickupBone final : public FeatureCore
     {

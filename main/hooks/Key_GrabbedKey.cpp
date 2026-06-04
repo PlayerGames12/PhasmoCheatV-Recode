@@ -19,7 +19,6 @@ void Hooks::hkKey_GrabbedKey(SDK::Key* key, SDK::MethodInfo* methodInfo)
 		if (keyType == SDK::KeyType::Main)
 		{
 			CALL_METHOD(Map, DoorModifier, AutoOpenDoors);
-			NOTIFY_SUCCESS_QUICK(LANG("AutoOpenDoors_Done"));
 		}
 	}
 }

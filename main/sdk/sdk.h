@@ -319,6 +319,7 @@ namespace SDK
 #include "Light.h"
 #include "LevelStats.h"
 #include "LineRenderer.h"
+#include "EMF.h"
 #include "EMFData.h"
 #include "PhotonObjectInteract.h"
 #include "MouseLook.h"

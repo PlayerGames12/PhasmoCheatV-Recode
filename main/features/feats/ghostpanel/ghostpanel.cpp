@@ -83,7 +83,7 @@ void GhostPanel::OnRender()
 
         DrawRow(LANG("GhostName"), Utils::UnityStrToSysStr(*ghostTraits.Name).c_str(), CONFIG_BOOL(GetConfigManager(), "HideName"));
 
-        DrawRow(LANG("GhostType"), Utils::GhostEnumToStr(ghostTraits.GhostType_).c_str(), CONFIG_BOOL(GetConfigManager(), "HideType"));
+        DrawRow(LANG("GhostType"), Utils::GhostEnumToStrLocalized(ghostTraits.GhostType_).c_str(), CONFIG_BOOL(GetConfigManager(), "HideType"));
 
         DrawRow(LANG("GhostAge"), std::to_string(ghostTraits.GhostAge).c_str(), CONFIG_BOOL(GetConfigManager(), "HideAge"));
         DrawRow(LANG("GhostState"), Utils::GhostEnumToStr(InGame::ghostAI->Fields.currentState).c_str(), CONFIG_BOOL(GetConfigManager(), "HideState"));
@@ -211,12 +211,7 @@ std::string GhostPanel::GetGhostEvidenceString()
         if (i > 0)
             evidence += " | ";
 
-        const std::string fullName = Utils::GhostEnumToStr(items[i]);
-        if (fullName == "Ghost Writing") evidence += "Writing";
-        else if (fullName == "Fingerprints") evidence += "Prints";
-        else if (fullName == "Freezing Temperatures") evidence += "Freezing";
-        else if (fullName == "Spirit Box") evidence += "Spirit Box";
-        else evidence += fullName;
+        evidence += Utils::GhostEnumToStrLocalized(items[i]);
     }
 
     return evidence;

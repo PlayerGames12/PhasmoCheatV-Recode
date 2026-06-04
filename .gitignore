@@ -367,3 +367,4 @@ FodyWeavers.xsd
 # Hide
 /backup.zip
 /unlockcosmetics
+*.7z

@@ -7,7 +7,7 @@ void Hooks::hkDNAEvidence_Start(SDK::DNAEvidence* dnaEvidence, SDK::MethodInfo* 
 {
 	LOG_CALL("Called DNAEvidence_Start");
 
-	if (GET_ACTIVE(Map, AutoPickupBone))
+	if (GET_ACTIVE(Auto, AutoPickupBone))
 	{
 		auto* g_obj = SDK::Component_Get_GameObject((SDK::Component*)(dnaEvidence), nullptr); 
 		if (!g_obj)

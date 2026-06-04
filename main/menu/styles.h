@@ -3,6 +3,7 @@
 #include "../res/fonts/DefFont.hpp"
 #include "../res/fonts/HeadFont.hpp"
 #include "../res/fonts/VCustomFont.hpp"
+#include "effects/custom_background.h"
 
 using namespace PhasmoCheatV;
 
@@ -34,8 +35,10 @@ inline void SetMenuDefaultStyle()
     ImVec4* colors = style.Colors;
 
     colors[ImGuiCol_WindowBg] = darkBg;
-    if (Globals::IsMenuBlur) colors[ImGuiCol_ChildBg].w = 0.0f;
-    else colors[ImGuiCol_ChildBg] = darkerBg;
+    bool transparentChildren = Globals::IsMenuBlur
+        || (CustomBackground::Enabled && !CustomBackground::SelectedFile.empty());
+    if (transparentChildren) colors[ImGuiCol_ChildBg] = ImVec4(0, 0, 0, 0);
+    else                     colors[ImGuiCol_ChildBg] = darkerBg;
     colors[ImGuiCol_FrameBg] = cardBg;
     colors[ImGuiCol_FrameBgHovered] = ImVec4(0.18f, 0.18f, 0.20f, 1.00f);
     colors[ImGuiCol_FrameBgActive] = ImVec4(0.22f, 0.22f, 0.24f, 1.00f);

@@ -1,7 +1,7 @@
 #pragma once
 #include "../Includes.h"
 
-namespace PhasmoCheatV::Features::Misc
+namespace PhasmoCheatV::Features::Auto
 {
 	class AutoGame : public FeatureCore
 	{

@@ -225,6 +225,7 @@
     <ClCompile Include="main\features\feats\showmic\showmic.cpp" />
     <ClCompile Include="main\features\feats\skiplayeranim\skiplayeranim.cpp" />
     <ClCompile Include="main\features\feats\spiritboxalw\spiritboxalw.cpp" />
+    <ClCompile Include="main\features\feats\staminapanel\staminapanel.cpp" />
     <ClCompile Include="main\features\feats\vanbuttonmod\vanbuttonmod.cpp" />
     <ClCompile Include="main\features\feats\mapmod\mapmodifier.cpp" />
     <ClCompile Include="main\features\feats\noclip\noclip.cpp" />
@@ -307,12 +308,12 @@
     <ClCompile Include="main\hooks\MapController_Start.cpp" />
     <ClCompile Include="main\logging\logger.cpp" />
     <ClCompile Include="main\mem\memory.cpp" />
+    <ClCompile Include="main\menu\effects\custom_background.cpp" />
     <ClCompile Include="main\menu\menu.cpp" />
     <ClCompile Include="main\menu\renderer.cpp" />
     <ClCompile Include="main\utils\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\Xdsat\Downloads\Telegram Desktop\Translations_upd.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Includes.h" />
     <ClInclude Include="inGame.h" />
@@ -385,6 +386,7 @@
     <ClInclude Include="main\features\feats\showmic\showmic.h" />
     <ClInclude Include="main\features\feats\skiplayeranim\skiplayeranim.h" />
     <ClInclude Include="main\features\feats\spiritboxalw\spiritboxalw.h" />
+    <ClInclude Include="main\features\feats\staminapanel\staminapanel.h" />
     <ClInclude Include="main\features\feats\vanbuttonmod\vanbuttonmod.h" />
     <ClInclude Include="main\features\feats\mapmod\mapmodifier.h" />
     <ClInclude Include="main\features\feats\noclip\noclip.h" />
@@ -411,7 +413,11 @@
     <ClInclude Include="main\hooks\Hooks.h" />
     <ClInclude Include="main\logging\logger.h" />
     <ClInclude Include="main\mem\memory.h" />
+    <ClInclude Include="main\menu\effects\custom_background.h" />
     <ClInclude Include="main\menu\effects\directx_blur.h" />
+    <ClInclude Include="main\menu\effects\fireflies.h" />
+    <ClInclude Include="main\menu\effects\petals.h" />
+    <ClInclude Include="main\menu\effects\stars.h" />
     <ClInclude Include="main\menu\menu.h" />
     <ClInclude Include="main\menu\effects\pshader.h" />
     <ClInclude Include="main\menu\effects\rain.h" />
@@ -436,6 +442,7 @@
     <ClInclude Include="main\sdk\Difficulty.h" />
     <ClInclude Include="main\sdk\DNAEvidence.h" />
     <ClInclude Include="main\sdk\Door.h" />
+    <ClInclude Include="main\sdk\EMF.h" />
     <ClInclude Include="main\sdk\EMFData.h" />
     <ClInclude Include="main\sdk\Equipment.h" />
     <ClInclude Include="main\sdk\Evidence.h" />
@@ -543,6 +550,15 @@
     <ClInclude Include="res\fonts\VCustomFont.hpp" />
     <ClInclude Include="res\images\mic_off.h" />
     <ClInclude Include="res\images\mic_on.h" />
+    <ClInclude Include="res\images\mirror.h" />
+    <ClInclude Include="res\images\monkey_paw.h" />
+    <ClInclude Include="res\images\music_box.h" />
+    <ClInclude Include="res\images\ouijaBoard.h" />
+    <ClInclude Include="res\images\summoningCircle.h" />
+    <ClInclude Include="res\images\tarotCard.h" />
+    <ClInclude Include="res\images\uv_default.h" />
+    <ClInclude Include="res\images\uv_obake.h" />
+    <ClInclude Include="res\images\voodooDoll.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

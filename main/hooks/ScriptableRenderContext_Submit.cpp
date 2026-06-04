@@ -11,7 +11,7 @@ void Hooks::hkScriptableRenderContext_Submit(SDK::ScriptableRenderContext* conte
 	if (CheatWork)
 		Discord::DiscordRPCStatusHandler();
 
-	CALL_METHOD_IF_ACTIVE(Misc, AutoGame, AutoGameHandler);
+	CALL_METHOD_IF_ACTIVE(Auto, AutoGame, AutoGameHandler);
 
 	SDK::ScriptableRenderContext_Submit(context, methodInfo);
 }

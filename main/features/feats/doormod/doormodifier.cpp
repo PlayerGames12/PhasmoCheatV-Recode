@@ -206,4 +206,5 @@ void DoorModifier::AutoOpenDoors()
         };
 
     ProcessArray(doors);
+    NOTIFY_SUCCESS_QUICK(LANG("AutoOpenDoors_Done"));
 }

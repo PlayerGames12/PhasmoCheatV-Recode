@@ -11,6 +11,7 @@ using namespace Features::Movement;
 using namespace Features::Misc;
 using namespace Features::Difficulty;
 using namespace Features::Map;
+using namespace Features::Auto;
 
 const char* PhasmoCheatV::GetFeatureTypeName(const FeatureType type)
 {
@@ -71,9 +72,10 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
 	ADD_FEATURE(this, MusicPanel);
     ADD_FEATURE(this, PlayerESP);
     ADD_FEATURE(this, ActivityMonitor);
-    ADD_FEATURE(this, AWEsp);
+    ADD_FEATURE(this, StaminaPanel);
     ADD_FEATURE(this, WorldModulation);
     //ADD_FEATURE(this, JackalopeESP);
+    //ADD_FEATURE(this, AWEsp);
 
     // Players
     ADD_FEATURE(this, GodMode);
@@ -115,8 +117,7 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, JournalModifier);
     ADD_FEATURE(this, ForceStart);
     ADD_FEATURE(this, ShopModifier);
-	  ADD_FEATURE(this, SpiritBoxAlwaysAnswer);
-	  ADD_FEATURE(this, AutoGame);
+	ADD_FEATURE(this, SpiritBoxAlwaysAnswer);
     ADD_FEATURE(this, AudioModifier);
 
     // Difficulty
@@ -128,11 +129,14 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, GrabKeys);
     ADD_FEATURE(this, SaltModifier);
 	ADD_FEATURE(this, AlwaysBloodMoon);
-    ADD_FEATURE(this, AutoPickupBone);
     ADD_FEATURE(this, FuseBoxModifier);
 
     // Configs
     ADD_FEATURE(this, ConfigsManager);
+
+    // Automatic
+    ADD_FEATURE(this, AutoGame);
+    ADD_FEATURE(this, AutoPickupBone);
 
     // Hided | MISC
 #if COSMETICSUNLOCKER
@@ -199,9 +203,10 @@ bool FeatureHandler::FeatureMatchesSearch(const std::string& featureName, const 
 
 void FeatureHandler::ShowTypeSelector()
 {
-    constexpr std::array<FeatureType, 9> TYPES = {
+    constexpr std::array<FeatureType, 10> TYPES = {
         TYPE_VISUALS, TYPE_PLAYERS, TYPE_GHOST, TYPE_CURSED,
-        TYPE_MOVEMENT, TYPE_MISC, TYPE_CONFIGS, TYPE_DIFFICULTY, TYPE_MAP
+        TYPE_MOVEMENT, TYPE_MISC, TYPE_CONFIGS, TYPE_DIFFICULTY, TYPE_MAP,
+        TYPE_AUTO
     };
 
     const float width = ImGui::GetContentRegionAvail().x;
@@ -276,6 +281,7 @@ void FeatureHandler::ShowTypeSelector()
         case TYPE_CONFIGS: label = LANG("Configs"); break;
         case TYPE_DIFFICULTY: label = LANG("Difficulty"); break;
         case TYPE_MAP: label = LANG("Map"); break;
+		case TYPE_AUTO: label = LANG("Automatic"); break;
         }
 
         if (ImGui::Button(("##btn_" + std::to_string(count)).c_str(), size))
@@ -317,6 +323,7 @@ void FeatureHandler::ShowFeaturesByType()
     case TYPE_CONFIGS: categoryName = "Configs"; break;
     case TYPE_DIFFICULTY: categoryName = "Difficulty"; break;
     case TYPE_MAP: categoryName = "Map"; break;
+    case TYPE_AUTO: categoryName = "Automatic"; break;
     }
     ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
     ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[7]);
