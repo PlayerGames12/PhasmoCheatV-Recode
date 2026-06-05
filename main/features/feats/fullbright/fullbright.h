@@ -14,5 +14,10 @@ namespace PhasmoCheatV::Features::Visuals
 		void OnRender() override {}
 		void OnMenuRender() override;
 		void FullbrightMain();
+		void BoostDarkMaterials();
+		void BoostPlayerLights();
+
+	private:
+		bool m_bleasdaleInitDone = false;
 	};
 }

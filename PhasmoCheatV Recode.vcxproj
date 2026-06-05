@@ -623,6 +623,7 @@
     <ClInclude Include="main\sdk\Transform.h" />
     <ClInclude Include="main\sdk\Vector2.h" />
     <ClInclude Include="main\sdk\Vector3.h" />
+    <ClInclude Include="main\sdk\Vector4.h" />
     <ClInclude Include="main\sdk\Voice.h" />
     <ClInclude Include="main\sdk\VoodooDollPin.h" />
     <ClInclude Include="main\sdk\WeatherProfile.h" />
