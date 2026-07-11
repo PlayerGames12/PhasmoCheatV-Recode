@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <algorithm>
 #include <windows.h>
+#include <shellapi.h>
 #include "../styles.h"
 
 namespace fs = std::filesystem;

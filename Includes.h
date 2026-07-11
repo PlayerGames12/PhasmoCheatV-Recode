@@ -16,6 +16,8 @@
 #include <array>
 #include <random>
 #include <urlmon.h>
+#include <stddef.h>
+#include <stdint.h>
 
 #include "Globals.h"
 #include "InGame.h"
@@ -29,8 +31,8 @@
 #include "imgui/imgui_internal.h"
 #include "main/menu/renderer.h"
 
-#include "detours/include/detours.h"
-#include "z85/z85.h"
+#include "detours/src/detours.h"
+#include "z85/src/z85.h"
 #include "miniz/miniz.h"
 #include "discordrpc/include/discord_rpc.h"
 #include "discordrpc/include/discord_register.h"
@@ -39,7 +41,7 @@
 #include "main/menu/menu.h"
 #include "main/features/settings.h"
 #include "main/features/feature.h"
-#include "nlohmann/json.hpp"
+#include "nlohmann/include/nlohmann/json.hpp"
 #include "main/config/LanguageManager.h"
 #include "main/config/config.h"
 #include "main/utils/notification.h"
