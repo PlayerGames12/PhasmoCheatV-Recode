@@ -1,0 +1,24 @@
+[submodule "libs/imgui"]
+	path = libs/imgui
+	url = https://github.com/ocornut/imgui
+[submodule "libs/nlohmann"]
+	path = libs/nlohmann
+	url = https://github.com/nlohmann/json
+[submodule "libs/detours"]
+	path = libs/detours
+	url = https://github.com/microsoft/Detours
+[submodule "libs/miniz"]
+	path = libs/miniz
+	url = https://github.com/richgel999/miniz
+[submodule "libs/z85"]
+	path = libs/z85
+	url = https://github.com/artemkin/z85
+[submodule "libs/discordrpc"]
+	path = libs/discordrpc
+	url = https://github.com/discord/discord-rpc
+[submodule "libs/stb"]
+	path = libs/stb
+	url = https://github.com/nothings/stb
+[submodule "libs/rapidjson"]
+	path = libs/rapidjson
+	url = https://github.com/Tencent/rapidjson.git
