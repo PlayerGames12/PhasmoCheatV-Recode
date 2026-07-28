@@ -150,58 +150,6 @@ void CrucifixESP::OnMenuRender()
 		enabled ? OnActivate() : OnDeactivate();
 	}
 
-	if (ImGui::Button("Dump Crucifix Fields"))
-	{
-		auto crucifixs = getCruxifixs();
-
-		if (crucifixs.empty())
-			return;
-
-		LOG_INFO("=== Crucifix Dump: %d objects ===", crucifixs.size());
-
-		for (size_t i = 0; i < crucifixs.size(); i++)
-		{
-			auto crucifix = crucifixs[i];
-
-			if (!crucifix)
-				continue;
-
-			auto& f = crucifix->Fields;
-
-			LOG_INFO("------ Crucifix [%d] %p ------", i, crucifix);
-
-			LOG_INFO("photoEvidence: %p", f.photoEvidence);
-			LOG_INFO("videoEvidence: %p", f.videoEvidence);
-			LOG_INFO("burningClip: %p", f.burningClip);
-			LOG_INFO("particles: %p", f.particles);
-
-			LOG_INFO(
-				"glowColor: R %.2f G %.2f B %.2f A %.2f",
-				f.glowColor.R,
-				f.glowColor.G,
-				f.glowColor.B,
-				f.glowColor.A
-			);
-
-			LOG_INFO("allModels: %p", f.allModels);
-			LOG_INFO("allRenderers: %p", f.allRenderers);
-
-			LOG_INFO("useCount: %d", f.useCount);
-			LOG_INFO("range: %d", f.range);
-			LOG_INFO("maxUses: %d", f.maxUses);
-
-			LOG_INFO("hasBeenUsed: %s",
-				f.hasBeenUsed ? "true" : "false");
-
-			LOG_INFO("dropDelay: %.3f", f.dropDelay);
-
-			LOG_INFO("burnSequence: %p", f.burnSequence);
-
-			LOG_INFO("stoppedCursedHunt: %s",
-				f.stoppedCursedHunt ? "true" : "false");
-		}
-	}
-
 	if (enabled)
 	{
 		auto DrawConfigCheckbox = [&](const char* langKey, const char* configKey) {
