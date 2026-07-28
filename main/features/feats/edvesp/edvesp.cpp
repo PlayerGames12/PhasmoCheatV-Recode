@@ -355,11 +355,10 @@ void EvidenceESP::RenderEMF()
 
     LoadTextures();
 
-    if (!InGame::emfData)
+    if (!SDK::EMFData_sFields->instance)
         return;
 
-    auto emfSpots =
-        InGame::emfData->Fields.EMFSpots;
+    auto emfSpots = SDK::EMFData_sFields->instance->Fields.EMFSpots;
 
     if (!emfSpots)
         return;
@@ -454,7 +453,7 @@ void EvidenceESP::RenderEvidence()
 {
     LoadTextures();
 
-    if (!InGame::evidenceController)
+    if (!SDK::EvidenceController_sFields->instance)
         return;
 
     const bool cursedItemEnabled =
@@ -473,7 +472,7 @@ void EvidenceESP::RenderEvidence()
         CONFIG_BOOL(GetConfigManager(), "UseNewIcons");
 
     const auto evidenceList =
-        InGame::evidenceController->Fields.EvidenceList;
+        SDK::EvidenceController_sFields->instance->Fields.EvidenceList;
 
     if (!evidenceList)
         return;

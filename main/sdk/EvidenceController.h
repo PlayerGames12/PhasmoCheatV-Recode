@@ -27,5 +27,11 @@ namespace SDK
 		EvidenceControllerFields Fields;
 	};
 
+	struct EvidenceController_staticFields
+	{
+		EvidenceController* instance;
+	};
+
 	DEC_MET(EvidenceController_Start, void(*)(EvidenceController* evidenceController, MethodInfo* methodInfo), "Assembly-CSharp", "", "EvidenceController", "Start", 0);
+	DEC_SFIELD(EvidenceController_sFields, EvidenceController_staticFields, "Assembly-CSharp", "", "EvidenceController");
 }

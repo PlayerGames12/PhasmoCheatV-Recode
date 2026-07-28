@@ -91,7 +91,7 @@ namespace BindSystem
                 uniqueKey.substr(0, uniqueKey.find("##"));
 
             auto* feature =
-                PhasmoCheatV::MainFeatureHandler
+                MainFeatureHandler
                 ->FindFeature(featureName);
 
             if (!feature)
@@ -212,5 +212,7 @@ namespace BindSystem
 
 #define BCheckBox(label, v, bindId) \
     BindSystem::BCheckBoxImpl(label, v, typeid(*this).name(), bindId)
+
 #define BButton(labelKey, bindId, callback) \
     BindSystem::BButtonImpl(labelKey, bindId, callback)
+

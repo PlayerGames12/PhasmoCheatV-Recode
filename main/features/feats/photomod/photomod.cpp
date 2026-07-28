@@ -68,7 +68,7 @@ void PhotoModifier::PhotoModifierAutoPhoto()
 	auto* localPlayer = Utils::GetLocalPlayer();
 	if (!localPlayer) return;
 
-	auto* ghostAI = InGame::ghostAI;
+	auto* ghostAI = Utils::GetGhostAI();
 	if (!ghostAI) return;
 
 	auto* ghostTransform = ghostAI->Fields.raycastPoint;

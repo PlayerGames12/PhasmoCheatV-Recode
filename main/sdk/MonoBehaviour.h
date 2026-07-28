@@ -4,6 +4,7 @@
 namespace SDK
 {
 	struct MethodInfo;
+	struct PhotonView;
 
 	struct __declspec(align(8)) Object1Fields
 	{
@@ -40,7 +41,7 @@ namespace SDK
 	struct MonoBehaviourPunFields
 	{
 		MonoBehaviourFields _;
-		void* pvCache;
+		PhotonView* pvCache;
 	};
 
 	struct MonoBehaviourPunCallbacksFields

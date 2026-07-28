@@ -13,7 +13,6 @@ namespace PhasmoCheatV::Features::Map
         void OnDeactivate() override {}
         void OnRender() override {}
         void OnMenuRender() override;
-        void DoorModifierMain();
         void AutoOpenDoors();
 
     private:

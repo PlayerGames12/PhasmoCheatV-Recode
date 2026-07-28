@@ -51,7 +51,7 @@ void JournalModifier::OnDeactivate()
 
 void JournalModifier::OnRender()
 {
-    if (!IsActive() || !InGame::ghostAI || !InGame::ghostAI->Fields.GhostInfo)
+    if (!IsActive() || !Utils::GetGhostAI() || !Utils::GetGhostAI()->Fields.GhostInfo)
         return;
 
     const float now = SDK::Time_Get_Time(nullptr);
@@ -63,7 +63,7 @@ void JournalModifier::OnRender()
 
     lastUpdateTime = now;
 
-    const int ghostType = static_cast<int>(InGame::ghostAI->Fields.GhostInfo->Fields.GhostTraits.GhostType_);
+    const int ghostType = static_cast<int>(Utils::GetGhostAI()->Fields.GhostInfo->Fields.GhostTraits.GhostType_);
     JournalModifierMain(ghostType);
 }
 

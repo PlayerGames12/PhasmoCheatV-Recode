@@ -2,22 +2,21 @@
 
 using namespace PhasmoCheatV::Features::Misc;
 
-static const SDK::Vector3 flippedScale = { 1.0f, -1.0f, 1.0f };
-static const SDK::Vector3 normalScale  = { 1.0f,  1.0f, 1.0f };
-
-GhostHandstand::GhostHandstand() : FeatureCore(LANG("GhostHandstand_Header"), TYPE_MISC)
-{
-}
+GhostHandstand::GhostHandstand() : FeatureCore(LANG("GhostHandstand_Header"), TYPE_MISC) {}
 
 void GhostHandstand::OnMenuRender()
 {
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 6));
+
 	bool enabled = IsActive();
-	if (BCheckBox(LANG("GhostHandstandEnabled"), &enabled, "b_GhostHandstandEnabled"))
+	if (ImGui::Checkbox(LANG("GhostHandstandEnabled"), &enabled))
 	{
 		SET_CONFIG_VALUE(GetConfigManager(), "Enabled", bool, enabled);
 		if (enabled) OnActivate();
 		else OnDeactivate();
 	}
+
+	ImGui::PopStyleVar();
 }
 
 void GhostHandstand::GhostHandstandMain(SDK::GhostAI* ghostAI)

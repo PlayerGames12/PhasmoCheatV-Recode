@@ -131,8 +131,7 @@ bool CopyToTemp(const char* src, char* out)
     return CopyFileA(src, out, FALSE);
 }
 
-int main()
-{
+int main(){
     SetConsoleTitleA("PhasmoCheatV Injector");
 
     std::cout << "Checking VC Redist version..." << std::endl;
@@ -168,6 +167,8 @@ int main()
     if (!p)
     {
         std::cout << "Failed to open process!" << std::endl;
+        std::cout << "Press Enter to exit...";
+        std::cin.get();
         return 0;
     }
 
@@ -177,6 +178,8 @@ int main()
     if (!CopyToTemp(dll, tmp))
     {
         std::cout << "Failed to copy DLL to temp!" << std::endl;
+        std::cout << "Press Enter to exit...";
+        std::cin.get();
         return 0;
     }
 
@@ -186,6 +189,8 @@ int main()
     if (!r)
     {
         std::cout << "Failed to allocate memory!" << std::endl;
+        std::cout << "Press Enter to exit...";
+        std::cin.get();
         return 0;
     }
 
@@ -195,6 +200,8 @@ int main()
     if (!ll)
     {
         std::cout << "Failed to get LoadLibraryA!" << std::endl;
+        std::cout << "Press Enter to exit...";
+        std::cin.get();
         return 0;
     }
 
@@ -202,6 +209,8 @@ int main()
     if (!t)
     {
         std::cout << "Failed to create remote thread!" << std::endl;
+        std::cout << "Press Enter to exit...";
+        std::cin.get();
         return 0;
     }
 

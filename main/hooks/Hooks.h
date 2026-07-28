@@ -10,18 +10,11 @@ namespace PhasmoCheatV
 		static LRESULT HkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Other hooks
-		static void hkLevelController_Start(SDK::LevelController* levelController, SDK::MethodInfo* methodInfo);
 		static void hkExitLevel_Exit(SDK::ExitLevel* exitLevel, void* photon, SDK::MethodInfo* methodInfo);
 		static void hkGameController_Exit(SDK::GameController* gameController, void* photon, SDK::MethodInfo* methodInfo);
 		static void hkPauseMenuController_Leave(SDK::PauseMenuController* pauseMenuController, SDK::MethodInfo* methodInfo);
-		static void hkMapController_Start(SDK::MapController* mapController, SDK::MethodInfo* methodInfo);
-		static void hkGhostAI_Start(SDK::GhostAI* ghostAI, SDK::MethodInfo* methodInfo);
 		static void hkGhostAI_Update(SDK::GhostAI* ghostAI, SDK::MethodInfo* methodInfo);
 		static void hkGhostAI_Hunting(SDK::GhostAI* ghostAI, bool isHunting, int obakeArrayID, void* photon, SDK::MethodInfo* methodInfo);
-		static void hkEvidenceController_Start(SDK::EvidenceController* evidenceController, SDK::MethodInfo* methodInfo);
-		static void hkEMFData_Start(SDK::EMFData* emfData, SDK::MethodInfo* methodInfo);
-		//static void hkPlayer_StartKillingPlayer(SDK::Player* player, SDK::MethodInfo* methodInfo);
-		//static std::nullptr_t hkPlayer_StartKillingPlayerNetworked(SDK::Player* player, bool b1, void* photon, SDK::MethodInfo* methodInfo);
 		static void hkPlayer_Start(SDK::Player* player, SDK::MethodInfo* methodInfo);
 		static void hkGhostInfo_SyncEvidence(SDK::GhostInfo* instance, int* evidence, void* info, SDK::MethodInfo* methodInfo);
 		static void hkGhostInfo_SyncValuesNetworked(SDK::GhostInfo* instance, int ghostType, int ghostAge, bool isMale, int ghostFirstNameID, int ghostLastNameID, bool isShy, int deathLength, int favouriteRoomID, bool isWhisper, void* photonMessageInfo, SDK::MethodInfo* methodInfo);
@@ -45,11 +38,8 @@ namespace PhasmoCheatV
 		static void hkFallTeleportBox_OnTriggerEnter(SDK::FallTeleportBox* fallTeleportBox, SDK::Collider* collider, SDK::MethodInfo* methodInfo);
 		static void hkLightSwitch_Start(SDK::LightSwitch* lightSwitch, SDK::MethodInfo* methodInfo);
 		static void hkLightningController_Start(SDK::LightningController* lightningController, SDK::MethodInfo* methodInfo);
-		static void hkTarotCards_GrabCard(SDK::TarotCards* tarotCards, SDK::MethodInfo* methodInfo);
 		static void hkTarotCards_BreakItem(SDK::TarotCards* tarotCards, SDK::MethodInfo* methodInfo);
-		static void hkRandomWeather_Start(SDK::RandomWeather* randomWeather, SDK::MethodInfo* methodInfo);
 		static void hkEMFData_UpdateNightMareGraph(SDK::EMFData* emfData, SDK::MethodInfo* methodInfo);
-		static void hkCursedItemsController_Awake(SDK::CursedItemsController* cursedItemsController, SDK::MethodInfo* methodInfo);
 		static void hkLiftButton_AttemptUse(SDK::LiftButton* liftButton, void* photon, SDK::MethodInfo* methodInfo);
 		static void hkGameController_PlayerDied(SDK::GameController* gameController, SDK::Player* player, SDK::MethodInfo* methodInfo);
 		static void hkThermometer_HoldUse(SDK::Thermometer* thermometer, SDK::MethodInfo* methodInfo);
@@ -63,11 +53,15 @@ namespace PhasmoCheatV
 		static bool hkEVPRecorder_CanAnswer(SDK::EVPRecorder* recorder, SDK::MethodInfo* methodInfo);
 		static void hkScriptableRenderContext_Submit(SDK::ScriptableRenderContext* context, SDK::MethodInfo* methodInfo);
 		static void hkPlayer_BeginDeathSequence(SDK::Player* player, SDK::deathType deadType, SDK::MethodInfo* methodInfo);
-		static void hkGameController_Awake(SDK::GameController* gameController, SDK::MethodInfo* methodInfo);
 		static void hkRewardManager_Awake(SDK::RewardManager* rewardManager, SDK::MethodInfo* methodInfo);
 		static void hkSceneManagement_Internal_SceneLoaded(void* scene, int32_t mode, SDK::MethodInfo* method);
 		static void hkAWDoll_Awake(SDK::AWDoll* awDoll, SDK::MethodInfo* methodInfo);
 		static void hkKey_GrabbedKey(SDK::Key* key, SDK::MethodInfo* methodInfo);
+		static void hkHuntingState_ctor(SDK::HuntingState* huntingState, SDK::GhostAI* ghostAI, void* navMeshAgent, SDK::PhotonView* photonView, bool force, SDK::MethodInfo* methodInfo);
+		static void hkPlayer_NotifyOfDeathEnd(SDK::Player* player, SDK::MethodInfo* methodInfo);
+		static void hkPlayer_NotifyOfDeathStart(SDK::Player* player, void* photonMessageInfo, SDK::MethodInfo* methodInfo);
+		static void hkJournalController_SendState(SDK::JournalController* journalController, bool a1, bool sync, SDK::MethodInfo* methodInfo);
+		static void hkCrucifix_GhostUse(SDK::Crucifix* crucifix, SDK::MethodInfo* methodInfo);
 		 
 		// CosmeticsUnlocker hooks
 #if COSMETICSUNLOCKER

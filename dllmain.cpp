@@ -33,34 +33,15 @@ void WaitForGameReady()
     Sleep(2000);
 }
 
-LONG CALLBACK VehHandler(EXCEPTION_POINTERS* ep)
-{
-    if (ep->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION)
-    {
-        auto rip = ep->ContextRecord->Rip;
-        auto addr = ep->ExceptionRecord->ExceptionInformation[1];
-
-        char buf[128];
-        wsprintfA(buf, "AV RIP=%p ADDR=%p\n", (void*)rip, (void*)addr);
-        LOG_INFO(buf);
-        OutputDebugStringA(buf);
-    }
-
-    return EXCEPTION_CONTINUE_SEARCH; // fall next
-}
-
 // Global module handle
 static std::unique_ptr<Logger> loggerInstance;
 static std::unique_ptr<Renderer> rendererInstance;
 static std::unique_ptr<Hooking> hookingInstance;
 static std::unique_ptr<FeatureHandler> featureInstance;
-static PVOID g_VehHandle = nullptr;
 
 // Main cheat thread
 extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
 {
-    g_VehHandle = AddVectoredExceptionHandler(1, VehHandler);
-
     WaitForGameReady();
     bool hooksApplied = false;
 
@@ -95,7 +76,7 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
 
         Discord::Initialize();
 
-        /* 2.6-2.7 Diagnostics is currently disabled due to some issues, but it will be back in the future updates.
+        /* Diagnostics is currently disabled due to some issues, but it will be back in the future updates.
         if (Diagnostics::Init())
         {
             Diagnostics::Send("GameVersion", Utils::GetGameVersion());
@@ -107,18 +88,11 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
 
         // Set up hooks
         AHK(hookingInstance->OriginalPresent, Hooks::HkPresent); // using ADD_HOOK
-        AHKA(LevelController_Start); // using ADD_HOOK_AUTO
-        AHKA(ExitLevel_Exit);
-        AHKA(MapController_Start);
-        AHKA(GhostAI_Start);
+        AHKA(ExitLevel_Exit); // using ADD_HOOK_AUTO
         AHKA(GameController_Exit);
         AHKA(PauseMenuController_Leave);
         AHKA(GhostAI_Hunting);
         AHKA(GhostAI_Update);
-        AHKA(EvidenceController_Start);
-        AHKA(EMFData_Start);
-        //AHKA(Player_StartKillingPlayer);
-        //AHKA(Player_StartKillingPlayerNetworked);
         AHKA(Player_Start);
         AHKA(GhostInfo_SyncValuesNetworked);
         AHKA(GhostInfo_SyncEvidence);
@@ -143,8 +117,6 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
         AHKA(LightSwitch_Start);
         AHKA(LightningController_Start);
         AHKA(TarotCards_BreakItem);
-        AHKA(RandomWeather_Start);
-        AHKA(CursedItemsController_Awake);
         AHKA(LiftButton_AttemptUse);
         AHKA(GameController_PlayerDied);
         AHKA(Thermometer_HoldUse);
@@ -156,23 +128,22 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
         AHKA(Jackalope_Awake);
         AHKA(ScriptableRenderContext_Submit);
         AHKA(Player_BeginDeathSequence);
-        AHKA(GameController_Awake);
         AHKA(RewardManager_Awake);
         AHKA(SceneManagement_Internal_SceneLoaded);
         AHKA(Key_GrabbedKey);
+        AHKA(Player_NotifyOfDeathEnd);
+        AHKA(Player_NotifyOfDeathStart);
+        AHKA(Crucifix_GhostUse);
+        PHK(HandCamera_MoveNext, Hooks::hkHandCamera_MoveNext); // using PATTERN_HOOK
+		PHK(HuntingState_ctor, Hooks::hkHuntingState_ctor);
+        PHK(EMFData_UpdateNightMareGraph, Hooks::hkEMFData_UpdateNightMareGraph);
+        PHK(JournalController_SendState, Hooks::hkJournalController_SendState);
+
 
         // CosmeticsUnlocker hooks
 #if COSMETICSUNLOCKER
 #include "unlockcosmetics/dllmain_hooks.txt"
 #endif
-
-        PHK(HandCamera_MoveNext, Hooks::hkHandCamera_MoveNext); // Use PATTERN_HOOK
-
-        auto& funcs_UpdateNightmareGraph = const_cast<std::vector<SDK::EMFData_UpdateNightMareGraph_t>&>(SDK::Get_EMFData_UpdateNightMareGraph_All());
-        for (size_t i = 0; i < funcs_UpdateNightmareGraph.size(); i++)
-        {
-            hooking->AddHook("EMFData_UpdateNightMareGraph_" + std::to_string(i), reinterpret_cast<PVOID*>(&funcs_UpdateNightmareGraph[i]), reinterpret_cast<PVOID>(&Hooks::hkEMFData_UpdateNightMareGraph));
-        }
 
         hookingInstance->ApplyHooks();
         hooksApplied = true;
@@ -189,9 +160,6 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
 
         NOTIFY_INFO_QUICK(LANG("Menu_CheatInjected") + Utils::getKeyName(MenuToggleKey));
         LOG_INFO("Cheat injected successfully. The menu opens on " + Utils::getKeyName(MenuToggleKey));
-
-        InGame::ghostAI = Utils::GetGhostAI();
-        if (!InGame::ghostAI) LOG_INFO("Ghost not found with tag!");
 
         int presenceUpdateTimer = 0;
 
@@ -236,6 +204,7 @@ extern "C" __declspec(dllexport) DWORD WINAPI PhasmoCheatVThread()
     hookingInstance.reset();
     rendererInstance.reset();
     featureInstance.reset();
+    g_symbolResolver.Shutdown();
 
     LOG_INFO("Cleanup completed");
 
@@ -244,12 +213,6 @@ finalize:
         loggerInstance->ShutdownConsole();
 
     loggerInstance.reset();
-
-    if (g_VehHandle)
-    {
-        RemoveVectoredExceptionHandler(g_VehHandle);
-        g_VehHandle = nullptr;
-    }
 
     FreeLibraryAndExitThread(globalModule, NULL);
     return 0;

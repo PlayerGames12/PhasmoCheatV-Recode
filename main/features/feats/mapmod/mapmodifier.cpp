@@ -127,9 +127,9 @@ void MapModifier::OnMenuRender()
 
 void MapModifier::MapModifierMain()
 {
-    if (IsActive() && CONFIG_BOOL(GetConfigManager(), "CustomMaxLight") && InGame::fuseBox)
+    if (IsActive() && CONFIG_BOOL(GetConfigManager(), "CustomMaxLight") && SDK::LevelController_sFields->instance && SDK::LevelController_sFields->instance->Fields.fuseBox)
     {
-        InGame::fuseBox->Fields.maxLights = CONFIG_INT(GetConfigManager(), "MaxLight");
+        SDK::LevelController_sFields->instance->Fields.fuseBox->Fields.maxLights = CONFIG_INT(GetConfigManager(), "MaxLight");
     }
     
     if (IsActive() && lightsModifier == 1)
@@ -188,7 +188,7 @@ void MapModifier::MapModifierMain()
             return;
         }
 
-        auto* randomWeather = InGame::randomWeather;
+        auto* randomWeather = SDK::RandomWeather_sFields->instance;
 
         if (!randomWeather)
         {
@@ -204,18 +204,33 @@ void MapModifier::MapModifierMain()
             return;
         }
 
-        if (weatherProfile->Fields.weatherType != SDK::WeatherType::heavyRain) // NEVER REMOVE THIS IF LOOP - IT WILL RESULT IN ISHACKER = TRUE
+        auto gameObject = SDK::Component_Get_GameObject(reinterpret_cast<SDK::Component*>(lightningController), nullptr);
+        if (!gameObject)
+        {
+            NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
+            return;
+        }
+
+        auto photonView = reinterpret_cast<SDK::PhotonView*>(SDK::GameObject_GetComponentByName(gameObject, Utils::SysStrToUnityStr("Photon.Pun.PhotonView"), nullptr));
+        if (!photonView)
+        {
+            NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
+            return;
+        }
+
+        if (weatherProfile->Fields.weatherType != SDK::WeatherType::heavyRain) // NEVER REMOVE THIS IF LOOP
         {
             NOTIFY_ERROR_QUICK(LANG("WeatherShouldBeHeavyRain"));
             return;
         }
 
-        auto* methodLightning = SDK::Get_LightningController_PlayLightning();
+        if (!SDK::PhotonNetwork_Get_IsMasterClient(nullptr) || !SDK::PhotonNetwork_Get_OfflineMode(nullptr)) // NEVER REMOVE THIS IF LOOP
+        {
+            NOTIFY_ERROR_QUICK("NeedMustBeHost");
+            return;
+        }
 
-        if (!methodLightning)
-            NOTIFY_ERROR_QUICK(LANG("WarnNeedReportDev"));
-
-        methodLightning(lightningController, nullptr);
+        SDK::PhotonView_RPC(photonView, Utils::SysStrToUnityStr("PlayLightningNetworked"), SDK::RpcTarget::All, nullptr, nullptr);
 
         NOTIFY_SUCCESS_QUICK(LANG("LightningTriggered"));
     }
@@ -224,7 +239,14 @@ void MapModifier::MapModifierMain()
     {
         switchFuseBox = false;
 
-        auto* fuseBox = InGame::fuseBox;
+        auto levelController = SDK::LevelController_sFields->instance;
+        if (!levelController)
+        {
+            NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
+            return;
+        }
+
+        auto* fuseBox = levelController->Fields.fuseBox;
 
         if (!fuseBox)
         { 

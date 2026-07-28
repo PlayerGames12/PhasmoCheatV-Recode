@@ -33,7 +33,8 @@ LRESULT __stdcall Hooks::HkWndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LP
 	if (uMsg == WM_KEYUP && wParam == VK_DELETE)
     {
         Globals::IsDebugging = !Globals::IsDebugging;
-		NOTIFY_INFO_QUICK("Debug mode ", Globals::IsDebugging ? "enabled" : "disabled");
+        Globals::IsCalledLogs = !Globals::IsCalledLogs;
+		NOTIFY_INFO_QUICK(std::format("Debug Mode {}", Globals::IsDebugging ? "enabled" : "disabled"));
     }
 
     if (menu.Open)

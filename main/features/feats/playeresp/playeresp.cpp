@@ -80,7 +80,7 @@ PlayerESP::PlayerESP() : FeatureCore(LANG("PlayerESP_Header"), TYPE_VISUALS)
 
 void PlayerESP::OnRender()
 {
-    if (!IsActive() || InGame::ghostAI == nullptr)
+    if (!IsActive() || Utils::GetGhostAI() == nullptr)
         return;
 
     const auto players = Utils::GetAllPlayers();
@@ -233,7 +233,7 @@ void PlayerESP::OnRender()
 
         if (showSanity && !player->Fields.IsDead)
         {
-            float sanity = 100.0f - Utils::GetPlayerSanity(player);
+            float sanity = Utils::GetPlayerSanity(player);
             sanity = std::clamp(sanity, 0.0f, 100.0f);
 
             constexpr float barWidth = 8.0f;

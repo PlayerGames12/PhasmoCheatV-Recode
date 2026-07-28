@@ -122,10 +122,10 @@ SDK::Network* Utils::GetNetwork()
 
 SDK::ListPlayer* Utils::GetAllPlayers()
 {
-	if (InGame::mapController == nullptr)
+	if (!SDK::MapController_sFields->instance)
 		return nullptr;
 
-	return InGame::mapController->Fields.Players;
+	return SDK::MapController_sFields->instance->Fields.Players;
 }
 
 int Utils::GetPlayerInx(const SDK::Player* player)
@@ -377,6 +377,9 @@ std::string Utils::GhostEnumToStr(SDK::GhostType ghostType)
 		break;
 	case SDK::GhostType::Aswang:
 		ghostTypeString = "Aswang";
+		break;
+	case SDK::GhostType::Deildegast:
+		ghostTypeString = "Deildegast";
 		break;
 	default:
 		ghostTypeString = "Unknown";
@@ -813,9 +816,32 @@ double Utils::GetCheatUptimeSeconds()
 	return duration.count();
 }
 
+float Utils::toSanityOrInsanity(float value)
+{
+	return 100.0f - value;
+}
+/*
+errors code:
+-1: player is null
+-2: playerSanity is null
+-3: sanity less than 0
+*/
 float Utils::GetPlayerSanity(SDK::Player* player)
 {
-	return player->Fields.PlayerSanity->Fields.insanity;
+	if (!player)
+		return -1;
+
+	auto playerSanity = player->Fields.PlayerSanity;
+
+	if (!playerSanity)
+		return -2;
+
+	auto sanity = toSanityOrInsanity(playerSanity->Fields.insanity);
+
+	if (sanity < 0)
+		return -3;
+
+	return sanity;
 }
 
 bool Utils::IsLocalMasterClient()
@@ -833,6 +859,8 @@ void Utils::TpPlayerToVec3(SDK::Player* player, const SDK::Vector3& position)
 
 void Utils::TpPlayerToPlayer(SDK::Player* player, const SDK::Player* twoplayer)
 {
+	if (!player || !twoplayer)
+		return;
 	TpPlayerToVec3(player, GetPosVec3(twoplayer));
 }
 
@@ -974,7 +1002,6 @@ SDK::ExitLevel* Utils::GetExitLevel()
 		auto* exitLevel = reinterpret_cast<SDK::ExitLevel*>(raw);
 		if (!exitLevel) continue;
 
-		LOG_INFO("Found ExitLevel");
 		return exitLevel;
 	}
 
@@ -1295,16 +1322,11 @@ SDK::GameObject* Utils::GetPlayerCrosshairObj(SDK::Player* player)
 
 SDK::GhostAI* Utils::GetGhostAI()
 {
-	auto* ghostAIArray = SDK::GameObject_FindGameObjectsWithTag(SysStrToUnityStr("Ghost"), nullptr);
-	if (!ghostAIArray) return nullptr;
+	auto levelController = SDK::LevelController_sFields->instance;
+	if (!levelController)
+		return nullptr;
 
-	for (uint32_t i = 0; i < 65535; i++)
-	{
-		SDK::GameObject* obj = ghostAIArray->Vector[i];
-		if (!obj) break;
-		return reinterpret_cast<SDK::GhostAI*>(SDK::GameObject_GetComponent(obj, SDK::System_Type_GetType(SysStrToUnityStr("GhostAI"), nullptr), nullptr));
-	}
-	return nullptr;
+	return levelController->Fields.ghostAI;
 }
 
 SDK::Transform* Utils::GetPotatoe()
@@ -1454,7 +1476,7 @@ bool Utils::Checks_IsRealSender(SDK::Player* pn_sender, SDK::PhotonView* view)
 	if (pn_sender == nullptr || view == nullptr)
 		return 0; // In game code return true
 
-	if (pn_sender != SDK::PhotonView_get_Owner(view, nullptr))
+	if (pn_sender != reinterpret_cast<SDK::Player*>(SDK::PhotonView_get_Owner(view, nullptr)))
 		return 0;
 
 	if (!SDK::PhotonNetwork_Get_InRoom(nullptr))
@@ -1637,11 +1659,11 @@ SDK::GameObject* Utils::GameObject_Find(std::string name)
 bool Utils::IsInGame()
 {
 	bool inGame = 
-		InGame::gameController && 
-		InGame::gameController->Fields.allPlayersAreConnected &&
-		InGame::ghostAI &&
-		InGame::ghostAI->Fields.GhostInfo &&
-		InGame::ghostAI->Fields.GhostInfo->Fields.GhostTraits.Name;
+		SDK::GameController_StaticFields->instance && 
+		SDK::GameController_StaticFields->instance->Fields.allPlayersAreConnected &&
+		Utils::GetGhostAI() &&
+		Utils::GetGhostAI()->Fields.GhostInfo &&
+		Utils::GetGhostAI()->Fields.GhostInfo->Fields.GhostTraits.Name;
 	
 	return inGame;
 }

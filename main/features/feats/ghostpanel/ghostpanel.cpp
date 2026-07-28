@@ -15,6 +15,105 @@ GhostPanel::GhostPanel() : FeatureCore(LANG("GhostPanel_Header"), TYPE_VISUALS)
     DECLARE_CONFIG(GetConfigManager(), "HideLocation", bool, false);
     DECLARE_CONFIG(GetConfigManager(), "HideMimicType", bool, false);
     DECLARE_CONFIG(GetConfigManager(), "HideBansheeTarget", bool, false);
+    DECLARE_CONFIG(GetConfigManager(), "HideCurrentSpeed", bool, false);
+    DECLARE_CONFIG(GetConfigManager(), "HideHuntDuration", bool, false);
+    DECLARE_CONFIG(GetConfigManager(), "RowOrder", std::string, "Name;Type;Age;State;Mimic;Banshee;Evidence;Room;Location;GhostCurrentSpeed");
+}
+
+void GhostPanel::LoadRowOrder()
+{
+    m_rowOrder.clear();
+    const std::string raw = CONFIG_STRING(GetConfigManager(), "RowOrder");
+
+    size_t start = 0;
+    while (start < raw.size())
+    {
+        size_t sep = raw.find(';', start);
+        if (sep == std::string::npos) sep = raw.size();
+        m_rowOrder.push_back(raw.substr(start, sep - start));
+        start = sep + 1;
+    }
+
+    if (m_rowOrder.empty())
+        m_rowOrder = { "Name", "Type", "Age", "State", "Mimic", "Banshee", "Evidence", "Room", "Location", "GhostCurrentSpeed", "HuntDuration" };
+}
+
+void GhostPanel::SaveRowOrder()
+{
+    std::string raw;
+    for (size_t i = 0; i < m_rowOrder.size(); ++i)
+    {
+        if (i > 0) raw += ";";
+        raw += m_rowOrder[i];
+    }
+    SET_CONFIG_VALUE(GetConfigManager(), "RowOrder", std::string, raw);
+}
+
+void GhostPanel::DrawReorderableRows(std::vector<RowDef>& rows)
+{
+    std::unordered_map<std::string, RowDef*> byId;
+    for (auto& r : rows) byId[r.id] = &r;
+
+    std::vector<std::string> activeOrder;
+    for (auto& id : m_rowOrder)
+        if (byId.count(id) && !byId[id]->value.empty())
+            activeOrder.push_back(id);
+
+    for (auto& r : rows)
+        if (std::find(activeOrder.begin(), activeOrder.end(), r.id) == activeOrder.end() && !r.value.empty())
+            activeOrder.push_back(r.id);
+
+    bool orderChanged = false;
+
+    for (int i = 0; i < (int)activeOrder.size(); ++i)
+    {
+        RowDef* row = byId[activeOrder[i]];
+        ImGui::PushID(row->id.c_str());
+
+        ImGui::Selectable("##drag_handle", false, ImGuiSelectableFlags_None, ImVec2(0, 0));
+
+        // source
+        if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+        {
+            ImGui::SetDragDropPayload("GHOST_ROW", &i, sizeof(int));
+            ImGui::Text("%s", row->label.c_str());
+            ImGui::EndDragDropSource();
+        }
+
+        // target
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GHOST_ROW"))
+            {
+                int srcIndex = *(const int*)payload->Data;
+                if (srcIndex != i)
+                {
+                    std::string moved = activeOrder[srcIndex];
+                    activeOrder.erase(activeOrder.begin() + srcIndex);
+                    activeOrder.insert(activeOrder.begin() + i, moved);
+                    orderChanged = true;
+                }
+            }
+            ImGui::EndDragDropTarget();
+        }
+
+        ImGui::SameLine();
+        ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.9f, 1.0f), "%s", row->label.c_str());
+        ImGui::SameLine(140.0f);
+
+        if (row->hidden && CONFIG_BOOL(GetConfigManager(), "IsHideSettings"))
+            DrawHiddenValue();
+        else
+            ImGui::TextWrapped("%s", row->value.c_str());
+
+        ImGui::PopID();
+    }
+
+    if (orderChanged)
+    {
+        m_rowOrder = activeOrder;
+        SaveRowOrder();
+    }
 }
 
 void GhostPanel::DrawHiddenValue(float width, float height)
@@ -36,10 +135,16 @@ void GhostPanel::OnRender()
 {
     if (!IsActive()) return;
 
-    if (!InGame::ghostAI || !InGame::ghostAI->Fields.GhostInfo)
-		return;
+    if (!Utils::GetGhostAI() || !Utils::GetGhostAI()->Fields.GhostInfo)
+        return;
 
-    const auto& ghostInfo = InGame::ghostAI->Fields.GhostInfo;
+    if (!m_rowOrderLoaded)
+    {
+        LoadRowOrder();
+        m_rowOrderLoaded = true;
+    }
+
+    const auto& ghostInfo = Utils::GetGhostAI()->Fields.GhostInfo;
     const auto& ghostTraits = ghostInfo->Fields.GhostTraits;
 
     if (!ghostTraits.Name)
@@ -58,73 +163,48 @@ void GhostPanel::OnRender()
     ImGui::Begin("###GhostWindow", nullptr, ghostWindowFlags);
 
     ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
-	ImGui::TextColored(ImVec4(0.51f, 0.25f, 0.96f, 1.00f), "GHOST PROFILE"); // font don't support russian and chinese language, so we use english for this title
+    ImGui::TextColored(ImVec4(0.51f, 0.25f, 0.96f, 1.00f), "GHOST PROFILE");
     ImGui::PopFont();
     ImGui::Separator();
     ImGui::Spacing();
 
-    if (ImGui::BeginTable("GhostInfoPanel", 2,
-        ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_SizingFixedFit))
-    {
-        ImGui::TableSetupColumn("Label", ImGuiTableColumnFlags_WidthFixed, 120);
-        ImGui::TableSetupColumn("Value", ImGuiTableColumnFlags_WidthStretch);
+    std::vector<RowDef> rows;
 
-        auto DrawRow = [&](const char* label, const char* value, bool hidden) {
-            ImGui::TableNextRow();
-            ImGui::TableSetColumnIndex(0);
-            ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.9f, 1.0f), "%s", label);
-            ImGui::TableSetColumnIndex(1);
+    rows.push_back({ "Name", LANG("GhostName"), Utils::UnityStrToSysStr(*ghostTraits.Name), CONFIG_BOOL(GetConfigManager(), "HideName") });
+    rows.push_back({ "Type", LANG("GhostType"), Utils::GhostEnumToStrLocalized(ghostTraits.GhostType_), CONFIG_BOOL(GetConfigManager(), "HideType") });
+    rows.push_back({ "Age", LANG("GhostAge"), std::to_string(ghostTraits.GhostAge), CONFIG_BOOL(GetConfigManager(), "HideAge") });
+    rows.push_back({ "State", LANG("GhostState"), Utils::GhostEnumToStr(Utils::GetGhostAI()->Fields.currentState), CONFIG_BOOL(GetConfigManager(), "HideState") });
 
-            if (hidden)
-                DrawHiddenValue();
-            else
-                ImGui::TextWrapped("%s", value);
-            };
+    if (ghostTraits.GhostType_ == SDK::GhostType::Mimic)
+        rows.push_back({ "Mimic", LANG("MimicType"), Utils::GhostEnumToStr(ghostTraits.MimicType), CONFIG_BOOL(GetConfigManager(), "HideMimicType") });
 
-        DrawRow(LANG("GhostName"), Utils::UnityStrToSysStr(*ghostTraits.Name).c_str(), CONFIG_BOOL(GetConfigManager(), "HideName"));
+    if (CONFIG_BOOL(GetConfigManager(), "BansheeTargetSetting") && ghostTraits.GhostType_ == SDK::GhostType::Banshee)
+        if (const auto& bansheeTarget = Utils::GetGhostAI()->Fields.BansheeTarget)
+            rows.push_back({ "Banshee", LANG("BansheeTarget"), Utils::GetPlayerName(bansheeTarget), CONFIG_BOOL(GetConfigManager(), "HideBansheeTarget") });
 
-        DrawRow(LANG("GhostType"), Utils::GhostEnumToStrLocalized(ghostTraits.GhostType_).c_str(), CONFIG_BOOL(GetConfigManager(), "HideType"));
+    if (const auto& evidence = GetGhostEvidenceString(); !evidence.empty())
+        rows.push_back({ "Evidence", LANG("Evidence"), evidence, CONFIG_BOOL(GetConfigManager(), "HideEvidence") });
 
-        DrawRow(LANG("GhostAge"), std::to_string(ghostTraits.GhostAge).c_str(), CONFIG_BOOL(GetConfigManager(), "HideAge"));
-        DrawRow(LANG("GhostState"), Utils::GhostEnumToStr(InGame::ghostAI->Fields.currentState).c_str(), CONFIG_BOOL(GetConfigManager(), "HideState"));
+    if (const auto& levelRoom = ghostInfo->Fields.favouriteRoom; levelRoom && levelRoom->Fields.RoomName)
+        rows.push_back({ "Room", LANG("FavoriteRoom"), Utils::UnityStrToSysStr(*levelRoom->Fields.RoomName), CONFIG_BOOL(GetConfigManager(), "HideRoom") });
 
-        if (ghostTraits.GhostType_ == SDK::GhostType::Mimic)
-            DrawRow(LANG("MimicType"), Utils::GhostEnumToStr(ghostTraits.MimicType).c_str(), CONFIG_BOOL(GetConfigManager(), "HideMimicType"));
+    if (SDK::LevelController_sFields->instance && SDK::LevelController_sFields->instance->Fields.currentGhostRoom)
+        if (const auto ghostRoom = SDK::LevelController_sFields->instance->Fields.currentGhostRoom; ghostRoom->Fields.RoomName)
+            rows.push_back({ "Location", LANG("Location"), Utils::UnityStrToSysStr(*ghostRoom->Fields.RoomName), CONFIG_BOOL(GetConfigManager(), "HideLocation") });
+    if (const auto& ghostNavMesh = Utils::GetGhostAI()->Fields.NavMeshAgent)
+        rows.push_back({ "GhostCurrentSpeed", LANG("GhostCurrentSpeed"), std::format("{:.1f} units/s", SDK::NavMeshAgent_get_speed(ghostNavMesh, nullptr)), CONFIG_BOOL(GetConfigManager(), "HideCurrentSpeed") }); // unity units/seconds
+    if (Globals::isHunting && InGame::huntingState && InGame::huntingState->Fields.huntDurationTimer > 0)
+        rows.push_back({ "HuntDuration", LANG("GhostHuntDuration"), std::format("{:.1f} sec", InGame::huntingState->Fields.huntDurationTimer), CONFIG_BOOL(GetConfigManager(), "HideHuntDuration")});
 
-        if (CONFIG_BOOL(GetConfigManager(), "BansheeTargetSetting") &&
-            ghostTraits.GhostType_ == SDK::GhostType::Banshee)
-        {
-            if (const auto& bansheeTarget = InGame::ghostAI->Fields.BansheeTarget)
-                DrawRow(LANG("BansheeTarget"), Utils::GetPlayerName(bansheeTarget).c_str(), CONFIG_BOOL(GetConfigManager(), "HideBansheeTarget"));
-        }
+    DrawReorderableRows(rows);
 
-        if (const auto& evidence = GetGhostEvidenceString(); !evidence.empty())
-            DrawRow(LANG("Evidence"), evidence.c_str(), CONFIG_BOOL(GetConfigManager(), "HideEvidence"));
-        if (const auto& levelRoom = ghostInfo->Fields.favouriteRoom;
-            levelRoom && levelRoom->Fields.RoomName)
-        {
-            DrawRow(LANG("FavoriteRoom"), Utils::UnityStrToSysStr(*levelRoom->Fields.RoomName).c_str(), CONFIG_BOOL(GetConfigManager(), "HideRoom"));
-        }
-
-        if (InGame::levelController && InGame::levelController->Fields.currentGhostRoom)
-        {
-            const auto ghostRoom = InGame::levelController->Fields.currentGhostRoom;
-            if (ghostRoom->Fields.RoomName)
-                DrawRow(LANG("Location"), Utils::UnityStrToSysStr(*ghostRoom->Fields.RoomName).c_str(), CONFIG_BOOL(GetConfigManager(), "HideLocation"));
-        }
-
-        ImGui::TableNextRow();
-        ImGui::TableSetColumnIndex(0);
-        ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.9f, 1.0f), "Status");
-        ImGui::TableSetColumnIndex(1);
-
-        if (Globals::isHunting)
-            ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), "HUNTING");
-        else
-            ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), "PASSIVE");
-
-        ImGui::EndTable();
-    }
+    ImGui::Separator();
+    ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.9f, 1.0f), "Status");
+    ImGui::SameLine(140.0f);
+    if (Globals::isHunting)
+        ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), "HUNTING");
+    else
+        ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), "PASSIVE");
 
     ImGui::End();
     ImGui::PopStyleVar(3);
@@ -189,6 +269,14 @@ void GhostPanel::OnMenuRender()
             bool hideTarget = CONFIG_BOOL(GetConfigManager(), "HideBansheeTarget");
             if (ImGui::Checkbox(LANG("HideBansheeTarget"), &hideTarget))
                 SET_CONFIG_VALUE(GetConfigManager(), "HideBansheeTarget", bool, hideTarget);
+
+            bool hideCurrentSpeed = CONFIG_BOOL(GetConfigManager(), "HideCurrentSpeed");
+            if (ImGui::Checkbox(LANG("HideCurrentSpeed"), &hideCurrentSpeed))
+                SET_CONFIG_VALUE(GetConfigManager(), "HideCurrentSpeed", bool, hideCurrentSpeed);
+
+            bool hideHuntDuration = CONFIG_BOOL(GetConfigManager(), "HideHuntDuration");
+            if (ImGui::Checkbox(LANG("HideHuntDuration"), &hideHuntDuration))
+                SET_CONFIG_VALUE(GetConfigManager(), "HideHuntDuration", bool, hideHuntDuration);
         }
     }
 
@@ -197,7 +285,7 @@ void GhostPanel::OnMenuRender()
 
 std::string GhostPanel::GetGhostEvidenceString()
 {
-    const auto& ghostInfo = InGame::ghostAI->Fields.GhostInfo;
+    const auto& ghostInfo = Utils::GetGhostAI()->Fields.GhostInfo;
     const auto& ghostEvidenceList = ghostInfo->Fields.GhostTraits.GhostEvidenceList;
 
     if (!ghostEvidenceList || ghostEvidenceList->Fields.Size == 0)
@@ -216,3 +304,5 @@ std::string GhostPanel::GetGhostEvidenceString()
 
     return evidence;
 }
+
+//todo: public bool ഩദഠപണഡറപമ (0xFC); // delayedBySmudgeStick + hook on WaitForSeconds = timer smudge stick; hook StopHuntingForTime = ghost is smudged ?

@@ -14,7 +14,7 @@ namespace PhasmoCheatV::Features::Cursed
 		void OnRender() override {}
 		void OnMenuRender() override;
 		void TarotCardApplySettings(SDK::TarotCardType& type);
-		void TarotCardInfCards(SDK::TarotCards* tarotCards, SDK::MethodInfo* methodInfo);
+		bool TarotCardInfCards(SDK::PhotonView* photonView);
 		void CursedItemsControllMain();
 
 	private:

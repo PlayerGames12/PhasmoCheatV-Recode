@@ -4,15 +4,15 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
-#define COSMETICSUNLOCKER 1 // DON'T CHANGE THIS IF YOU NOT HAVE NEED FILES
+#define COSMETICSUNLOCKER 1 //! dont change this if u not have need files
 
 namespace PhasmoCheatV::Globals
 {
 	// DEBUG
 	inline bool IsDebugging = false;
 	inline bool IsCalledLogs = false;
-	inline bool IsUpdateCalledLogs = false; // Warning! A lot of spam
-	inline bool RedirectUnityLogs = false; // Warning! A lot of spam
+	inline bool IsUpdateCalledLogs = false; //! a lot of spam
+	inline bool RedirectUnityLogs = false; //! a lot of spam
 	inline bool IsRPCLogs = false;
 	inline std::chrono::steady_clock::time_point CheatInjectedTime = std::chrono::steady_clock::now();
 	inline bool ForTestsFlag = false;
@@ -23,8 +23,8 @@ namespace PhasmoCheatV::Globals
 	inline bool isHunting = false;
 	inline int MenuToggleKey = VK_RETURN;
 	inline bool IsBeta = false;
-	inline std::string Version = "2.9";
-	inline std::string betaVersion = "2.9.1";
+	inline std::string Version = "3.0";
+	inline std::string betaVersion = "3.0.0";
 	inline char statusRPC[128] = "Waiting...";
 
 	// IMGUI

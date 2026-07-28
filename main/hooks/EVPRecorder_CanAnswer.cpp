@@ -7,7 +7,7 @@ bool Hooks::hkEVPRecorder_CanAnswer(SDK::EVPRecorder* recorder, SDK::MethodInfo*
 {
     LOG_CALL("Called EVPRecorder_CanAnswer");
 
-    const auto ghostAI = InGame::ghostAI;
+    const auto ghostAI = Utils::GetGhostAI();
     if (ghostAI)
     {
         const auto ghostInfo = ghostAI->Fields.GhostInfo;

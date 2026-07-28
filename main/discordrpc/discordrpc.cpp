@@ -54,7 +54,13 @@ namespace Discord
         DiscordRichPresence rp{};
         memset(&rp, 0, sizeof(rp));
 
-        rp.state = Globals::statusRPC;
+        static std::string state;
+        state = std::string(Globals::statusRPC)
+            + " | "
+            + Globals::Version
+            + (Globals::IsBeta ? " | beta" : "");
+
+        rp.state = state.c_str();
         rp.details = "By VCom Team";
         rp.largeImageKey = "main1";
         rp.smallImageKey = "mini1";
@@ -68,8 +74,8 @@ namespace Discord
     {
         std::string name = Utils::GetPlayerName();
 		std::string ghostType = "Unknown";
-        if (InGame::ghostAI && InGame::ghostAI->Fields.GhostInfo)
-		    ghostType = Utils::GhostEnumToStr(InGame::ghostAI->Fields.GhostInfo->Fields.GhostTraits.GhostType_);
+        if (Utils::GetGhostAI() && Utils::GetGhostAI()->Fields.GhostInfo)
+		    ghostType = Utils::GhostEnumToStr(Utils::GetGhostAI()->Fields.GhostInfo->Fields.GhostTraits.GhostType_);
         else
             ghostType = "Not in the game";
 

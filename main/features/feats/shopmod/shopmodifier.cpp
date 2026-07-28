@@ -129,7 +129,7 @@ void ShopModifier::ShopModifierMain()
     if (!IsActive())
         return;
 
-    if (InGame::ghostAI)
+    if (Utils::GetGhostAI())
         return;
 
     const bool skipShopTutorials = CONFIG_BOOL(GetConfigManager(), "SkipShopTutorials");

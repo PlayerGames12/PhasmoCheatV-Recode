@@ -17,5 +17,18 @@ namespace PhasmoCheatV::Features::Visuals
 
 	private:
 		static std::string GetGhostEvidenceString();
+
+		struct RowDef {
+			std::string id;
+			std::string label;
+			std::string value;
+			bool hidden;
+		};
+
+		std::vector<std::string> m_rowOrder;
+		bool m_rowOrderLoaded = false;
+		void LoadRowOrder();
+		void SaveRowOrder();
+		void DrawReorderableRows(std::vector<RowDef>& rows);
 	};
 }

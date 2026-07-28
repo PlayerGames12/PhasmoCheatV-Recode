@@ -26,6 +26,11 @@ namespace SDK
 		MapControllerFields Fields;
 	};
 
+	struct MapController_StaticFields
+	{
+		MapController* instance;
+	};
 
 	DEC_MET(MapController_Start, void(*)(MapController* mapController, MethodInfo* methodInfo), "Assembly-CSharp", "", "MapController", "Start", 0);
+	DEC_SFIELD(MapController_sFields, MapController_StaticFields, "Assembly-CSharp", "", "MapController");
 }

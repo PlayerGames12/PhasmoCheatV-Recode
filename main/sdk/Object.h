@@ -16,7 +16,7 @@ namespace SDK
         void* Monitor;
         void* Bounds;
         uint32_t MaxLength;
-        Object* Vector[0];
+        Object* Vector[1];
     };
 
     struct __declspec(align(8)) ListObjectFields

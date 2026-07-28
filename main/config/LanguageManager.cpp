@@ -7,7 +7,7 @@
  
 namespace PhasmoCheatV {
 
-    Language LanguageManager::currentLanguage = Language::EN;
+    Language LanguageManager::currentLanguage = Language::EN; 
     std::unordered_map<std::string, TranslationEntry> LanguageManager::translations;
     bool LanguageManager::isInitialized = false;
 
@@ -154,4 +154,4 @@ namespace PhasmoCheatV {
     Language LanguageManager::GetCurrentLanguage() {
         return currentLanguage;
     }
-}
+} 

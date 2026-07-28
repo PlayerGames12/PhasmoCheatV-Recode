@@ -81,7 +81,7 @@ void StatsPanel::StatsPanelCollectBone()
 {
     if (!collectBone) return;
     collectBone = false;
-    if (!InGame::evidenceController)
+    if (!SDK::EvidenceController_sFields->instance)
     {
         NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
         return;
@@ -93,12 +93,12 @@ void StatsPanel::StatsPanelCollectBone()
         return;
     }
 
-    if (!InGame::evidenceController->Fields.bone)
+    if (!SDK::EvidenceController_sFields->instance->Fields.bone)
     {
         NOTIFY_ERROR_QUICK(LANG("BoneNotFound"));
         return;
 	}
 
-    SDK::DNAEvidence_GrabbedNetworked(InGame::evidenceController->Fields.bone, nullptr);
+    SDK::DNAEvidence_GrabbedNetworked(SDK::EvidenceController_sFields->instance->Fields.bone, nullptr);
     NOTIFY_SUCCESS_QUICK(LANG("BoneCollected"));
 }

@@ -4,13 +4,14 @@
 namespace SDK
 {
 	struct HingeDoor;
+	struct PhotonView;
 
 	struct DoorFields
 	{
 		MonoBehaviourFields MonoBehaviourFields;
-		bool Field10;
-		bool Field11;
-		bool Field12;
+		bool locked;
+		bool closed;
+		bool hasBeenGrabbedByPlayer;
 		char pad_000[0x5];
 		void* DoorLockClips;
 		void* DoorUnlockClips;
@@ -29,14 +30,14 @@ namespace SDK
 		bool Field72;
 		bool Field73;
 		char pad_001[0x4];
-		void* Field78;
+		PhotonView* photonView;
 		Rigidbody* Rigidbody;
 		void* Field88;
 		void* Field90;
 		Collider* col;
 		float FieldA0;
 		char pad_002[0x4];
-		void* Noise;
+		void* noise;
 		void* FieldB0;
 		bool useForceInsteadOfAnimations;
 		char pad_003[0x3];
@@ -46,31 +47,29 @@ namespace SDK
 		Vector3 forwardDirection;
 		char pad_004[0x4];
 		void* FieldE8;
-		Vector3 FieldF0;
-		Vector3 FieldFC;
-		void* Field108;
-		int32_t Field110;
+		void* FieldF0;
+		KeyType keyType;
 		char pad_005[0x4];
 		void* hutnCollider;
 		void* collideWithColliders;
 		float closeDoorDistance;
 		char pad_006[0x4];
-		void* Field130;
-		void* Field138;
-		bool Field140;
+		void* Field118;
+		void* Field120;
+		bool Field128;
 		char pad_007[0x3];
 		float loopSoundVelocityThreshold;
 		float loopVolumeMultiplier;
 		char pad_008[0x4];
-		void* Field150;
+		void* Field138;
 		bool useGravityForDoorMovement;
-		bool Field159;
+		bool Field141;
 		char pad_009[0x6];
-		void* Field160;
-		float Field168;
-		float Field16C;
-		void* Field170;
-		float Field178;
+		void* Field148;
+		float Field150;
+		float Field154;
+		void* Field158;
+		float Field160;
 		char pad_010[0x4];
 	};
 

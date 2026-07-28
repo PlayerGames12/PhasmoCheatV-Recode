@@ -34,7 +34,8 @@ namespace SDK
 		Dayan,
 		Obambo,
 		Kormos,
-		Aswang
+		Aswang,
+		Deildegast
 	};
 
 	struct GhostTraits

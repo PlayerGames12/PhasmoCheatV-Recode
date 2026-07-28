@@ -10,16 +10,24 @@ GhostSpin::GhostSpin() : FeatureCore(LANG("GhostSpin_Header"), TYPE_MISC)
 
 void GhostSpin::OnMenuRender()
 {
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 6));
+
 	bool enabled = IsActive();
-	float speed = CONFIG_FLOAT(GetConfigManager(), "Speed");
-	if (BCheckBox(LANG("GhostSpinEnabled"), &enabled, "b_GhostSpinEnabled"))
+	if (ImGui::Checkbox(LANG("GhostSpinEnabled"), &enabled))
 	{
 		SET_CONFIG_VALUE(GetConfigManager(), "Enabled", bool, enabled);
 		if (enabled) OnActivate();
 		else OnDeactivate();
 	}
-	if (ImGui::SliderFloat(LANG("GhostSpinSpeed"), &speed, 0.0f, 2000.0f, "%.0f deg/s"))
-		SET_CONFIG_VALUE(GetConfigManager(), "Speed", float, speed);
+
+	if (enabled)
+	{
+		float speed = CONFIG_FLOAT(GetConfigManager(), "Speed");
+		if (ImGui::SliderFloat(LANG("GhostSpinSpeed"), &speed, 0.0f, 2000.0f, "%.0f deg/s"))
+			SET_CONFIG_VALUE(GetConfigManager(), "Speed", float, speed);
+	}
+
+	ImGui::PopStyleVar();
 }
 
 void GhostSpin::GhostSpinMain(SDK::GhostAI* ghostAI)

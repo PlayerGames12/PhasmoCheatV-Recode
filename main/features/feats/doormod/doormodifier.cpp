@@ -52,13 +52,13 @@ void DoorModifier::OnMenuRender()
 
 void DoorModifier::ProcessDoorAction(DoorAction action, bool enable)
 {
-    if (!InGame::levelController)
+    if (!SDK::LevelController_sFields->instance)
     {
         NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
         return;
     }
 
-    auto& levelFields = InGame::levelController->Fields;
+    auto& levelFields = SDK::LevelController_sFields->instance->Fields;
     SDK::DoorArray* doorArrays[2] = {
         reinterpret_cast<SDK::DoorArray*>(levelFields.doors),
         reinterpret_cast<SDK::DoorArray*>(levelFields.exitDoors)
@@ -174,20 +174,15 @@ void DoorModifier::ProcessDoorArray(SDK::DoorArray* doorArray, DoorAction action
     }
 }
 
-void DoorModifier::DoorModifierMain()
-{
-    // called in GhostAI_Update
-}
-
 void DoorModifier::AutoOpenDoors()
 {
 	if (!IsActive() || !CONFIG_BOOL(GetConfigManager(), "OpenAllDoors"))
 		return;
 
-    if (!InGame::levelController)
+    if (!SDK::LevelController_sFields->instance)
         return;
 
-    auto* doors = InGame::levelController->Fields.doors;
+    auto* doors = SDK::LevelController_sFields->instance->Fields.doors;
 
     auto ProcessArray = [&](auto* doorArray)
         {
@@ -208,3 +203,5 @@ void DoorModifier::AutoOpenDoors()
     ProcessArray(doors);
     NOTIFY_SUCCESS_QUICK(LANG("AutoOpenDoors_Done"));
 }
+
+// todo: add ragdoll doors lol

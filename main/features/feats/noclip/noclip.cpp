@@ -9,18 +9,26 @@ NoClip::NoClip() : FeatureCore(LANG("NoClip_Header"), TYPE_MOVEMENT)
 
 void NoClip::OnMenuRender()
 {
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 6));
+
 	bool enabled = IsActive();
 	float noClipSpeed = CONFIG_FLOAT(GetConfigManager(), "NoClipSpeed");
 
-	ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), LANG("CreditNoClip"));
 	if (BCheckBox(LANG("EnabledNoClip"), &enabled, "b_EnabledNoClip"))
 	{
 		SET_CONFIG_VALUE(GetConfigManager(), "Enabled", bool, enabled);
 		if (enabled) OnActivate();
 		else OnDeactivate();
 	}
-	if (ImGui::SliderFloat(LANG("NoClipSpeed"), &noClipSpeed, 0.0f, 10.0f, "%.1f"))
-		SET_CONFIG_VALUE(GetConfigManager(), "NoClipSpeed", float, noClipSpeed);
+
+    if (enabled)
+    {
+        ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), LANG("CreditNoClip"));
+        if (ImGui::SliderFloat(LANG("NoClipSpeed"), &noClipSpeed, 0.0f, 10.0f, "%.1f"))
+            SET_CONFIG_VALUE(GetConfigManager(), "NoClipSpeed", float, noClipSpeed);
+    }
+
+    ImGui::PopStyleVar();
 }
 
 void NoClip::OnDeactivate()

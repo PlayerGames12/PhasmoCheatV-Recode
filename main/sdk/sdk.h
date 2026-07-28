@@ -2,6 +2,12 @@
 #include "il2cpp/il2cpp.h"
 #include "../main/logging/logger.h" // For LOGS
 #include "../mem/memory.h"
+#include <dbghelp.h>
+#include <intrin.h>
+#include <type_traits>
+#include <shlwapi.h>
+#pragma comment(lib, "shlwapi.lib")
+#pragma comment(lib, "dbghelp.lib")
 
 using namespace PhasmoCheatV;
 
@@ -10,7 +16,126 @@ using namespace PhasmoCheatV;
 //using NAME##_ptr = TYPE; \
 //inline NAME##_ptr NAME = reinterpret_cast<NAME##_ptr>(il2cpp_get_method_pointer(ASSEMBLY, NAMESPACE, CLASS, METHOD, ARGCOUNT));
 
-// Thanks Evelien
+class SymbolResolver
+{
+public:
+    std::string Resolve(void* addr)
+    {
+        std::lock_guard<std::mutex> lock(mtx_);
+        EnsureInit();
+
+        HMODULE ownModule = GetOwnModuleHandle();
+        HMODULE addrModule = GetModuleForAddress(addr);
+
+        if (addrModule != ownModule)
+        {
+            char modName[MAX_PATH] = "unknown_module";
+            if (addrModule)
+                GetModuleFileNameA(addrModule, modName, MAX_PATH);
+
+            char buf[256];
+            snprintf(buf, sizeof(buf), "0x%p (outside mod, module: %s)",
+                addr, PathFindFileNameA(modName));
+            return buf;
+        }
+
+        alignas(SYMBOL_INFO) char buffer[sizeof(SYMBOL_INFO) + MAX_SYM_NAME * sizeof(char)];
+        SYMBOL_INFO* symbol = reinterpret_cast<SYMBOL_INFO*>(buffer);
+        symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+        symbol->MaxNameLen = MAX_SYM_NAME;
+
+        const HANDLE process = GetCurrentProcess();
+        const DWORD64 addr64 = reinterpret_cast<DWORD64>(addr);
+        DWORD64 displacement = 0;
+
+        if (!SymFromAddr(process, addr64, &displacement, symbol))
+        {
+            return FormatRawAddress(addr);
+        }
+
+        std::string result = symbol->Name;
+        if (displacement != 0)
+        {
+            char off[32];
+            snprintf(off, sizeof(off), "+0x%llx", static_cast<unsigned long long>(displacement));
+            result += off;
+        }
+
+        IMAGEHLP_LINE64 line{};
+        line.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
+        DWORD lineDisplacement = 0;
+
+        if (SymGetLineFromAddr64(process, addr64, &lineDisplacement, &line))
+        {
+            result += " (";
+            result += line.FileName;
+            result += ":";
+            result += std::to_string(line.LineNumber);
+            result += ")";
+        }
+
+        return result;
+    }
+
+    void Shutdown()
+    {
+        std::lock_guard<std::mutex> lock(mtx_);
+        if (initialized_)
+        {
+            SymCleanup(GetCurrentProcess());
+            initialized_ = false;
+        }
+    }
+
+private:
+    static HMODULE GetOwnModuleHandle()
+    {
+        static HMODULE h = [] {
+            HMODULE mod = nullptr;
+            GetModuleHandleExA(
+                GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
+                reinterpret_cast<LPCSTR>(&GetOwnModuleHandle),
+                &mod);
+            return mod;
+            }();
+        return h;
+    }
+
+    static HMODULE GetModuleForAddress(void* addr)
+    {
+        HMODULE mod = nullptr;
+        GetModuleHandleExA(
+            GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
+            reinterpret_cast<LPCSTR>(addr),
+            &mod);
+        return mod;
+    }
+
+    void EnsureInit()
+    {
+        if (initialized_) return;
+
+        SymSetOptions(SYMOPT_UNDNAME | SYMOPT_DEFERRED_LOADS | SYMOPT_LOAD_LINES);
+        if (SymInitialize(GetCurrentProcess(), nullptr, TRUE))
+        {
+            initialized_ = true;
+        }
+    }
+
+    static std::string FormatRawAddress(void* addr)
+    {
+        char fallback[32];
+        snprintf(fallback, sizeof(fallback), "0x%p", addr);
+        return fallback;
+    }
+
+    std::mutex mtx_;
+    bool initialized_ = false;
+};
+
+inline SymbolResolver g_symbolResolver;
+
+// Thanks Evelien and Arthur
 template <typename FuncType>
 struct SafeFuncPtr
 {
@@ -18,7 +143,6 @@ struct SafeFuncPtr
     const char* name = "unknown";
 
     SafeFuncPtr() = default;
-
     explicit SafeFuncPtr(const char* n) : name(n) {}
 
     SafeFuncPtr& operator=(FuncType p)
@@ -26,7 +150,6 @@ struct SafeFuncPtr
         raw = p;
         return *this;
     }
-
     SafeFuncPtr& operator=(std::nullptr_t)
     {
         raw = nullptr;
@@ -35,32 +158,72 @@ struct SafeFuncPtr
 
     explicit operator bool() const { return raw != nullptr; }
 
+private:
+    template <typename RetType, typename... Args>
+    static RetType InvokeRaw(FuncType raw, bool& outCrashed, Args&... args)
+    {
+        __try
+        {
+            outCrashed = false;
+            if constexpr (!std::is_void_v<RetType>)
+                return raw(args...);
+            else
+                raw(args...);
+        }
+        __except (EXCEPTION_EXECUTE_HANDLER)
+        {
+            outCrashed = true;
+            if constexpr (!std::is_void_v<RetType>)
+                return RetType{};
+        }
+    }
+
+public:
     template <typename... Args>
     auto operator()(Args... args) const -> decltype(raw(args...))
     {
         using RetType = decltype(raw(args...));
 
+        void* callerAddr = _ReturnAddress();
+
         if (!raw)
         {
-            LOG_ERROR("Null SDK function call:", name);
+            LOG_ERROR("Null SDK function call:", name,
+                "| caller:", g_symbolResolver.Resolve(callerAddr));
             if constexpr (!std::is_void_v<RetType>)
                 return RetType{};
             else
                 return;
         }
 
-        __try
+        bool crashed = false;
+
+        if constexpr (!std::is_void_v<RetType>)
         {
-            return raw(args...);
+            RetType result = InvokeRaw<RetType>(raw, crashed, args...);
+            if (crashed)
+            {
+                LOG_ERROR("SEH exception in SDK call:", name,
+                    "| caller:", g_symbolResolver.Resolve(callerAddr));
+            }
+            return result;
         }
-        __except (EXCEPTION_EXECUTE_HANDLER)
+        else
         {
-            LOG_ERROR("SEH exception in SDK call:", name);
-            if constexpr (!std::is_void_v<RetType>)
-                return RetType{};
+            InvokeRaw<RetType>(raw, crashed, args...);
+            if (crashed)
+            {
+                LOG_ERROR("SEH exception in SDK call:", name,
+                    "| caller:", g_symbolResolver.Resolve(callerAddr));
+            }
+            return;
         }
     }
 };
+
+inline uintptr_t ResolveInstruction(uint8_t* p) { return reinterpret_cast<uintptr_t>(p); }
+inline uintptr_t ResolveRip(uint8_t* p) { int32_t disp = *reinterpret_cast<int32_t*>(p + 4); return reinterpret_cast<uintptr_t>(p + 8 + disp); }
+inline uintptr_t ResolveCall(uint8_t* p) { int32_t rel = *reinterpret_cast<int32_t*>(p + 1); return reinterpret_cast<uintptr_t>(p + 5 + rel); }
 
 // EXPAMPLE USE: DEC_MET(Behaviour_Set_Enabled, void(*)(Behaviour* behaviour, bool enabled, MethodInfo* methodInfo), "UnityEngine.CoreModule", "UnityEngine", "Behaviour", "set_enabled", 1);
 #define DEC_MET(NAME, TYPE, ASSEMBLY, NAMESPACE, CLASS, METHOD, ARGCOUNT) \
@@ -255,6 +418,95 @@ namespace { \
     static NAME##_registrar NAME##_reg; \
 }
 
+#define DEC_MET_INSTR(NAME, ASSEMBLY, NAMESPACE, CLASS, METHOD, ARGCOUNT, PATTERN, MASK, RESOLVE) \
+inline uintptr_t NAME##_addr = 0;                                                                   \
+inline bool NAME##_initialized = false;                                                             \
+                                                                                                   \
+inline void Init_##NAME()                                                                           \
+{                                                                                                  \
+    if (NAME##_initialized)                                                                        \
+        return;                                                                                    \
+                                                                                                   \
+    NAME##_initialized = true;                                                                     \
+                                                                                                   \
+    auto fn = reinterpret_cast<uint8_t*>(                                                          \
+        il2cpp_get_method_pointer(ASSEMBLY, NAMESPACE, CLASS, METHOD, ARGCOUNT));                  \
+                                                                                                   \
+    if (!fn)                                                                                       \
+        return;                                                                                    \
+                                                                                                   \
+    for (size_t i = 0; i < 0x1000; ++i)                                                            \
+    {                                                                                              \
+        bool found = true;                                                                         \
+                                                                                                   \
+        for (size_t j = 0; MASK[j]; ++j)                                                           \
+        {                                                                                          \
+            if (MASK[j] == 'x' && fn[i + j] != (uint8_t)PATTERN[j])                                \
+            {                                                                                      \
+                found = false;                                                                     \
+                break;                                                                             \
+            }                                                                                      \
+        }                                                                                          \
+                                                                                                   \
+        if (found)                                                                                 \
+        {                                                                                          \
+            NAME##_addr = RESOLVE(fn + i);                                                         \
+            break;                                                                                 \
+        }                                                                                          \
+    }                                                                                              \
+}                                                                                                  \
+                                                                                                   \
+namespace                                                                                          \
+{                                                                                                  \
+    struct NAME##_registrar                                                                        \
+    {                                                                                              \
+        NAME##_registrar()                                                                         \
+        {                                                                                          \
+            Init_##NAME();                                                                         \
+        }                                                                                          \
+    };                                                                                             \
+    static NAME##_registrar NAME##_reg;                                                            \
+}
+
+#define DEC_SFIELD(NAME, TYPE, ASSEMBLY, NAMESPACE, CLASS) \
+inline TYPE* NAME = nullptr; \
+inline bool NAME##_initialized = false; \
+\
+inline void Init_##NAME() \
+{ \
+    if (NAME##_initialized) \
+        return; \
+\
+    NAME##_initialized = true; \
+\
+    auto klass = il2cpp_get_class(ASSEMBLY, NAMESPACE, CLASS); \
+    if (!klass) \
+    { \
+        LOG_ERROR("Failed to find class for static fields:", CLASS); \
+        return; \
+    } \
+\
+    if (!klass->static_fields) \
+    { \
+        LOG_ERROR("Static fields is null:", CLASS); \
+        return; \
+    } \
+\
+    NAME = reinterpret_cast<TYPE*>(klass->static_fields); \
+} \
+\
+namespace \
+{ \
+    struct NAME##_registrar \
+    { \
+        NAME##_registrar() \
+        { \
+            Init_##NAME(); \
+        } \
+    }; \
+    static NAME##_registrar NAME##_reg; \
+}
+
 namespace SDK
 {
     const auto BASE_ADDRESS = reinterpret_cast<uintptr_t>(GetModuleHandleW(L"GameAssembly.dll"));
@@ -288,6 +540,7 @@ namespace SDK
 #include "Component.h"
 #include "Rigidbody.h"
 #include "Cursor.h"
+#include "NavMesh.h" // NavMeshAgent, NavMeshPath
 #include "GhostEvidence.h"
 #include "GhostTraits.h"
 #include "GhostInfo.h"
@@ -300,6 +553,7 @@ namespace SDK
 #include "Voice.h"
 #include "LocalPlayer.h"
 #include "Player.h"
+#include "Key.h"
 #include "Door.h"
 #include "LevelRoom.h"
 #include "PlayerSanity.h"
@@ -338,7 +592,6 @@ namespace SDK
 #include "Map.h"
 #include "Contract.h"
 #include "LevelValues.h"
-#include "Key.h"
 #include "SceneManager.h"
 #include "SaltSpot.h"
 #include "SaltShaker.h"
@@ -386,3 +639,5 @@ namespace SDK
 #include "Shader.h"
 #include "Material.h"
 #include "RenderSettings.h"
+#include "HuntingState.h"
+#include "Crucifix.h"

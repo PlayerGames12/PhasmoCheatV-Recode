@@ -10,16 +10,24 @@ Spinbot::Spinbot() : FeatureCore(LANG("Spinbot_Header"), TYPE_MISC)
 
 void Spinbot::OnMenuRender()
 {
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 6));
+
 	bool enabled = IsActive();
-	float speed = CONFIG_FLOAT(GetConfigManager(), "Speed");
-	if (BCheckBox(LANG("SpinbotEnabled"), &enabled, "b_SpinbotEnabled"))
+	if (ImGui::Checkbox(LANG("SpinbotEnabled"), &enabled))
 	{
 		SET_CONFIG_VALUE(GetConfigManager(), "Enabled", bool, enabled);
 		if (enabled) OnActivate();
 		else OnDeactivate();
 	}
-	if (ImGui::SliderFloat(LANG("SpinbotSpeed"), &speed, 0.0f, 2000.0f, "%.0f deg/s"))
-		SET_CONFIG_VALUE(GetConfigManager(), "Speed", float, speed);
+
+	if (enabled)
+	{
+		float speed = CONFIG_FLOAT(GetConfigManager(), "Speed");
+		if (ImGui::SliderFloat(LANG("SpinbotSpeed"), &speed, 0.0f, 2000.0f, "%.0f deg/s"))
+			SET_CONFIG_VALUE(GetConfigManager(), "Speed", float, speed);
+	}
+
+	ImGui::PopStyleVar();
 }
 
 void Spinbot::SpinbotMain(SDK::FirstPersonController* firstPersonController)

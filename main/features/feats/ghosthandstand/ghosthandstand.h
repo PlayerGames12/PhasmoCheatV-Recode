@@ -18,5 +18,7 @@ namespace PhasmoCheatV::Features::Misc
 	private:
 		bool  m_applied = false;
 		float m_height = 1.8f;
+		const SDK::Vector3 flippedScale = { 1.0f, -1.0f, 1.0f };
+		const SDK::Vector3 normalScale = { 1.0f,  1.0f, 1.0f };
 	};
 }

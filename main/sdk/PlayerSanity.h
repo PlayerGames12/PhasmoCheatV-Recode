@@ -8,7 +8,7 @@ namespace SDK
 	struct PlayerSanityFields
 	{
 		MonoBehaviourFields MonoBehaviourFields;
-		void* PhotonView;
+		PhotonView* photonView;
 		Player* Player;
 		float insanity;
 		float Field2;

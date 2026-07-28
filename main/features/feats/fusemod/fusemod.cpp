@@ -33,7 +33,7 @@ void FuseBoxModifier::OnMenuRender()
 
 void FuseBoxModifier::FuseBoxModifierHandler()
 {
-	auto* levelController = InGame::levelController;
+	auto* levelController = SDK::LevelController_sFields->instance;
 	if (!levelController)
 		return;
 	auto* fuseBox = levelController->Fields.fuseBox;

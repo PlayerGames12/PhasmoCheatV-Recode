@@ -7,6 +7,8 @@ namespace SDK
 	{
 		MonoBehaviourPunFields monoBehaviourPunFields;
 		TarotCards* cards;
+		void* meshFilter;
+		void* meshRend;
 	};
 
 	struct TarotCard

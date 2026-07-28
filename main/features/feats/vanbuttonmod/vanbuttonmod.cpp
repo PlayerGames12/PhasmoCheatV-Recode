@@ -89,7 +89,7 @@ void VanButtonModifier::AutoOpenVanDoor(SDK::LiftButton* liftButton)
     if (InGame::LiftButtonOpenedByCheat || !CONFIG_BOOL(GetConfigManager(), "AutoOpenVanDoor"))
         return;
 
-    if (!liftButton || !liftButton->Fields.view || !InGame::ghostAI)
+    if (!liftButton || !liftButton->Fields.view || !Utils::GetGhostAI())
         return;
 
     static bool timerStarted = false;

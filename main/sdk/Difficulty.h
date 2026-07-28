@@ -61,6 +61,15 @@ namespace SDK
         monkeyPaw
     };
 
+    struct CursedItemsArray
+    {
+        void* Clazz;
+        void* Monitor;
+        void* Bounds;
+        uint32_t MaxLength;
+        DiffCursedItems Vector[1];
+    };
+
     struct DifficultyFields
     {
         char pad_000[0x8];
@@ -102,7 +111,7 @@ namespace SDK
         void* chosenCursed;
         float overrideMultiplier;
         DifficultyWeatherValueType actualWeather;
-        void* actualCursed;
+        CursedItemsArray* actualCursedItems;
         void* itemTiers;
         const char* mapName;
         void* nameLocalisedOverrides;

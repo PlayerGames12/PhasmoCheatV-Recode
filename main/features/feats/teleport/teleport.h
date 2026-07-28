@@ -13,6 +13,7 @@ namespace PhasmoCheatV::Features::Movement
 		void OnDeactivate() override {}
 		void OnRender() override {}
 		void OnMenuRender() override;
+		void TeleportToTruck();
 
 	private:
 		enum class Target : int32_t
@@ -29,7 +30,6 @@ namespace PhasmoCheatV::Features::Movement
 		void TeleportToCoordinates(float x, float y, float z);
 		void TeleportItems();
 		void TeleportBone();
-		void TeleportToTruck();
 		void TeleportToGhost();
 		void TeleportToBasement();
 		void TeleportToEntrance();

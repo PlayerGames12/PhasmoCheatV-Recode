@@ -9,7 +9,7 @@ PotatoeEsp::PotatoeEsp() : FeatureCore(LANG("PotatoeESP_Header"), TYPE_VISUALS)
 
 void PotatoeEsp::OnRender()
 {
-    if (!IsActive() || Utils::GetMap()->Fields.uniqueMapID != 4 || !InGame::ghostAI)
+    if (!IsActive() || Utils::GetMap()->Fields.uniqueMapID != 4 || !Utils::GetGhostAI())
         return;
 
     SDK::Transform* potatoeTransform = Utils::GetPotatoe();

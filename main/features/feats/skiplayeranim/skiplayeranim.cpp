@@ -2,7 +2,7 @@
 
 using namespace PhasmoCheatV::Features::Players;
 
-SkipLayerAnim::SkipLayerAnim() : FeatureCore(LANG("SkipLayerAnim_Header"), TYPE_PLAYERS) {}
+SkipLayerAnim::SkipLayerAnim() : FeatureCore(LANG("SkipPlayerAnim_Header"), TYPE_PLAYERS) {}
 
 void SkipLayerAnim::OnActivate()
 {

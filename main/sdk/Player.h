@@ -19,7 +19,7 @@ namespace SDK
     {
         MonoBehaviourPunFields MonoBehaviourPunFields;
         bool IsDead;
-        bool Field1;
+        bool Field1; // idk, but maybe isDyingLocally
         bool Field2;
         char pad_000[0x5];
         void* ClosetZone;
@@ -40,7 +40,7 @@ namespace SDK
         void* FootstepController;
         bool Field26;
         char pad_002[0x7];
-        void* wristwatch; // 0.17.0.0
+        void* wristwatch;
         void* ridgidBody;
         void* RendererArray;
         void* JournalController;
@@ -48,24 +48,24 @@ namespace SDK
         void* DeadPlayer;
         void* PlayerAudio;
         void* networkedStamina;
-        void* NetworkedCrouch; // 0.17.0.0
-        void* NetworkedPropGrab; // 0.17.0.0
-        void* PlayerCharacterAnimations; // 0.17.0.0
+        void* NetworkedCrouch;
+        void* NetworkedPropGrab;
+        void* PlayerCharacterAnimations;
         bool Field31;
         char pad_003[0x7];
-        LocalPlayer* LocalPlayer; // 0.17.0.0
-        void* RigLayer1; // 0.17.0.0
-        void* RigLayer2; // 0.17.0.0
-        void* PlayerCharacter; // 0.17.0.0
+        LocalPlayer* LocalPlayer;
+        void* RigLayer1;
+        void* RigLayer2;
+        void* PlayerCharacter;
         Animator* Animator;
-        void* FixedJoint; // 0.17.0.0
-        void* EquipmentGrabIKController; // 0.17.0.0
-        void* IKFOVController; // 0.17.0.0
-        void* CapsuleCollider; // 0.17.0.0
-        void* PlayerCosmetics; // 0.17.0.0
-        bool Field_0x160; // 0.17.0.0
+        void* FixedJoint;
+        void* EquipmentGrabIKController;
+        void* IKFOVController;
+        void* CapsuleCollider;
+        void* PlayerCosmetics;
+        bool Field_0x160;
         char pad_004[0x7];
-        void* Evidence; // 0.17.0.0
+        void* Evidence;
     };
 
 	struct Player
@@ -81,7 +81,7 @@ namespace SDK
 		void* Monitor;
 		void* Bounds;
 		void* MaxLength;
-		Player* Vector[65535];
+		Player* Vector[1];
 	};
 
 	struct __declspec(align(8)) ListPlayerFields
@@ -103,4 +103,6 @@ namespace SDK
     DEC_MET(Player_BeginDeathSequence, void(*)(Player* player, deathType deadType, MethodInfo* methodInfo), "Assembly-CSharp", "", "Player", "BeginDeathSequence", 1);
     DEC_MET(Player_SetHeadTransform, void(*)(Player* player, Vector3 position, Quaternion rotation, MethodInfo* methodInfo), "Assembly-CSharp", "", "Player", "SetHeadTransform", 2);
 	DEC_MET(Player_SetRotation, void(*)(Player* player, Quaternion rotation, MethodInfo* methodInfo), "Assembly-CSharp", "", "Player", "SetRotation", 1);
+    DEC_MET(Player_NotifyOfDeathEnd, void(*)(Player* player, MethodInfo* methodInfo), "Assembly-CSharp", "", "Player", "NotifyOfDeathEnd", 0);
+    DEC_MET(Player_NotifyOfDeathStart, void(*)(Player* player, void* photonMessageInfo, MethodInfo* methodInfo), "Assembly-CSharp", "", "Player", "NotifyOfDeathStart", 1);
 }

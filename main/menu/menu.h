@@ -1,5 +1,6 @@
 #pragma once
 #include "../includes.h"
+#include "widgets/TempDisabled.h"
 
 namespace PhasmoCheatV
 {

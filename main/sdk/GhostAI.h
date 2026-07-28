@@ -42,7 +42,7 @@ namespace SDK
         GhostState currentState;
         char pad_000[0x4];
         GhostInfo* GhostInfo;
-        void* NavMeshAgent;
+        NavMeshAgent* NavMeshAgent;
         void* GhostAudio;
         void* GhostInteraction;
         GhostActivity* GhostActivity;

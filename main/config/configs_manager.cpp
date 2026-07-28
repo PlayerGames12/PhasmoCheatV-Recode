@@ -50,9 +50,7 @@ void ConfigsManager::OnMenuRender()
     auto configs = ConfigsM::GetConfigs();
 
     if (configs.empty())
-    {
         ImGui::Text("No configs found");
-    }
     else
     {
         if (ImGui::BeginTable("Configs", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
@@ -126,19 +124,13 @@ void ConfigsManager::OnMenuRender()
                         NOTIFY_SUCCESS_QUICK("Config created");
                     }
                     else
-                    {
                         NOTIFY_ERROR_QUICK("Failed to create config");
-                    }
                 }
                 else
-                {
                     NOTIFY_WARNING_QUICK("Config name already exists");
-                }
             }
             else
-            {
                 NOTIFY_WARNING_QUICK("Config name cannot be empty");
-            }
         }
 
         ImGui::SameLine();

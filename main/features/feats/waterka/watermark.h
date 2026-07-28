@@ -16,5 +16,10 @@ namespace PhasmoCheatV::Features::Visuals
 
 	private:
 		std::string CachedText;
+		float lastInfoUpdate;
+		int cachedCPU;
+		int cachedRAM;
+		SIZE_T cachedUsedRAM;
+		SIZE_T cachedTotalRAM;
 	};
 }

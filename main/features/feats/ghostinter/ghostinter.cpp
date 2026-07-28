@@ -6,7 +6,7 @@ GhostInteractor::GhostInteractor() : FeatureCore(LANG("GhostInteractionControl_H
 
 static bool CanTrigger()
 {
-    if (!InGame::ghostAI)
+    if (!Utils::GetGhostAI())
     {
         NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
         return false;
@@ -59,7 +59,7 @@ void GhostInteractor::OnMenuRender()
 
 void GhostInteractor::GhostInteractorMain()
 {
-    auto ai = InGame::ghostAI;
+    auto ai = Utils::GetGhostAI();
     if (!ai)
         return;
 

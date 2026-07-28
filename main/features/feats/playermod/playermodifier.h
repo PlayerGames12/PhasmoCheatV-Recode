@@ -13,5 +13,10 @@ namespace PhasmoCheatV::Features::Players
         void OnDeactivate() override {}
         void OnRender() override {}
         void OnMenuRender() override;
+
+    private:
+        void ChangeSanityPlayer(bool isLocal, SDK::Player* player, float sanity);
+        void RevivePlayer(SDK::Player* player);
+        void SetBansheeTarget(SDK::Player* player);
     };
 }

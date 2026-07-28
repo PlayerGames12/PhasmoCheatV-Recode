@@ -30,5 +30,11 @@ namespace SDK
 		RandomWeatherFields Fields;
 	};
 
+	struct RandomWeather_staticFields
+	{
+		RandomWeather* instance;
+	};
+
 	DEC_MET(RandomWeather_Start, void(*)(RandomWeather* randomWeather, MethodInfo* methodInfo), "Assembly-CSharp", "", "RandomWeather", "Start", 0);
+	DEC_SFIELD(RandomWeather_sFields, RandomWeather_staticFields, "Assembly-CSharp", "", "RandomWeather");
 }

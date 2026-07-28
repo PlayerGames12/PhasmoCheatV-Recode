@@ -76,7 +76,7 @@ void Menu::Render()
 
     ImGui::PopStyleVar();
 
-    // mirg
+    // migration
     {
         static bool s_migrationChecked = false;
         static bool s_needsMigration = false;
@@ -685,7 +685,7 @@ void Menu::Render()
             ImGui::EndGroup();
         }
         break;
-        case 4: // tech part not supported more languages. Only English
+        case 4: //! tech part not supported more languages. Only English
             if (IsDebugging)
             {
                 ImGui::BeginChild("TestContent", ImVec2(0, 0), false);
@@ -717,14 +717,15 @@ void Menu::Render()
                     }
                 }
 
+                if (ImGui::Button("Test Static Fields"))
+                {
+                    auto instance = SDK::GameController_StaticFields->instance;
+                    LOG_INFO(instance);
+                }
+
                 if (ImGui::Button("Call test"))
                 {
                     ForTestsFlag = true;
-                }
-
-                if (ImGui::Button("Test stamina"))
-                {
-					LOG_INFO(InGame::playerStamina->Fields.CurrentStamina);
                 }
 
                 if (ImGui::Button("Crash game"))

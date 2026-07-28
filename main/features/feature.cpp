@@ -73,7 +73,8 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, PlayerESP);
     ADD_FEATURE(this, ActivityMonitor);
     ADD_FEATURE(this, StaminaPanel);
-    ADD_FEATURE(this, WorldModulation);
+    ADD_FEATURE(this, CrucifixESP);
+    // ADD_FEATURE(this, GhostGPS); fun function for tests
     //ADD_FEATURE(this, JackalopeESP);
     //ADD_FEATURE(this, AWEsp);
 
@@ -119,6 +120,7 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, ShopModifier);
 	ADD_FEATURE(this, SpiritBoxAlwaysAnswer);
     ADD_FEATURE(this, AudioModifier);
+    ADD_FEATURE(this, CrucifixModifier);
 
     // Difficulty
     ADD_FEATURE(this, DifficultyModifier);
@@ -130,6 +132,7 @@ FeatureHandler::FeatureHandler() : CurrentType(TYPE_NONE)
     ADD_FEATURE(this, SaltModifier);
 	ADD_FEATURE(this, AlwaysBloodMoon);
     ADD_FEATURE(this, FuseBoxModifier);
+    ADD_FEATURE(this, SoundBoard);
 
     // Configs
     ADD_FEATURE(this, ConfigsManager);

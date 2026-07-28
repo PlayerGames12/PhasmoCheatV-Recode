@@ -1,0 +1,94 @@
+huntingstate_ctor (CODE: 1):
+in dnSpy, find SoundController, then hit ctrl+shift+r (analyze).
+look for a class that has fields like these (they've stayed the same since 0.11.0.0):
+
+GameController
+LevelController
+SoundController
+GhostTraits.Type (ghostType)
+n a few more (those might change)
+
+once u find it, just search for the ctor by the class name.
+
+emfdata_updatenightmaregraph (CODE: 2):
+find xrefs to EMFData->Fields.rend.
+look for a method that calls UnityEngine_Random_Range(0.0, 480.0, 0).
+that's the one u need.
+
+emfdata_updategraph (CODE: 3):
+hasn't changed since 0.11.0.0.
+
+evprecorder_cananswer (CODE: 4):
+find EVPRecorder.OnPhraseRecognized.
+then jump into the first call to EVPRecorder$$OBFUSCATED(...) inside the first if, like if (EVPRecorder____________6448592000(this, 0)).
+that's the method ur looking for.
+
+ghostbutton_onclick (CODE: 5):
+find JournalController.SelectGhost.
+then get xrefs to it.
+ur looking for GhostButton$$OBFUSCATED - there's usually only 1 xref that matches.
+
+handcamera_animatephotocall (CODE: 6):
+find HandCamera$$MoveNext in IDA.
+look for this call:
+UnityEngine_Material__SetTexture(material, StringLiteral_950, (UnityEngine_Texture_o*)positions, 0);
+the very next call after that is the method u need: HandCamera$$AnimateTakenPicture.
+
+lightningcontroller_playlightning (CODE: 7):
+find LightningController$$Update.
+look for the RPC call:
+if (photonView_1)
+{
+    Photon_Pun_PhotonView__RPC(photonView_1, PlayLightningNetworked, 0, parameters, 0);
+    goto LABEL_20;
+}
+
+grab the PlayLightningNetworked StringLiteral, then check its xrefs.
+find a method in LightningController that looks like this:
+if (!photonView)
+LABEL_9:
+sub_180399850(v4);
+
+Photon_Pun_PhotonView__RPC(photonView, PlayLightningNetworked, 0, parameters, 0);
+then make sure it also has:
+if (_24->fields.weatherType != 3)
+    return;
+
+if both match, u got the right method.
+
+summoningcircle_beginritual (CODE: 8):
+find WaterHoseParticles$$OnParticleCollision.
+then check xrefs to:
+UnityEngine_GameObject__BroadcastMessage(other, StringLiteral_2248, 1, 0);
+jump into any SummoningCircle method from those xrefs.
+ur looking for smth like:
+
+playerSanity_1 = _->fields.playerSanity;
+if (playerSanity_1)
+{
+    allCandles->fields._5__________ = playerSanity_1->fields._________;
+    SummoningCircle$$OBFUSCATED(allCandles, 0);
+    return;
+}
+
+thats beginRitual.
+or just search for the string SummoningCirclesUsed, then check its xrefs n jump into any SummoningCircle method.
+summoningcircle_candlelit (CODE: 9):
+
+first find SummoningCircle_BeginRitual (CODE: 8).
+then check its xrefs.
+there'll usually be a few methods (the real one + junk).
+telling them apart is ez - open each one n look for:
+if (playerSanity->fields.insanity > 84.0)
+insanity will be obfuscated, so rename it first.
+
+tarotcards_grabcard (CODE: 10):
+not used anymore.
+
+tarotcards_resetcarddraw (CODE: 11):
+not used anymore.
+
+journalcontroller_sendstate (CODE: 12):
+in dnSpy, find JournalController.OpenCloseJournal.
+then in IDA, find the call to JournalController$$OBFUSCATED(...).
+there should only be 1.

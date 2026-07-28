@@ -19,20 +19,28 @@ void GameSpeed::OnDeactivate()
 
 void GameSpeed::OnMenuRender()
 {
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 6));
+
 	bool enabled = IsActive();
-	float speed = CONFIG_FLOAT(GetConfigManager(), "Speed");
 	if (BCheckBox(LANG("GameSpeedEnabled"), &enabled, "b_GameSpeedEnabled"))
 	{
 		SET_CONFIG_VALUE(GetConfigManager(), "Enabled", bool, enabled);
 		if (enabled) OnActivate();
 		else OnDeactivate();
 	}
-	if (ImGui::SliderFloat(LANG("GameSpeedSlider"), &speed, 0.0f, 10.0f, "%.1f"))
+
+	if (enabled)
 	{
-		SET_CONFIG_VALUE(GetConfigManager(), "Speed", float, speed);
-		if (IsActive())
-			SDK::Time_Set_TimeScale(speed, nullptr);
+		float speed = CONFIG_FLOAT(GetConfigManager(), "Speed");
+		if (ImGui::SliderFloat(LANG("GameSpeedSlider"), &speed, 0.0f, 10.0f, "%.1f"))
+		{
+			SET_CONFIG_VALUE(GetConfigManager(), "Speed", float, speed);
+			if (IsActive())
+				SDK::Time_Set_TimeScale(speed, nullptr);
+		}
 	}
+
+	ImGui::PopStyleVar();
 }
 
 void GameSpeed::GameSpeedMain()

@@ -140,7 +140,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)libs;$(ProjectDir)res;$(ProjectDir)libs\miniz;$(ProjectDir)libs\nlohmann\include;$(ProjectDir)libs\imgui;$(ProjectDir)libs\rapidjson\include;$(ProjectDir)libs\discordrpc\include;$(ProjectDir)libs\stb\deprecated;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp23</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -206,11 +206,15 @@
     <ClCompile Include="main\features\feats\awesp\awesp.cpp" />
     <ClCompile Include="main\features\feats\cosmeticsunlocker\cosmeticunlocker.cpp" />
     <ClCompile Include="main\features\feats\crosshairmod\crosshairmod.cpp" />
+    <ClCompile Include="main\features\feats\crucifixesp\crucifixesp.cpp" />
+    <ClCompile Include="main\features\feats\crucifixmod\crucifixmod.cpp" />
     <ClCompile Include="main\features\feats\customlooklimits\customlooklimits.cpp" />
     <ClCompile Include="main\features\feats\curseditemscontroll\curseditemscontroll.cpp" />
     <ClCompile Include="main\features\feats\custname\customname.cpp" />
     <ClCompile Include="main\features\feats\custspeed\customspeed.cpp" />
     <ClCompile Include="main\features\feats\gamespeed\gamespeed.cpp" />
+    <ClCompile Include="main\features\feats\ghostgps\ghostgps.cpp" />
+    <ClCompile Include="main\features\feats\soundboard\soundboard.cpp" />
     <ClCompile Include="main\features\feats\spinbot\spinbot.cpp" />
     <ClCompile Include="main\features\feats\ghostspin\ghostspin.cpp" />
     <ClCompile Include="main\features\feats\ghosthandstand\ghosthandstand.cpp" />
@@ -260,35 +264,31 @@
     <ClCompile Include="main\features\feats\temperaturepanel\temperaturepanel.cpp" />
     <ClCompile Include="main\features\feats\tests\test.cpp" />
     <ClCompile Include="main\features\feats\waterka\watermark.cpp" />
-    <ClCompile Include="main\features\feats\worldmodulation\worldmodulation.cpp" />
     <ClCompile Include="main\features\feature.cpp" />
     <ClCompile Include="main\hooks\Application_CallLogCallback.cpp" />
     <ClCompile Include="main\hooks\AWDoll_Awake.cpp" />
     <ClCompile Include="main\hooks\CosmeticsUnlocker.cpp" />
-    <ClCompile Include="main\hooks\CursedItemsController_Awake.cpp" />
+    <ClCompile Include="main\hooks\Crucifix_GhostUse.cpp" />
     <ClCompile Include="main\hooks\DNAEvidence_GrabbedNetworked.cpp" />
     <ClCompile Include="main\hooks\DNAEvidence_Start.cpp" />
-    <ClCompile Include="main\hooks\EMFData_Start.cpp" />
     <ClCompile Include="main\hooks\EMFData_UpdateNightMareGraph.cpp" />
-    <ClCompile Include="main\hooks\EvidenceController_Start.cpp" />
     <ClCompile Include="main\hooks\EVPRecorder_CanAnswer.cpp" />
     <ClCompile Include="main\hooks\ExitLevel_Exit.cpp" />
     <ClCompile Include="main\hooks\ExitLevel_ThereAreAlivePlayersOutsideTheTruck.cpp" />
     <ClCompile Include="main\hooks\FallTeleportBox_OnTriggerEnter.cpp" />
     <ClCompile Include="main\hooks\FirstPersonController_Update.cpp" />
-    <ClCompile Include="main\hooks\GameController_Awake.cpp" />
     <ClCompile Include="main\hooks\GameController_Exit.cpp" />
     <ClCompile Include="main\hooks\GameController_PlayerDied.cpp" />
     <ClCompile Include="main\hooks\GhostAI_Hunting.cpp" />
-    <ClCompile Include="main\hooks\GhostAI_Start.cpp" />
     <ClCompile Include="main\hooks\GhostAI_Update.cpp" />
     <ClCompile Include="main\hooks\GhostInfo_SyncEvidence.cpp" />
     <ClCompile Include="main\hooks\GhostInfo_SyncValuesNetworked.cpp" />
     <ClCompile Include="main\hooks\HandCamera_MoveNext.cpp" />
+    <ClCompile Include="main\hooks\HuntingState_ctor.cpp" />
     <ClCompile Include="main\hooks\Jackalope_Awake.cpp" />
+    <ClCompile Include="main\hooks\JournalController_SendState.cpp" />
     <ClCompile Include="main\hooks\Key_GrabbedKey.cpp" />
     <ClCompile Include="main\hooks\Key_Start.cpp" />
-    <ClCompile Include="main\hooks\LevelController_Start.cpp" />
     <ClCompile Include="main\hooks\LevelSelectionManager_Start.cpp" />
     <ClCompile Include="main\hooks\LevelValues_GetInvestigationBonusReward.cpp" />
     <ClCompile Include="main\hooks\LevelValues_IsPerfectGame.cpp" />
@@ -297,15 +297,15 @@
     <ClCompile Include="main\hooks\LightningController_Start.cpp" />
     <ClCompile Include="main\hooks\LightSwitch_Start.cpp" />
     <ClCompile Include="main\hooks\PhotonView_RPC.cpp" />
+    <ClCompile Include="main\hooks\Player_NotifyOfDeathEnd.cpp" />
+    <ClCompile Include="main\hooks\Player_NotifyOfDeathStart.cpp" />
     <ClCompile Include="main\hooks\Player_Start.cpp" />
-    <ClCompile Include="main\hooks\Player_StartDeathAnimation.cpp" />
-    <ClCompile Include="main\hooks\RandomWeather_Start.cpp" />
+    <ClCompile Include="main\hooks\Player_BeginDeathSequence.cpp" />
     <ClCompile Include="main\hooks\RewardManager_Awake.cpp" />
     <ClCompile Include="main\hooks\SceneManagement_Internal_SceneLoaded.cpp" />
     <ClCompile Include="main\hooks\ScriptableRenderContext_Submit.cpp" />
     <ClCompile Include="main\hooks\ServerManager_LoadScene.cpp" />
     <ClCompile Include="main\hooks\TarotCards_BreakItem.cpp" />
-    <ClCompile Include="main\hooks\TarotCards_GrabCard.cpp" />
     <ClCompile Include="main\hooks\MediaValues_GetRewardAmount.cpp" />
     <ClCompile Include="main\hooks\ObjectiveManager_Update.cpp" />
     <ClCompile Include="main\hooks\PauseMenuController_Leave.cpp" />
@@ -321,7 +321,6 @@
     <ClCompile Include="main\hooks\VoodooDollPin_Use.cpp" />
     <ClCompile Include="main\hooks\WndProc.cpp" />
     <ClCompile Include="main\hooks\hooking.cpp" />
-    <ClCompile Include="main\hooks\MapController_Start.cpp" />
     <ClCompile Include="main\logging\logger.cpp" />
     <ClCompile Include="main\mem\memory.cpp" />
     <ClCompile Include="main\menu\effects\custom_background.cpp" />
@@ -435,11 +434,15 @@
     <ClInclude Include="main\features\feats\awesp\awesp.h" />
     <ClInclude Include="main\features\feats\cosmeticsunlocker\cosmeticunlocker.h" />
     <ClInclude Include="main\features\feats\crosshairmod\crosshairmod.h" />
+    <ClInclude Include="main\features\feats\crucifixesp\crucifixesp.h" />
+    <ClInclude Include="main\features\feats\crucifixmod\crucifixmod.h" />
     <ClInclude Include="main\features\feats\customlooklimits\customlooklimits.h" />
     <ClInclude Include="main\features\feats\curseditemscontroll\curseditemscontroll.h" />
     <ClInclude Include="main\features\feats\custname\customname.h" />
     <ClInclude Include="main\features\feats\custspeed\customspeed.h" />
     <ClInclude Include="main\features\feats\gamespeed\gamespeed.h" />
+    <ClInclude Include="main\features\feats\ghostgps\ghostgps.h" />
+    <ClInclude Include="main\features\feats\soundboard\soundboard.h" />
     <ClInclude Include="main\features\feats\spinbot\spinbot.h" />
     <ClInclude Include="main\features\feats\ghostspin\ghostspin.h" />
     <ClInclude Include="main\features\feats\ghosthandstand\ghosthandstand.h" />
@@ -489,7 +492,6 @@
     <ClInclude Include="main\features\feats\temperaturepanel\temperaturepanel.h" />
     <ClInclude Include="main\features\feats\tests\test.h" />
     <ClInclude Include="main\features\feats\waterka\watermark.h" />
-    <ClInclude Include="main\features\feats\worldmodulation\worldmodulation.h" />
     <ClInclude Include="main\features\feature.h" />
     <ClInclude Include="main\features\features_includes.h" />
     <ClInclude Include="main\features\settings.h" />
@@ -507,6 +509,8 @@
     <ClInclude Include="main\menu\effects\rain.h" />
     <ClInclude Include="main\menu\renderer.h" />
     <ClInclude Include="main\menu\styles.h" />
+    <ClInclude Include="main\menu\widgets\OnlyHostMark.h" />
+    <ClInclude Include="main\menu\widgets\TempDisabled.h" />
     <ClInclude Include="main\sdk\Animator.h" />
     <ClInclude Include="main\sdk\Application.h" />
     <ClInclude Include="main\sdk\AudioSource.h" />
@@ -520,6 +524,7 @@
     <ClInclude Include="main\sdk\Component.h" />
     <ClInclude Include="main\sdk\Contract.h" />
     <ClInclude Include="main\sdk\CosmeticUnlocker.h" />
+    <ClInclude Include="main\sdk\Crucifix.h" />
     <ClInclude Include="main\sdk\CursedItem.h" />
     <ClInclude Include="main\sdk\CursedItemsController.h" />
     <ClInclude Include="main\sdk\Cursor.h" />
@@ -548,6 +553,7 @@
     <ClInclude Include="main\sdk\GhostTraits.h" />
     <ClInclude Include="main\sdk\Graphic.h" />
     <ClInclude Include="main\sdk\HandCamera.h" />
+    <ClInclude Include="main\sdk\HuntingState.h" />
     <ClInclude Include="main\sdk\ItemInfo.h" />
     <ClInclude Include="main\sdk\Jackalope.h" />
     <ClInclude Include="main\sdk\JournalController.h" />
@@ -574,6 +580,7 @@
     <ClInclude Include="main\sdk\MethodInfo.h" />
     <ClInclude Include="main\sdk\MonoBehaviour.h" />
     <ClInclude Include="main\sdk\MouseLook.h" />
+    <ClInclude Include="main\sdk\NavMesh.h" />
     <ClInclude Include="main\sdk\Network.h" />
     <ClInclude Include="main\sdk\Object.h" />
     <ClInclude Include="main\sdk\ObjectiveManager.h" />

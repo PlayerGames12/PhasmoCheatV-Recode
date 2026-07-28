@@ -31,7 +31,7 @@ void Teleport::OnMenuRender()
 
     ImGui::Text(LANG("Teleport_Items"));
 
-    if (InGame::mapController)
+    if (SDK::MapController_sFields->instance)
         TeleportItems();
 
     if (ImGui::Button(LANG("Teleport_Bone")))
@@ -197,6 +197,10 @@ void Teleport::TeleportItems()
             if (photonView)
                 SDK::PhotonView_RequestOwnership(photonView, nullptr);
 
+            bool isMine = SDK::PhotonView_get_IsMine(photonView, nullptr);
+            if (!isMine)
+                continue;
+
             SDK::Vector3 pos = localPosition;
             pos.Y += 0.5f;
             SDK::Transform_Set_Position(transform, pos, nullptr);
@@ -212,7 +216,7 @@ void Teleport::TeleportItems()
 
 void Teleport::TeleportBone()
 {
-    if (!InGame::mapController || !InGame::evidenceController)
+    if (!SDK::MapController_sFields->instance || !SDK::EvidenceController_sFields->instance)
         return NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
 
     const auto localPlayer = Utils::GetLocalPlayer();
@@ -220,7 +224,7 @@ void Teleport::TeleportBone()
         return NOTIFY_ERROR_QUICK(LANG("TP_LocalPlayerMissing"));
 
     const auto localPos = Utils::GetPosVec3(localPlayer);
-    const auto evidenceList = InGame::evidenceController->Fields.EvidenceList;
+    const auto evidenceList = SDK::EvidenceController_sFields->instance->Fields.EvidenceList;
 
     if (!evidenceList || !evidenceList->Fields.Items || evidenceList->Fields.Size <= 0)
         return;
@@ -323,7 +327,7 @@ void Teleport::TeleportToTruck()
     if (!localPlayer)
         return NOTIFY_ERROR_QUICK(LANG("TP_LocalPlayerMissing"));
 
-    if (!InGame::mapController)
+    if (!SDK::MapController_sFields->instance)
         return NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
 
     auto obj = Utils::FindObjectByName("TruckFloorCollider");
@@ -349,11 +353,11 @@ void Teleport::TeleportToGhost()
     if (!localPlayer)
         return NOTIFY_ERROR_QUICK(LANG("TP_LocalPlayerMissing"));
 
-    if (!InGame::ghostAI)
+    if (!Utils::GetGhostAI())
         return NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
 
     Utils::TpPlayerToVec3(localPlayer,
-        Utils::GetPosVec3(InGame::ghostAI));
+        Utils::GetPosVec3(Utils::GetGhostAI()));
     NOTIFY_INFO_QUICK(LANG("TP_ToGhost"));
 }
 
@@ -363,7 +367,7 @@ void Teleport::TeleportToBasement()
     if (!localPlayer)
         return NOTIFY_ERROR_QUICK(LANG("TP_LocalPlayerMissing"));
 
-    if (!InGame::mapController)
+    if (!SDK::MapController_sFields->instance)
         return NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
 
     SDK::GameObject* circleObj = Utils::FindObjectByName("Summoning Circle Spawn");
@@ -388,10 +392,10 @@ void Teleport::TeleportToEntrance()
     if (!localPlayer)
         return NOTIFY_ERROR_QUICK(LANG("TP_LocalPlayerMissing"));
 
-    if (!InGame::levelController)
+    if (!SDK::LevelController_sFields->instance)
         return NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
 
-    auto exitDoorArray = InGame::levelController->Fields.exitDoors;
+    auto exitDoorArray = SDK::LevelController_sFields->instance->Fields.exitDoors;
     if (!exitDoorArray || !exitDoorArray->Vector)
         return NOTIFY_ERROR_QUICK("Exit door not found!");
 

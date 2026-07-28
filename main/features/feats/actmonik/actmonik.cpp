@@ -6,7 +6,7 @@ ActivityMonitor::ActivityMonitor() : FeatureCore(LANG("ActivityMonitor_Header"),
 
 void ActivityMonitor::OnRender()
 {
-    if (!InGame::emfData)
+    if (!SDK::EMFData_sFields->instance)
         return;
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(16.0f, 16.0f));
@@ -67,7 +67,7 @@ void ActivityMonitor::OnRender()
 
     for (int index = 0; index < 60; ++index)
     {
-        const SDK::Vector3 location = SDK::LineRenderer_GetPosition(InGame::emfData->Fields.Rend, index, nullptr);
+        const SDK::Vector3 location = SDK::LineRenderer_GetPosition(SDK::EMFData_sFields->instance->Fields.Rend, index, nullptr);
         float scaledY = location.Y / 48.0f;
         float boundedY = std::clamp(scaledY, 0.0f, 10.0f);
         float plotY = chartPosition.y + chartDimensions.y - (boundedY * (chartDimensions.y / 10.0f));

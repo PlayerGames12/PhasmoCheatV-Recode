@@ -7,11 +7,8 @@ namespace PhasmoCheatV::InGame
     inline bool FuseBoxSwitchedByCheat = false;
     inline std::mutex g_GameObjectCacheMutex;
 
-    inline SDK::GhostAI* ghostAI = nullptr;
-    inline SDK::LevelController* levelController = nullptr;
     inline SDK::Network* network = nullptr;
     inline SDK::MapController* mapController = nullptr;
-    inline SDK::FuseBox* fuseBox = nullptr;
     inline SDK::EvidenceController* evidenceController = nullptr;
     inline SDK::GameObject* FBGO = nullptr; // FullBright GameObject
     inline SDK::EMFData* emfData = nullptr;
@@ -28,23 +25,19 @@ namespace PhasmoCheatV::InGame
     inline SDK::DifficultySettings* difficultySettings = nullptr;
 	inline std::vector<SDK::Jackalope*> jackalope;
 	inline SDK::FirstPersonController* firstPersonController = nullptr;
-    inline SDK::GameController* gameController = nullptr;
 	inline SDK::ObjectiveManager* objectiveManager = nullptr;
     inline SDK::RewardManager* rewardManager = nullptr;
     inline std::unordered_map<std::string, SDK::GameObject*> g_GameObjectCache;
     inline std::vector<SDK::AWDoll*> awDolls;
-	inline SDK::PlayerStamina* playerStamina = nullptr;
+	inline SDK::HuntingState* huntingState = nullptr;
 
     // Reset in-game pointers
     inline void Reset() {
 		LiftButtonOpenedByCheat = false;
         FuseBoxSwitchedByCheat = false;
 
-        ghostAI = nullptr;
-        levelController = nullptr;
         network = nullptr;
         mapController = nullptr;
-        fuseBox = nullptr;
         evidenceController = nullptr;
         FBGO = nullptr;
         emfData = nullptr;
@@ -61,11 +54,10 @@ namespace PhasmoCheatV::InGame
         difficultySettings = nullptr;
 		firstPersonController = nullptr;
         jackalope.clear();
-        gameController = nullptr;
 		objectiveManager = nullptr;
         rewardManager = nullptr;
 		g_GameObjectCache.clear();
         awDolls.clear();
-		playerStamina = nullptr;
+        huntingState = nullptr;
     }
 }

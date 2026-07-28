@@ -46,7 +46,7 @@ void GhostModifier::OnMenuRender()
             "ghostModifier_forceAppear",
             [this]()
             {
-                if (InGame::ghostAI == nullptr)
+                if (Utils::GetGhostAI() == nullptr)
                 {
                     NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
                     return;
@@ -76,7 +76,7 @@ void GhostModifier::OnMenuRender()
             "ghostModifier_applyState",
             [this]()
             {
-                if (!InGame::ghostAI)
+                if (!Utils::GetGhostAI())
                 {
                     NOTIFY_ERROR_QUICK(LANG("NeedToBeInGame"));
                     return;
@@ -113,7 +113,7 @@ void GhostModifier::OnMenuRender()
             }
         }
 
-        if (SDK::GhostAI* ghost = InGame::ghostAI) {
+        if (SDK::GhostAI* ghost = Utils::GetGhostAI()) {
             if (SDK::GhostModel* ghostModel = ghost->Fields.currentModel) {
                 bool isVisibleGhost = Utils::IsGhostVisible(ghost);
                 if (ImGui::Button(LANG("SetGhostVisible")))
@@ -133,23 +133,23 @@ void GhostModifier::GhostModifierMain()
     if (CONFIG_BOOL(GetConfigManager(), "CustomSpeedEnabled"))
     {
         const float ghostSpeed = CONFIG_FLOAT(GetConfigManager(), "GhostSpeed");
-        if (InGame::ghostAI != nullptr)
+        if (Utils::GetGhostAI() != nullptr)
         {
-            InGame::ghostAI->Fields.defaultSpeed = ghostSpeed;
-            InGame::ghostAI->Fields.saltSpeedMultiplier = ghostSpeed;
-            InGame::ghostAI->Fields.incenseSpeedMultiplier = ghostSpeed;
+            Utils::GetGhostAI()->Fields.defaultSpeed = ghostSpeed;
+            Utils::GetGhostAI()->Fields.saltSpeedMultiplier = ghostSpeed;
+            Utils::GetGhostAI()->Fields.incenseSpeedMultiplier = ghostSpeed;
         }
     }
 
     bool shouldForceAppear = CONFIG_BOOL(GetConfigManager(), "ShouldForceAppear");
-    if (shouldForceAppear && InGame::ghostAI != nullptr)
+    if (shouldForceAppear && Utils::GetGhostAI() != nullptr)
     {
         ForceAppear();
         SET_CONFIG_VALUE(GetConfigManager(), "ShouldForceAppear", bool, false);
     }
 
     bool shouldChangeState = CONFIG_BOOL(GetConfigManager(), "ShouldChangeState");
-    if (shouldChangeState && InGame::ghostAI != nullptr)
+    if (shouldChangeState && Utils::GetGhostAI() != nullptr)
     {
         int forcedState = CONFIG_INT(GetConfigManager(), "ForceState");
         ChangeState(static_cast<SDK::GhostState>(forcedState));
@@ -157,26 +157,26 @@ void GhostModifier::GhostModifierMain()
     }
 
     bool freezeState = CONFIG_BOOL(GetConfigManager(), "FreezeState");
-    if (freezeState && InGame::ghostAI != nullptr)
+    if (freezeState && Utils::GetGhostAI() != nullptr)
     {
         int forcedState = CONFIG_INT(GetConfigManager(), "ForceState");
         SDK::GhostState currentForcedState = static_cast<SDK::GhostState>(forcedState);
 
-        if (InGame::ghostAI->Fields.currentState != currentForcedState)
+        if (Utils::GetGhostAI()->Fields.currentState != currentForcedState)
         {
-            SDK::GhostAI_ChangeState(InGame::ghostAI, currentForcedState, nullptr, nullptr, nullptr);
+            SDK::GhostAI_ChangeState(Utils::GetGhostAI(), currentForcedState, nullptr, nullptr, nullptr);
         }
     }
 }
 
 void GhostModifier::ChangeState(SDK::GhostState forcedState)
 {
-    if (!IsActive() || !InGame::ghostAI) return;
-    SDK::GhostAI_ChangeState(InGame::ghostAI, forcedState, nullptr, nullptr, nullptr);
+    if (!IsActive() || !Utils::GetGhostAI()) return;
+    SDK::GhostAI_ChangeState(Utils::GetGhostAI(), forcedState, nullptr, nullptr, nullptr);
 }
 
 void GhostModifier::ForceAppear()
 {
-    if (!IsActive() || !InGame::ghostAI) return;
-    SDK::GhostAI_Appear(InGame::ghostAI, INT_MAX, nullptr);
+    if (!IsActive() || !Utils::GetGhostAI()) return;
+    SDK::GhostAI_Appear(Utils::GetGhostAI(), INT_MAX, nullptr);
 }

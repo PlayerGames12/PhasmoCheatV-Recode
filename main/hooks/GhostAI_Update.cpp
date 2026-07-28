@@ -22,7 +22,6 @@ void Hooks::hkGhostAI_Update(SDK::GhostAI* ghostAI, SDK::MethodInfo* methodInfo)
 	CALL_METHOD(Visuals, StatsPanel, StatsPanelCollectBone);
 	CALL_METHOD(Misc, PhotoModifier, PhotoModifierAutoPhoto);
 	CALL_METHOD(Map, FuseBoxModifier, FuseBoxModifierHandler);
-	CALL_METHOD(Map, DoorModifier, DoorModifierMain);
 	CALL_METHOD(Players, SkipLayerAnim, SkipLayerAnimHandler);
 
 	if (ForTestsFlag && IsDebugging)

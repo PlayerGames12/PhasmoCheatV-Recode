@@ -9,6 +9,16 @@ FoVEditor::FoVEditor() : FeatureCore(LANG("FoVEditor_Header"), TYPE_PLAYERS)
     DECLARE_CONFIG(GetConfigManager(), "DefaultFoVSaved", bool, false);
 }
 
+void FoVEditor::OnDeactivate()
+{
+    auto localPlayer = Utils::GetLocalPlayer();
+    if (!localPlayer) return;
+    auto Camera = localPlayer->Fields.LocalPlayer->Fields.Camera;
+    if (!Camera) return;
+    float fov = CONFIG_FLOAT(GetConfigManager(), "DefaultFoVValue");
+    SDK::Camera_Set_FieldOfView(Camera, fov, nullptr);
+}
+
 void FoVEditor::OnMenuRender()
 {
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 6));

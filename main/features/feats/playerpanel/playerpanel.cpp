@@ -80,7 +80,7 @@ void PlayersPanel::OnRender()
             {
                 const int sanity = player->Fields.IsDead
                     ? 0
-                    : static_cast<int>(100.f - Utils::GetPlayerSanity(player));
+                    : static_cast<int>(Utils::GetPlayerSanity(player));
                 DrawRow(LANG("PlayerSanity"), player->Fields.IsDead ? LANG("Dead") : std::to_string(sanity).c_str());
             }
 
@@ -109,9 +109,9 @@ void PlayersPanel::OnRender()
             if (CONFIG_BOOL(GetConfigManager(), "ShowHackerFlag"))
                 DrawRow(LANG("PlayerHacker"), spot->Fields.IsHacker ? LANG("Yes") : LANG("No"));
 
-            if (CONFIG_BOOL(GetConfigManager(), "ShowAverageSanity") && i == 0 && InGame::mapController && InGame::mapController->Fields.GameController)
+            if (CONFIG_BOOL(GetConfigManager(), "ShowAverageSanity") && i == 0 && SDK::MapController_sFields->instance && SDK::MapController_sFields->instance->Fields.GameController)
             {
-                const float avgSanity = 100.f - SDK::GameController_GetAveragePlayerInsanity(InGame::mapController->Fields.GameController, nullptr);
+                const float avgSanity = 100.f - SDK::GameController_GetAveragePlayerInsanity(SDK::MapController_sFields->instance->Fields.GameController, nullptr);
                 char avgBuf[16];
                 snprintf(avgBuf, sizeof(avgBuf), "%.0f%%", avgSanity);
                 DrawRow(LANG("AverageSanity"), avgBuf);

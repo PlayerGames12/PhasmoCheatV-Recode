@@ -10,7 +10,7 @@ namespace PhasmoCheatV::Features::Players
 		~FoVEditor() override = default;
 
 		void OnActivate() override {};
-		void OnDeactivate() override {};
+		void OnDeactivate() override;
 		void OnRender() override {};
 		void OnMenuRender() override;
 		void FoVEditorMain();

@@ -9,10 +9,21 @@ void StaminaPanel::OnRender()
     if (!IsActive())
         return;
 
-    if (!InGame::playerStamina)
+    auto localPlayer = Utils::GetLocalPlayer();
+
+    if (!localPlayer)
         return;
 
-    float currentStamina = InGame::playerStamina->Fields.CurrentStamina;
+    auto localPlayerReal = localPlayer->Fields.LocalPlayer;
+    if (!localPlayerReal)
+        return;
+
+    auto playerStamina = localPlayerReal->Fields.stamina;
+    if (!playerStamina)
+        return;
+
+
+    float currentStamina = playerStamina->Fields.CurrentStamina;
 
     currentStamina = std::clamp(currentStamina, 0.f, 3.f);
 
@@ -76,10 +87,6 @@ void StaminaPanel::OnMenuRender()
     if (ImGui::Checkbox(LANG("EnableStaminaPanel"), &enabled))
     {
         SET_CONFIG_VALUE(GetConfigManager(), "Enabled", bool, enabled);
-
-        if (enabled)
-            OnActivate();
-        else
-            OnDeactivate();
+        enabled ? OnActivate() : OnDeactivate();
     }
 }

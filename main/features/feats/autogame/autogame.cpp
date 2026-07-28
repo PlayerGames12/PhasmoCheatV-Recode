@@ -329,10 +329,10 @@ void AutoGame::AutoGameHandler()
 
 	case AutoGamePhase::WaitingForPlayers:
 	{
-		auto* gameController = InGame::gameController;
+		auto* gameController = SDK::GameController_StaticFields->instance;
 		if (!gameController) return;
 
-		if (gameController->Fields.allPlayersAreConnected || InGame::ghostAI && InGame::ghostAI->Fields.GhostInfo && InGame::ghostAI->Fields.GhostInfo->Fields.GhostTraits.Name)
+		if (gameController->Fields.allPlayersAreConnected || Utils::GetGhostAI() && Utils::GetGhostAI()->Fields.GhostInfo && Utils::GetGhostAI()->Fields.GhostInfo->Fields.GhostTraits.Name)
 		{
 			waitStart = now;
 			phase = AutoGamePhase::WaitingDelayAfterPlayers;

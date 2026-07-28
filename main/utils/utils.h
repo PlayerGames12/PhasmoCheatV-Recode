@@ -35,6 +35,7 @@ namespace Utils {
 	SDK::Transform* GetPlayerTransformCamera(const SDK::Player* player);
 	SDK::LevelStats* GetLevelStats();
 	double GetCheatUptimeSeconds();
+	float toSanityOrInsanity(float insanity);
 	float GetPlayerSanity(SDK::Player* player);
 	bool IsLocalMasterClient();
 	void TpPlayerToVec3(SDK::Player* player, const SDK::Vector3& position);

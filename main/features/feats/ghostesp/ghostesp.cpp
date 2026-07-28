@@ -80,14 +80,14 @@ GhostESP::GhostESP() : FeatureCore(LANG("GhostESP_Header"), TYPE_VISUALS)
 void GhostESP::OnRender()
 {
     if (!IsActive()) return;
-    if (!InGame::ghostAI) return;
+    if (!Utils::GetGhostAI()) return;
 
-    const auto ghostInfo = InGame::ghostAI->Fields.GhostInfo;
+    const auto ghostInfo = Utils::GetGhostAI()->Fields.GhostInfo;
     if (!ghostInfo) return;
 
     const ImColor nameCol = CONFIG_COLOR(GetConfigManager(), "NameCol");
 
-    DrawName(InGame::ghostAI, nameCol);
+    DrawName(Utils::GetGhostAI(), nameCol);
 
     if (CONFIG_BOOL(GetConfigManager(), "ShowBoxESP"))
     {
@@ -97,22 +97,22 @@ void GhostESP::OnRender()
 
         switch (boxType)
         {
-        case 0: Draw2DBox(InGame::ghostAI, color, thickness); break;
-        case 1: DrawCornerBox(InGame::ghostAI, color, thickness); break;
-        case 2: DrawFilledBox(InGame::ghostAI, color, thickness); break;
+        case 0: Draw2DBox(Utils::GetGhostAI(), color, thickness); break;
+        case 1: DrawCornerBox(Utils::GetGhostAI(), color, thickness); break;
+        case 2: DrawFilledBox(Utils::GetGhostAI(), color, thickness); break;
         }
     }
 
     if (CONFIG_BOOL(GetConfigManager(), "ShowSkeleton"))
     {
-        DrawSkeleton(InGame::ghostAI,
+        DrawSkeleton(Utils::GetGhostAI(),
             CONFIG_COLOR(GetConfigManager(), "SkeletonColor"),
             CONFIG_FLOAT(GetConfigManager(), "SkeletonThickness"));
     }
 
     if (CONFIG_BOOL(GetConfigManager(), "ShowPhotoESP"))
     {
-        DrawPhotoESP(InGame::ghostAI);
+        DrawPhotoESP(Utils::GetGhostAI());
     }
 }
 

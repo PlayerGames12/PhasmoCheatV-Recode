@@ -1,14 +1,103 @@
 #include "watermark.h"
+#include <windows.h>
+#include <psapi.h>
 
 using namespace PhasmoCheatV::Features::Visuals;
+
+namespace
+{
+    int GetSystemCPUUsage()
+    {
+        static FILETIME prevIdleTime = {}, prevKernelTime = {}, prevUserTime = {};
+        static bool initialized = false;
+
+        FILETIME idleTime, kernelTime, userTime;
+        if (!GetSystemTimes(&idleTime, &kernelTime, &userTime))
+            return 0;
+
+        if (!initialized)
+        {
+            prevIdleTime = idleTime;
+            prevKernelTime = kernelTime;
+            prevUserTime = userTime;
+            initialized = true;
+            return 0;
+        }
+
+        ULARGE_INTEGER idle, kernel, user;
+        ULARGE_INTEGER prevIdle, prevKernel, prevUser;
+
+        idle.LowPart = idleTime.dwLowDateTime;
+        idle.HighPart = idleTime.dwHighDateTime;
+        kernel.LowPart = kernelTime.dwLowDateTime;
+        kernel.HighPart = kernelTime.dwHighDateTime;
+        user.LowPart = userTime.dwLowDateTime;
+        user.HighPart = userTime.dwHighDateTime;
+
+        prevIdle.LowPart = prevIdleTime.dwLowDateTime;
+        prevIdle.HighPart = prevIdleTime.dwHighDateTime;
+        prevKernel.LowPart = prevKernelTime.dwLowDateTime;
+        prevKernel.HighPart = prevKernelTime.dwHighDateTime;
+        prevUser.LowPart = prevUserTime.dwLowDateTime;
+        prevUser.HighPart = prevUserTime.dwHighDateTime;
+
+        ULONGLONG idleDiff = idle.QuadPart - prevIdle.QuadPart;
+        ULONGLONG kernelDiff = kernel.QuadPart - prevKernel.QuadPart;
+        ULONGLONG userDiff = user.QuadPart - prevUser.QuadPart;
+        ULONGLONG total = kernelDiff + userDiff;
+
+        prevIdleTime = idleTime;
+        prevKernelTime = kernelTime;
+        prevUserTime = userTime;
+
+        if (total == 0)
+            return 0;
+
+        return static_cast<int>(100.0 - ((idleDiff * 100.0) / total));
+    }
+
+    int GetRAMUsage()
+    {
+        MEMORYSTATUSEX memInfo;
+        memInfo.dwLength = sizeof(MEMORYSTATUSEX);
+        GlobalMemoryStatusEx(&memInfo);
+        return static_cast<int>(memInfo.dwMemoryLoad);
+    }
+
+    SIZE_T GetUsedRAMMB()
+    {
+        MEMORYSTATUSEX memInfo;
+        memInfo.dwLength = sizeof(MEMORYSTATUSEX);
+        GlobalMemoryStatusEx(&memInfo);
+        return (memInfo.ullTotalPhys - memInfo.ullAvailPhys) / (1024 * 1024);
+    }
+
+    SIZE_T GetTotalRAMMB()
+    {
+        MEMORYSTATUSEX memInfo;
+        memInfo.dwLength = sizeof(MEMORYSTATUSEX);
+        GlobalMemoryStatusEx(&memInfo);
+        return memInfo.ullTotalPhys / (1024 * 1024);
+    }
+}
 
 Watermark::Watermark() : FeatureCore(LANG("Watermark_Header"), TYPE_VISUALS)
 {
     DECLARE_CONFIG(GetConfigManager(), "ShowSanity", bool, true);
     DECLARE_CONFIG(GetConfigManager(), "ShowPing", bool, true);
     DECLARE_CONFIG(GetConfigManager(), "ShowFPS", bool, true);
+    DECLARE_CONFIG(GetConfigManager(), "ShowCPU", bool, true);
+    DECLARE_CONFIG(GetConfigManager(), "ShowRAM", bool, true);
+    DECLARE_CONFIG(GetConfigManager(), "ShowRAMMB", bool, false);
+    DECLARE_CONFIG(GetConfigManager(), "ShowTime", bool, false);
+    DECLARE_CONFIG(GetConfigManager(), "Position", int, 1);
 
-    CachedText.reserve(128);
+    CachedText.reserve(256);
+    lastInfoUpdate = 0.0f;
+    cachedCPU = 0;
+    cachedRAM = 0;
+    cachedUsedRAM = 0;
+    cachedTotalRAM = 0;
 }
 
 void Watermark::OnRender()
@@ -18,8 +107,27 @@ void Watermark::OnRender()
     const bool showPing = CONFIG_BOOL(GetConfigManager(), "ShowPing");
     const bool showSanity = CONFIG_BOOL(GetConfigManager(), "ShowSanity");
     const bool showFPS = CONFIG_BOOL(GetConfigManager(), "ShowFPS");
+    const bool showCPU = CONFIG_BOOL(GetConfigManager(), "ShowCPU");
+    const bool showRAM = CONFIG_BOOL(GetConfigManager(), "ShowRAM");
+    const bool showRAMMB = CONFIG_BOOL(GetConfigManager(), "ShowRAMMB");
+    const bool showTime = CONFIG_BOOL(GetConfigManager(), "ShowTime");
+    const int position = CONFIG_INT(GetConfigManager(), "Position");
 
-    CachedText = "PhasmoCheatV";
+    float currentTime = ImGui::GetTime();
+    if (currentTime - lastInfoUpdate > 0.5f)
+    {
+        if (showCPU)
+            cachedCPU = GetSystemCPUUsage();
+        if (showRAM || showRAMMB)
+        {
+            cachedRAM = GetRAMUsage();
+            cachedUsedRAM = GetUsedRAMMB();
+            cachedTotalRAM = GetTotalRAMMB();
+        }
+        lastInfoUpdate = currentTime;
+    }
+
+    CachedText = Globals::IsDebugging ? "PhasmoCheatV [DEBUG]" : "PhasmoCheatV";
 
     if (showFPS)
     {
@@ -29,20 +137,53 @@ void Watermark::OnRender()
         CachedText.append(" FPS");
     }
 
+    if (showCPU)
+    {
+        CachedText.append(" | CPU ");
+        CachedText.append(std::to_string(cachedCPU));
+        CachedText.append("%");
+    }
+
+    if (showRAM)
+    {
+        CachedText.append(" | RAM ");
+        CachedText.append(std::to_string(cachedRAM));
+        CachedText.append("%");
+    }
+
+    if (showRAMMB)
+    {
+        CachedText.append(" | ");
+        CachedText.append(std::to_string(cachedUsedRAM));
+        CachedText.append("/");
+        CachedText.append(std::to_string(cachedTotalRAM));
+        CachedText.append(" MB");
+    }
+
+    if (showTime)
+    {
+        SYSTEMTIME st;
+        GetLocalTime(&st);
+        char timeBuf[16];
+        sprintf_s(timeBuf, "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond);
+        CachedText.append(" | ");
+        CachedText.append(timeBuf);
+    }
+
     if (SDK::Application_get_isPlaying(nullptr) && Utils::GetLocalPlayer())
     {
         if (showPing && SDK::PhotonNetwork_Get_IsConnected(nullptr))
         {
-                const int ping = SDK::PhotonNetwork_GetPing(nullptr);
-                CachedText.append(" | ");
-                CachedText.append(std::to_string(ping));
-                CachedText.append(" ms");
+            const int ping = SDK::PhotonNetwork_GetPing(nullptr);
+            CachedText.append(" | ");
+            CachedText.append(std::to_string(ping));
+            CachedText.append(" ms");
         }
     }
 
-    if (showSanity && InGame::mapController && InGame::mapController->Fields.GameController)
+    if (showSanity && SDK::MapController_sFields->instance && SDK::MapController_sFields->instance->Fields.GameController)
     {
-        const int sanity = static_cast<int>(100.f - SDK::GameController_GetAveragePlayerInsanity(InGame::mapController->Fields.GameController, nullptr));
+        const int sanity = static_cast<int>(100.f - SDK::GameController_GetAveragePlayerInsanity(SDK::MapController_sFields->instance->Fields.GameController, nullptr));
         CachedText.append(" | ");
         CachedText.append(std::to_string(sanity));
         CachedText.append("% Sanity");
@@ -57,12 +198,56 @@ void Watermark::OnRender()
 
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
     const float padding = 10.0f;
-    ImVec2 defaultPos = ImVec2(
-        viewport->Size.x - padding - width,
-        padding
-    );
-    ImGui::SetNextWindowPos(defaultPos, ImGuiCond_FirstUseEver);
+    ImVec2 pos;
+    bool isFree = (position == 9);
+
+    if (!isFree)
+    {
+        switch (position)
+        {
+        case 0:
+            pos = ImVec2(padding, padding);
+            break;
+        case 1:
+            pos = ImVec2(viewport->Size.x - padding - width, padding);
+            break;
+        case 2:
+            pos = ImVec2(padding, viewport->Size.y - padding - height);
+            break;
+        case 3:
+            pos = ImVec2(viewport->Size.x - padding - width, viewport->Size.y - padding - height);
+            break;
+        case 4:
+            pos = ImVec2((viewport->Size.x - width) * 0.5f, padding);
+            break;
+        case 5:
+            pos = ImVec2((viewport->Size.x - width) * 0.5f, viewport->Size.y - padding - height);
+            break;
+        case 6:
+            pos = ImVec2(padding, (viewport->Size.y - height) * 0.5f);
+            break;
+        case 7:
+            pos = ImVec2(viewport->Size.x - padding - width, (viewport->Size.y - height) * 0.5f);
+            break;
+        case 8:
+            pos = ImVec2((viewport->Size.x - width) * 0.5f, (viewport->Size.y - height) * 0.5f);
+            break;
+        default:
+            pos = ImVec2(viewport->Size.x - padding - width, padding);
+            break;
+        }
+        ImGui::SetNextWindowPos(pos, ImGuiCond_Always);
+    }
+    else
+    {
+        ImGui::SetNextWindowPos(ImVec2(viewport->Size.x - padding - width, padding), ImGuiCond_FirstUseEver);
+    }
+
     ImGui::SetNextWindowSize(ImVec2(width, height));
+
+    ImGuiWindowFlags flags = Globals::WINDOW_FLAGS_GLOBALS;
+    if (isFree)
+        flags &= ~ImGuiWindowFlags_NoMove;
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -70,7 +255,7 @@ void Watermark::OnRender()
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 
-    ImGui::Begin("###WatermarkWindow", nullptr, Globals::WINDOW_FLAGS_GLOBALS);
+    ImGui::Begin("###WatermarkWindow", nullptr, flags);
     {
         ImVec2 windowPos = ImGui::GetWindowPos();
         ImVec2 windowSize = ImGui::GetWindowSize();
@@ -125,6 +310,11 @@ void Watermark::OnMenuRender()
         bool showFPS = CONFIG_BOOL(GetConfigManager(), "ShowFPS");
         bool showSanity = CONFIG_BOOL(GetConfigManager(), "ShowSanity");
         bool showPing = CONFIG_BOOL(GetConfigManager(), "ShowPing");
+        bool showCPU = CONFIG_BOOL(GetConfigManager(), "ShowCPU");
+        bool showRAM = CONFIG_BOOL(GetConfigManager(), "ShowRAM");
+        bool showRAMMB = CONFIG_BOOL(GetConfigManager(), "ShowRAMMB");
+        bool showTime = CONFIG_BOOL(GetConfigManager(), "ShowTime");
+        int position = CONFIG_INT(GetConfigManager(), "Position");
 
         if (ImGui::Checkbox(LANG("Watermark_ShowFPS"), &showFPS))
             SET_CONFIG_VALUE(GetConfigManager(), "ShowFPS", bool, showFPS);
@@ -134,6 +324,34 @@ void Watermark::OnMenuRender()
 
         if (ImGui::Checkbox(LANG("Watermark_ShowPing"), &showPing))
             SET_CONFIG_VALUE(GetConfigManager(), "ShowPing", bool, showPing);
+
+        if (ImGui::Checkbox("Show CPU", &showCPU))
+            SET_CONFIG_VALUE(GetConfigManager(), "ShowCPU", bool, showCPU);
+
+        if (ImGui::Checkbox("Show RAM %", &showRAM))
+            SET_CONFIG_VALUE(GetConfigManager(), "ShowRAM", bool, showRAM);
+
+        if (ImGui::Checkbox("Show RAM MB", &showRAMMB))
+            SET_CONFIG_VALUE(GetConfigManager(), "ShowRAMMB", bool, showRAMMB);
+
+        if (ImGui::Checkbox("Show Time", &showTime))
+            SET_CONFIG_VALUE(GetConfigManager(), "ShowTime", bool, showTime);
+
+        const char* positions[] = {
+            "Top Left",
+            "Top Right",
+            "Bottom Left",
+            "Bottom Right",
+            "Top Center",
+            "Bottom Center",
+            "Middle Left",
+            "Middle Right",
+            "Center",
+            "Free"
+        };
+
+        if (ImGui::Combo("Position", &position, positions, IM_ARRAYSIZE(positions)))
+            SET_CONFIG_VALUE(GetConfigManager(), "Position", int, position);
     }
 
     ImGui::PopStyleVar();

@@ -68,5 +68,11 @@ namespace SDK
 		CursedItemsControllerFields Fields;
 	};
 
+	struct CursedItemsController_staticFields
+	{
+		CursedItemsController* instance;
+	};
+
 	DEC_MET(CursedItemsController_Awake, void(*)(CursedItemsController* cursedItemsController, MethodInfo* methodInfo), "Assembly-CSharp", "", "CursedItemsController", "Awake", 0);
+	DEC_SFIELD(CursedItemsController_sFields, CursedItemsController_staticFields, "Assembly-CSharp", "", "CursedItemsController");
 }

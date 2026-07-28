@@ -49,10 +49,11 @@ void Pickup::OnMenuRender()
 		if (ImGui::Checkbox(LANG("PickupEverything"), &PickupEverything))
 			SET_CONFIG_VALUE(GetConfigManager(), "PickupEverything", bool, PickupEverything);
 
-		if (ImGui::Checkbox(LANG("PocketEverything"), &PocketEverything))
+		wImGui::TempDisabled(1);
+		if (WD(ImGui::Checkbox(LANG("PocketEverything"), &PocketEverything)))
 		{
 			SET_CONFIG_VALUE(GetConfigManager(), "PocketEverything", bool, PocketEverything);
-			PocketEverything ? SDK::Call_ForceDrop_nop(5) : SDK::Call_ForceDrop_restore();
+			//PocketEverything ? SDK::Call_ForceDrop_nop(5) : SDK::Call_ForceDrop_restore();
 		}
 	}
 
@@ -66,7 +67,9 @@ void Pickup::PickupMain()
 	if (CONFIG_BOOL(GetConfigManager(), "GrabDistanceMultiplier"))
 	{
 		float grabDistance = CONFIG_FLOAT(GetConfigManager(), "CustomGrabDistance");
-		SDK::PCPropGrab_GrabDistance_wr(grabDistance);
+		if (SDK::PickupDistance_rd() != grabDistance)
+			SDK::PickupDistance_wr(grabDistance);
+
 	}
 	if (CONFIG_BOOL(GetConfigManager(), "PickupEverything"))
 	{
