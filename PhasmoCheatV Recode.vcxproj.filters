@@ -530,6 +530,58 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+=======
+    <Filter Include="Исходные файлы">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Файлы заголовков">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Файлы ресурсов">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="detours">
+      <UniqueIdentifier>{b5b9db23-bb16-42da-9999-7edcdd8a0ac6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{97023ca2-4130-48d5-a386-abe98a1d37ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Il2cpp">
+      <UniqueIdentifier>{bc5ab0cc-28fa-4e80-8ecf-91b57c6dfaca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sdk">
+      <UniqueIdentifier>{1f53e4d2-b77f-4d8a-ac4e-12d291ce014f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hooks">
+      <UniqueIdentifier>{4507e7b9-9587-4c96-bf56-87a98fd2a068}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logger">
+      <UniqueIdentifier>{3aaee8ac-f36e-4f80-8a2a-1902336f23c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="menu">
+      <UniqueIdentifier>{3047d702-ce57-4222-90f9-8823e99ad6f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{16714487-2458-4919-8514-66567f53af4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features">
+      <UniqueIdentifier>{72e9687e-963a-40e8-83f5-d4e41d5597ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features\feats">
+      <UniqueIdentifier>{d19d3a8f-dbb5-435e-85d2-6c9dbcb7f124}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="configs">
+      <UniqueIdentifier>{af337e08-b120-428b-8087-a4c7e9beb5be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fonts">
+      <UniqueIdentifier>{c78ec3a6-4cc9-44e5-a7ef-76dbc7d85d8b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+>>>>>>> 4ac75269361c1c8547816aa2abdcc14ffa3a521d
     <ClCompile Include="dllmain.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
