@@ -24,6 +24,12 @@ jobs:
       - name: Restore NuGet packages
         run: nuget restore "PhasmoCheatV Recode.sln"
 
+      - name: Restore legacy ImGui backend paths
+        shell: pwsh
+        run: |
+          Copy-Item libs/imgui/backends/imgui_impl_dx11.* libs/imgui/ -Force
+          Copy-Item libs/imgui/backends/imgui_impl_win32.* libs/imgui/ -Force
+
       - name: Build Release x64
         run: >-
           msbuild "PhasmoCheatV Recode.sln"
