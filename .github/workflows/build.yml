@@ -45,6 +45,12 @@ jobs:
           #define MINIZ_EXPORT
           '@ | Set-Content libs/miniz/miniz_export.h
 
+      - name: Fix CI resource path
+        shell: pwsh
+        run: |
+          $p = 'PhasmoCheatV Injector/PhasmoCheatV Injector.rc'
+          (Get-Content $p -Raw).Replace('D:\projects\PhasmoCheatV Recode', (Get-Location).Path) | Set-Content $p
+
       - name: Build Release x64
         run: >-
           msbuild "PhasmoCheatV Recode.sln"
