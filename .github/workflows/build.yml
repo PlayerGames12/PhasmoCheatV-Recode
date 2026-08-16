@@ -30,6 +30,12 @@ jobs:
           Copy-Item libs/imgui/backends/imgui_impl_dx11.* libs/imgui/ -Force
           Copy-Item libs/imgui/backends/imgui_impl_win32.* libs/imgui/ -Force
 
+      - name: Disable unavailable optional cosmetics SDK
+        shell: pwsh
+        run: |
+          $p = 'Globals.h'
+          (Get-Content $p -Raw).Replace('#define COSMETICSUNLOCKER 1', '#define COSMETICSUNLOCKER 0') | Set-Content $p
+
       - name: Build Release x64
         run: >-
           msbuild "PhasmoCheatV Recode.sln"
