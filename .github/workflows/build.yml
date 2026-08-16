@@ -29,6 +29,7 @@ jobs:
         run: |
           Copy-Item libs/imgui/backends/imgui_impl_dx11.* libs/imgui/ -Force
           Copy-Item libs/imgui/backends/imgui_impl_win32.* libs/imgui/ -Force
+          Copy-Item libs/stb/stb_image.h libs/imgui/ -Force
 
       - name: Disable unavailable optional cosmetics SDK
         shell: pwsh
