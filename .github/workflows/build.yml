@@ -3,11 +3,14 @@ name: Build PhasmoCheatV
 on:
   workflow_dispatch:
   push:
-    branches: ['**']
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   build:
     runs-on: windows-2022
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repository and submodules
@@ -35,7 +38,13 @@ jobs:
         shell: pwsh
         run: |
           $p = 'Globals.h'
-          (Get-Content $p -Raw).Replace('#define COSMETICSUNLOCKER 1', '#define COSMETICSUNLOCKER 0') | Set-Content $p
+          $content = Get-Content $p -Raw
+          if ($content -notmatch '#define COSMETICSUNLOCKER 1') {
+            Write-Host 'Cosmetics SDK is already disabled or the project layout changed.'
+          } else {
+            $content.Replace('#define COSMETICSUNLOCKER 1', '#define COSMETICSUNLOCKER 0') | Set-Content $p
+            Write-Host 'Cosmetics SDK unavailable in the public repository; building without it.'
+          }
 
       - name: Generate missing miniz export header
         shell: pwsh
@@ -60,6 +69,15 @@ jobs:
           /p:Platform=x64
           /p:PlatformToolset=v143
           /p:OutDir="${{ github.workspace }}\build\"
+
+      - name: Verify build outputs
+        shell: pwsh
+        run: |
+          $outputs = Get-ChildItem build -File -Include *.dll,*.exe
+          if ($outputs.Count -eq 0) {
+            throw 'The build completed without producing a DLL or EXE.'
+          }
+          $outputs | Select-Object Name, Length | Format-Table
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
