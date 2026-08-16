@@ -36,6 +36,14 @@ jobs:
           $p = 'Globals.h'
           (Get-Content $p -Raw).Replace('#define COSMETICSUNLOCKER 1', '#define COSMETICSUNLOCKER 0') | Set-Content $p
 
+      - name: Generate missing miniz export header
+        shell: pwsh
+        run: |
+          @'
+          #pragma once
+          #define MINIZ_EXPORT
+          '@ | Set-Content libs/miniz/miniz_export.h
+
       - name: Build Release x64
         run: >-
           msbuild "PhasmoCheatV Recode.sln"
