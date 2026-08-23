@@ -48,6 +48,18 @@ jobs:
           "@ | Set-Content -Path "libs\miniz\miniz_export.h" -Encoding UTF8
           Write-Host "Created libs\miniz\miniz_export.h"
 
+      - name: Copy stb_image.h into imgui folder
+        shell: pwsh
+        run: |
+          $src = "libs\stb\stb_image.h"
+          $dst = "libs\imgui\stb_image.h"
+          if (Test-Path $src) {
+            Copy-Item $src $dst -Force
+            Write-Host "Copied stb_image.h → libs\imgui\"
+          } else {
+            Write-Error "Missing: $src"
+          }
+
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
