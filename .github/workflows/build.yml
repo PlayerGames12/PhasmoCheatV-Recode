@@ -17,6 +17,26 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Fix ImGui backends paths
+        shell: pwsh
+        run: |
+          $backends = @(
+            "imgui_impl_dx11.cpp",
+            "imgui_impl_dx11.h",
+            "imgui_impl_win32.cpp",
+            "imgui_impl_win32.h"
+          )
+          foreach ($f in $backends) {
+            $src = "libs\imgui\backends\$f"
+            $dst = "libs\imgui\$f"
+            if (Test-Path $src) {
+              Copy-Item $src $dst -Force
+              Write-Host "Copied $f"
+            } else {
+              Write-Error "Missing: $src"
+            }
+          }
+
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
