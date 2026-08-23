@@ -4,7 +4,7 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
-#define COSMETICSUNLOCKER 1 //! dont change this if u not have need files
+#define COSMETICSUNLOCKER 0 //! dont change this if u not have need files
 
 namespace PhasmoCheatV::Globals
 {
