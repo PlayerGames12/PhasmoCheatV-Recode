@@ -37,6 +37,17 @@ jobs:
             }
           }
 
+      - name: Create miniz_export.h
+        shell: pwsh
+        run: |
+          @"
+          #pragma once
+          #ifndef MINIZ_EXPORT
+          #define MINIZ_EXPORT
+          #endif
+          "@ | Set-Content -Path "libs\miniz\miniz_export.h" -Encoding UTF8
+          Write-Host "Created libs\miniz\miniz_export.h"
+
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
@@ -63,4 +74,6 @@ jobs:
             **/Release/**/*.exe
             **/x64/Release/**/*.dll
             **/x64/Release/**/*.exe
+            **/build/**/*.exe
+            **/build/**/*.dll
           if-no-files-found: warn
