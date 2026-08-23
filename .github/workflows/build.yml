@@ -1,0 +1,46 @@
+name: Build PhasmoCheatV
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v2
+
+      - name: Restore NuGet packages
+        run: nuget restore "PhasmoCheatV Recode.sln"
+
+      - name: Build solution
+        run: |
+          msbuild "PhasmoCheatV Recode.sln" `
+            /p:Configuration=Release `
+            /p:Platform=x64 `
+            /m `
+            /v:minimal
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: PhasmoCheatV-Release
+          path: |
+            **/Release/**/*.dll
+            **/Release/**/*.exe
+            **/x64/Release/**/*.dll
+            **/x64/Release/**/*.exe
+          if-no-files-found: warn
